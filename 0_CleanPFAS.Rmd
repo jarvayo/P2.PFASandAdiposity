@@ -1,0 +1,68 @@
+#####                                                        #####
+##### CLEAN PFASBP DATA SET AND ENFORCE ELIGIBILITY CRITERIA #####
+#####                                                        #####
+
+```{r}
+##### LOAD PACKAGES
+library("sas7bdat")
+library("haven")
+library("data.table")
+
+##### LOAD DATASET
+PFAS <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandMidlife/Data/ja_062922.sas7bdat")
+
+```
+
+```{r}
+##### DROP UNNECESSARY VARIABLES
+#PFASBP_0 <- subset(PFASBP, select = c(aid, ga_days, mom_agey_bp, g_age_days_COLL_D_BLD1, sys, dias,  
+                                      Me_PFOSA_AcOH2, PFOA, PFHxS, PFNA2, PFOS, Et_PFOSA_AcOH,
+                                      bmi_mom_prepreg_d,  race2_mom_epi_epia_d,parity_d, coll_grad, 
+                                      gt70k, income_hh_epq_epqa_d, htn_rx_preg, t1diab_mom_epi_epia_d, 
+                                      t2diab_mom_epi_epia_d, highbp_mom_epi_epia_d,mod_pre_d, 
+                                      vig_pre_d, smokpreg_final_d,alc_d_f1,alc_d_bef_learn_f1, 
+                                      alc_d_aft_learn_f1, count))
+
+```
+
+```{r}
+##### DETERMINE PFASBP MISSINGNESS
+summary(PFASBP_0$PFOS)
+summary(PFASBP_0$PFOA)
+summary(PFASBP_0$PFOSA)
+summary(PFASBP_0$PFNA2)
+summary(PFASBP_0$PFHxS)
+summary(PFASBP_0$PFDeA)
+summary(PFASBP_0$Me_PFOSA_AcOH2)
+summary(PFASBP_0$Et_PFOSA_AcOH) #INDIVIDUALS ARE MISSING ALL OR NONE OF EACH PFASBP
+
+##### EXCLUDE INELEGIBLE PARTICIPANTS
+PFASBP_1 <- subset(PFASBP_0, !is.na(PFOS)) # MISSING PFASBP DATA
+PFASBP_2 <- subset(PFASBP_1, g_age_days_COLL_D_BLD1 <= 84) # MISSING 1ST TRIMESTER PFAS DATA
+
+table(PFASBP_2$highbp_mom_epi_epia_d)
+PFASBP_3 <- subset(PFASBP_2, highbp_mom_epi_epia_d != 1) # HISTORY OF HYPERTENSION
+
+table(PFASBP_3$t1diab_mom_epi_epia_d)
+table(PFASBP_3$t2diab_mom_epi_epia_d)
+PFASBP_4 <- subset(PFASBP_3, t1diab_mom_epi_epia_d != 1 & t2diab_mom_epi_epia_d != 1) # HISTORY OF DIABETES
+
+table(PFASBP_4$htn_rx_preg)
+PFASBP_5 <- subset(PFASBP_4, htn_rx_preg !=1) # PAST/CURRENT USE OF BP MEDICATION
+
+summary(PFASBP_5)
+
+```
+
+```{r}
+##### DROP UNNECESSARY VARIABLES
+PFASBP_5 <- subset(PFASBP_5, select = -c(htn_rx_preg, t1diab_mom_epi_epia_d, t2diab_mom_epi_epia_d,
+                                     highbp_mom_epi_epia_d))
+
+##### SAVE DATASET
+write.csv(PFASBP_5, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandBP/Data/PFASBP_W.csv", row.names = T)
+write_sas(PFASBP_5, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandBP/Data/PFASBP_W.sas7bdat")
+# THE "W" AT THE END OF THE SAVED FILES INDICATES THAT THE DATASET IS IN "WIDE" FORMAT
+
+```
+
