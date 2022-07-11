@@ -59,18 +59,19 @@ summary(PFAS$mom_waist_ma17)
 ##### EXCLUDE INELEGIBLE PARTICIPANTS
 PFAS_1 <- subset(PFAS, !is.na(VAT_AREA_mdxa17)) # MISSING DXA MEASURES
 PFAS_2 <- subset(PFAS_1, !is.na(mom_waist_ma17)) # MISSING WAIST CIRCUMFERENCE
-PFAS_3 <- subset(PFAS_2, !is.na(PFOS)) # MISSING PFASBP DATA
-PFAS_4 <- subset(PFAS_3, g_age_days_COLL_D_BLD1 <= 154) # MISSING 1ST OR 2ND TRIMESTER PFAS DATA (I.E., 22 WEEKS GESTATION)
+PFAS_3 <- subset(PFAS_2, !is.na(mom_bodyfat_ma17)) # MISSING TOTAL BODY FAT %
+PFAS_4 <- subset(PFAS_3, !is.na(PFOS)) # MISSING PFASBP DATA
+PFAS_5 <- subset(PFAS_4, g_age_days_COLL_D_BLD1 <= 154) # MISSING 1ST OR 2ND TRIMESTER PFAS DATA (I.E., 22 WEEKS GESTATION)
 summary(PFAS_2$g_age_days_COLL_D_BLD1)
 
 #table(PFAS_4$highbp_mom_epi_epia_d)
 #PFAS_5 <- subset(PFAS_4, highbp_mom_epi_epia_d != 1) # HISTORY OF HYPERTENSION
 
-table(PFAS_4$t1diab_mom_epi_epia_d)
-table(PFAS_4$t2diab_mom_epi_epia_d)
-PFAS_5 <- subset(PFAS_4, t1diab_mom_epi_epia_d != 1 & t2diab_mom_epi_epia_d != 1) # HISTORY OF DIABETES
+table(PFAS_5$t1diab_mom_epi_epia_d)
+table(PFAS_5$t2diab_mom_epi_epia_d)
+PFAS_6 <- subset(PFAS_5, t1diab_mom_epi_epia_d != 1 & t2diab_mom_epi_epia_d != 1) # HISTORY OF DIABETES
 
-summary(PFAS_5)
+summary(PFAS_6$mom_bodyfat_ma17)
 
 ```
 
@@ -80,8 +81,8 @@ summary(PFAS_5)
 #                                     highbp_mom_epi_epia_d))
 
 ##### SAVE DATASET
-write.csv(PFAS_5, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandMidlife/Data/PFAS_C.csv", row.names = T)
-write_sas(PFAS_5, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandMidlife/Data/PFAS_C.sas7bdat")
+write.csv(PFAS_6, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandMidlife/Data/PFAS_C.csv", row.names = T)
+write_sas(PFAS_6, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandMidlife/Data/PFAS_C.sas7bdat")
 # THE "C" AT THE END OF THE SAVED FILES INDICATES THAT THE DATASET IS CLEAN
 
 ```
