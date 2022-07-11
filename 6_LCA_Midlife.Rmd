@@ -4,11 +4,7 @@
 
 ```{r}
 ##### LOAD PACKAGES
-library("tidyverse")
-library("modelsummary")
-library("kableExtra")
-library("gt")
-library("shiny")
+library(poLCA)
 
 ```
 
@@ -20,11 +16,19 @@ PFAS <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandMidlife/Data/PFAS_
 
 ```{r}
 
+ad <- as.formula(cbind(PFAS$VAT_AREA_mdxa17, PFAS$SAT_AREA_mdxa17, PFAS$TAT_AREA_mdxa17, 
+                       PFAS$WEIGHT_mdxa17, PFAS$mom_waist_ma17, PFAS$mom_bodyfat_ma17)~1)
+
+```
+
+```{r}
+
+LCA3 <- poLCA(ad, data = PFAS, nclass = 3)
+plot(LCA3)
+
 ```
 
 #slide10:
-library(poLCA)
-samhsa2015 <- read.table(file="samhsa_2015F.csv", header=T, as.is=T, sep=",")
 
 vars <- c("mhintake", "mhdiageval", "mhreferral", "treatmt","adminserv")
 for (i in 1:length(vars)){
