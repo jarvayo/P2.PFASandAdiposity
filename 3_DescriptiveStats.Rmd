@@ -29,6 +29,14 @@ PFAS$LNPFHxS <- log(PFAS$PFHxS)
 PFAS$LNME_PFOSA <- log(PFAS$Me_PFOSA_AcOH2)
 PFAS$LNET_PFOSA <- log(PFAS$Et_PFOSA_AcOH)
 
+
+##### LOG-TRANSFORM DXA MEASURES (AND BMI/WEIGHT GAIN/WAIST CIRCUMFERENCE) TO OBSERVE SHAPE OF DISTRIBUTION
+PFAS$LNVAT_AREA <- log(PFAS$VAT_AREA_mdxa17)
+PFAS$LNSAT_AREA <- log(PFAS$SAT_AREA_mdxa17)
+PFAS$LNTAT_AREA <- log(PFAS$TAT_AREA_mdxa17)
+PFAS$LNWEIGHT <- log(PFAS$WEIGHT_mdxa17)
+PFAS$LNWAIST <- log(PFAS$mom_waist_ma17)
+
 ```
 
 ```{r}
@@ -53,6 +61,26 @@ hist(PFAS$LNME_PFOSA)
 hist(PFAS$LNET_PFOSA)
 
 ```
+
+```{r}
+##### DESCRIBE DXA MEASURE (AND BMI/WEIGHT GAIN/WAIST CIRCUMFERENCE/TOTAL BODY FAT) DISTRIBUTION
+hist(PFAS$VAT_AREA_mdxa17)
+hist(PFAS$SAT_AREA_mdxa17)
+hist(PFAS$TAT_AREA_mdxa17)
+#hist(PFAS$BMI)
+hist(PFAS$WEIGHT_mdxa17)
+hist(PFAS$mom_waist_ma17)
+hist(PFAS$mom_bodyfat_ma17)
+
+##### DESCRIBE LOG-DXA-MEAUSRE DISTRIBUTION
+hist(PFAS$LNVAT_AREA)
+hist(PFAS$LNSAT_AREA)
+hist(PFAS$LNTAT_AREA)
+hist(PFAS$LNWEIGHT)
+hist(PFAS$LNWAIST)
+
+```
+
 
 ```{r}
 ##### RENAME
@@ -172,14 +200,33 @@ summary(PFAS$Et_PFOSA_AcOH)
 
 ##### PFAS CORRELATION MATRIX
 PFAS_corr <- PFAS[ , c("PFOS", "PFOA", "PFNA2", "PFHxS", "Me_PFOSA_AcOH2", "Et_PFOSA_AcOH")]
-corr <- cor(PFAS_corr)
-round(corr, 2)
+p_corr <- cor(PFAS_corr)
+round(p_corr, 2)
 
-corrplot(corr, type = "upper", order = "hclust", 
+corrplot(p_corr, type = "upper", order = "hclust", 
          tl.col = "black", tl.srt = 45)
 
 ```
 
+```{r}
+##### OUTCOMES DISTRIBUTION TABLE
+summary(PFAS$VAT_AREA_mdxa17)
+summary(PFAS$SAT_AREA_mdxa17)
+summary(PFAS$TAT_AREA_mdxa17)
+summary(PFAS$WEIGHT_mdxa17)
+summary(PFAS$mom_waist_ma17)
+summary(PFAS$mom_bodyfat_ma17)
+
+##### OUTCOMES CORRELATION MATRIX
+OUTCOMES_corr <- PFAS[ , c("VAT_AREA_mdxa17", "SAT_AREA_mdxa17", "TAT_AREA_mdxa17", "WEIGHT_mdxa17", 
+                       "mom_waist_ma17", "mom_bodyfat_ma17")]
+o_corr <- cor(OUTCOMES_corr)
+round(o_corr, 2)
+
+corrplot(o_corr, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+```
 
 ```{r}
 ##### SAVE DATASET
