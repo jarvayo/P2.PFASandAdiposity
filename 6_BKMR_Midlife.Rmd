@@ -319,81 +319,229 @@ m1_interact_fat
 ```{r}
 ##### DETERMINE RISK ASSOCIATED WITH THE OVERALL MIXTURE
 ##### SUBSEQUENTLY, ESTIMATE RISK FOR SINGLE PFAS AND INTERACTIONS AMONG PFAS
-# SYSTOIC BP, SIZE PARAMETER
-risk_overall_m1_a_sys <- OverallRiskSummaries(fit = m1_a_sys, q.fixed = 0.50, sel = sel_m1_a_sys,
+# VAT
+risk_overall_vat <- OverallRiskSummaries(fit = mod.vat, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
-risks_singvar_m1_a_sys <- SingVarRiskSummaries(fit = m1_a_sys, qs.diff = c(0.25, 0.75),
-                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_m1_a_sys, method = "approx")
-risks_overall_interact_m1_a_sys <- SingVarIntSummaries(fit = m1_a_sys, qs.diff = c(0.25, 0.75),
-                                       qs.fixed = c(0.25, 0.75),sel=sel_m1_a_sys)
-
-#SYSTOLIC BP, VELOCITY PARAMETER
-risk_overall_m2_c_sys <- OverallRiskSummaries(fit = m2_c_sys, q.fixed = 0.50, sel = sel_m2_c_sys, 
+risks_singvar_vat <- SingVarRiskSummaries(fit = mod.vat, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+risks_overall_interact_vat <- SingVarIntSummaries(fit = mod.vat, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+# SAAT
+risk_overall_saat <- OverallRiskSummaries(fit = mod.saat, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
-risks_singvar_m2_c_sys <- SingVarRiskSummaries(fit = m2_c_sys, qs.diff = c(0.25, 0.75),
-                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_m2_c_sys, method = "approx")
-risks_overall_interact_m2_c_sys <- SingVarIntSummaries(fit = m2_c_sys, qs.diff = c(0.25, 0.75),
-                                       qs.fixed = c(0.25, 0.75),sel=sel_m2_c_sys)
+risks_singvar_saat <- SingVarRiskSummaries(fit = mod.saat, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+risks_overall_interact_saat <- SingVarIntSummaries(fit = mod.saat, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+# TAAT
+risk_overall_taat <- OverallRiskSummaries(fit = mod.taat, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+risks_singvar_taat <- SingVarRiskSummaries(fit = mod.taat, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+risks_overall_interact_taat <- SingVarIntSummaries(fit = mod.taat, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+# Weight
+risk_overall_weight <- OverallRiskSummaries(fit = mod.weight, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+risks_singvar_weight <- SingVarRiskSummaries(fit = mod.weight, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+risks_overall_interact_weight <- SingVarIntSummaries(fit = mod.weight, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+# Waist
+risk_overall_waist <- OverallRiskSummaries(fit = mod.waist, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+risks_singvar_waist <- SingVarRiskSummaries(fit = mod.waist, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+risks_overall_interact_waist <- SingVarIntSummaries(fit = mod.waist, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+# Fat
+risk_overall_fat <- OverallRiskSummaries(fit = mod.fat, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+risks_singvar_fat <- SingVarRiskSummaries(fit = mod.fat, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+risks_overall_interact_fat <- SingVarIntSummaries(fit = mod.fat, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
 
 
 
 ##### PLOT RISK ASSOCIATED WITH THE OVERALL MIXTURE
-m1_overall_sys <- ggplot(risk_overall_m1_a_sys, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+### VAT
+overall_vat <- ggplot(risk_overall_vat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
-               scale_y_continuous(name = "Difference in mean SBP (mmHg)")+
+               scale_y_continuous(name = "Change in VAT Area")+
                xlab("PFAS quantile") +
                theme_classic()+ theme(
                axis.text.x=element_text(size=11),
                axis.text.y=element_text(size=11),
                axis.title.x=element_text(angle=0, color='black', size=11),
                axis.title.y=element_text(angle=90, color='black', size=11))
-m1_overall_sys
+overall_vat
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
-m1_overall_single <- ggplot(risks_singvar_m1_a_sys, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+overall_sing_vat <- ggplot(risks_singvar_vat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
   geom_hline(aes(yintercept=0), linetype="dashed", color="gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name="PFAS") + scale_y_continuous(name="Difference in mean DBP (mmHg)")
-m1_overall_single
+  scale_x_discrete(name="PFAS") + scale_y_continuous(name="Change in VAT Area")
+overall_sing_vat
 
 # SINGLE VARIABLE INTERACTION TERMS
-m1_overall_interact <- ggplot(risks_overall_interact_m1_a_sys, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+overall_interact_vat <- ggplot(risks_overall_interact_vat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
-m1_overall_interact
+overall_interact_vat
 
 
 
-
-m2_overall <- ggplot(risk_overall_m2_c_sys, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+### SAAT
+overall_saat <- ggplot(risk_overall_saat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
-               scale_y_continuous(name = "Difference in mean velocity for SBP (mmHg)")+
+               scale_y_continuous(name = "Change in SAAT Area")+
                xlab("PFAS quantile") +
                theme_classic()+ theme(
                axis.text.x=element_text(size=11),
                axis.text.y=element_text(size=11),
                axis.title.x=element_text(angle=0, color='black', size=11),
                axis.title.y=element_text(angle=90, color='black', size=11))
-m2_overall
+overall_saat
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
-m2_overall_single <- ggplot(risks_singvar_m2_c_sys, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+overall_sing_saat <- ggplot(risks_singvar_saat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
   geom_hline(aes(yintercept=0), linetype="dashed", color="gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name="PFAS") + scale_y_continuous(name="Difference in velocity for DBP (mmHg)")
-m2_overall_single
+  scale_x_discrete(name="PFAS") + scale_y_continuous(name="Change in SAAT Area")
+overall_sing_saat
 
 # SINGLE VARIABLE INTERACTION TERMS
-m2_overall_interact <- ggplot(risks_overall_interact_m2_c_sys, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+overall_interact_saat <- ggplot(risks_overall_interact_saat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
-m2_overall_interact
+overall_interact_saat
+
+
+
+### TAAT
+overall_taat <- ggplot(risk_overall_taat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in TAAT Area")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x=element_text(size=11),
+               axis.text.y=element_text(size=11),
+               axis.title.x=element_text(angle=0, color='black', size=11),
+               axis.title.y=element_text(angle=90, color='black', size=11))
+overall_taat
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+overall_sing_taat <- ggplot(risks_singvar_taat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept=0), linetype="dashed", color="gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name="PFAS") + scale_y_continuous(name="Change in TAAT Area")
+overall_sing_taat
+
+# SINGLE VARIABLE INTERACTION TERMS
+overall_interact_taat <- ggplot(risks_overall_interact_taat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
+overall_interact_taat
+
+
+
+### Weight
+overall_weight <- ggplot(risk_overall_weight, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in Body Weight (kg)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x=element_text(size=11),
+               axis.text.y=element_text(size=11),
+               axis.title.x=element_text(angle=0, color='black', size=11),
+               axis.title.y=element_text(angle=90, color='black', size=11))
+overall_weight
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+overall_sing_weight <- ggplot(risks_singvar_weight, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept=0), linetype="dashed", color="gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name="PFAS") + scale_y_continuous(name="Change in Body Weight (kg)")
+overall_sing_weight
+
+# SINGLE VARIABLE INTERACTION TERMS
+overall_interact_weight <- ggplot(risks_overall_interact_weight, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
+overall_interact_weight
+
+
+
+### Waist
+overall_waist <- ggplot(risk_overall_waist, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in Waist Circumference (cm)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x=element_text(size=11),
+               axis.text.y=element_text(size=11),
+               axis.title.x=element_text(angle=0, color='black', size=11),
+               axis.title.y=element_text(angle=90, color='black', size=11))
+overall_waist
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+overall_sing_waist <- ggplot(risks_singvar_waist, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept=0), linetype="dashed", color="gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name="PFAS") + scale_y_continuous(name="Change in Waist Circumference (cm)")
+overall_sing_waist
+
+# SINGLE VARIABLE INTERACTION TERMS
+overall_interact_waist <- ggplot(risks_overall_interact_waist, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
+overall_interact_waist
+
+
+
+### Fat
+overall_fat <- ggplot(risk_overall_fat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in Total Body Fat (%)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x=element_text(size=11),
+               axis.text.y=element_text(size=11),
+               axis.title.x=element_text(angle=0, color='black', size=11),
+               axis.title.y=element_text(angle=90, color='black', size=11))
+overall_fat
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+overall_sing_fat <- ggplot(risks_singvar_fat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept=0), linetype="dashed", color="gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name="PFAS") + scale_y_continuous(name="Change in Total Body Fat (%)")
+overall_sing_fat
+
+# SINGLE VARIABLE INTERACTION TERMS
+overall_interact_fat <- ggplot(risks_overall_interact_fat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
+overall_interact_fat
 
 ```
 
