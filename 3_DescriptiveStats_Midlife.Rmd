@@ -1,0 +1,235 @@
+#####                                                       #####
+##### EVALUATE DISTRIBUTION OF VARIABLES AND CREATE TABLE 1 #####
+#####                                                       #####
+
+```{r}
+##### LOAD PACKAGES
+library("tidyverse")
+library("plyr")
+library("table1")
+library("gtools")
+library("corrplot")
+library("Hmisc")
+
+```
+
+```{r}
+##### LOAD DATASET
+PFAS <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandMidlife/Data/PFAS_C_COMP.csv")
+
+```
+
+
+```{r}
+##### LOG-TRANSFORM PFAS TO OBSERVE SHAPE OF DISTRIBUTION
+PFAS$LNPFOS <- log(PFAS$PFOS)
+PFAS$LNPFOA <- log(PFAS$PFOA)
+PFAS$LNPFNA2 <- log(PFAS$PFNA2)
+PFAS$LNPFHxS <- log(PFAS$PFHxS)
+PFAS$LNME_PFOSA <- log(PFAS$Me_PFOSA_AcOH2)
+PFAS$LNET_PFOSA <- log(PFAS$Et_PFOSA_AcOH)
+
+
+##### LOG-TRANSFORM DXA MEASURES (AND BMI/WEIGHT GAIN/WAIST CIRCUMFERENCE) TO OBSERVE SHAPE OF DISTRIBUTION
+PFAS$LNVAT_AREA <- log(PFAS$VAT_AREA_mdxa17)
+PFAS$LNSAT_AREA <- log(PFAS$SAT_AREA_mdxa17)
+PFAS$LNTAT_AREA <- log(PFAS$TAT_AREA_mdxa17)
+PFAS$LNWEIGHT <- log(PFAS$WEIGHT_mdxa17)
+PFAS$LNWAIST <- log(PFAS$mom_waist_ma17)
+
+```
+
+```{r}
+##### DESCRIBE PFAS DISTRIBUTION
+hist(PFAS$PFOS)
+hist(PFAS$PFOA)
+#hist(PFAS$PFOSA)
+hist(PFAS$PFNA2)
+hist(PFAS$PFHxS)
+#hist(PFAS$PFDeA)
+hist(PFAS$Me_PFOSA_AcOH2)
+hist(PFAS$Et_PFOSA_AcOH)
+
+##### DESCRIBE LNPFAS DISTRIBUTION
+hist(PFAS$LNPFOS)
+hist(PFAS$LNPFOA)
+#hist(PFAS$LNPFOSA)
+hist(PFAS$LNPFNA2)
+hist(PFAS$LNPFHxS)
+#hist(PFAS$LNPFDeA)
+hist(PFAS$LNME_PFOSA)
+hist(PFAS$LNET_PFOSA)
+
+```
+
+```{r}
+##### DESCRIBE DXA MEASURE (AND BMI/WEIGHT GAIN/WAIST CIRCUMFERENCE/TOTAL BODY FAT) DISTRIBUTION
+hist(PFAS$VAT_AREA_mdxa17)
+hist(PFAS$SAT_AREA_mdxa17)
+hist(PFAS$TAT_AREA_mdxa17)
+#hist(PFAS$BMI)
+hist(PFAS$WEIGHT_mdxa17)
+hist(PFAS$mom_waist_ma17)
+hist(PFAS$mom_bodyfat_ma17)
+
+##### DESCRIBE LOG-DXA-MEAUSRE DISTRIBUTION
+hist(PFAS$LNVAT_AREA)
+hist(PFAS$LNSAT_AREA)
+hist(PFAS$LNTAT_AREA)
+hist(PFAS$LNWEIGHT)
+hist(PFAS$LNWAIST)
+
+```
+
+
+```{r}
+##### RENAME
+PFAS$age_enroll <- PFAS$age_mom_enroll_d
+PFAS$age_dxa <- (PFAS$age_days_mdxa17)/365
+PFAS$exer <- PFAS$mod_pre_d + PFAS$vig_pre_d
+PFAS$race <- PFAS$race2_mom_epi_epia_d
+PFAS$edu <- PFAS$coll_grad
+PFAS$bmi <- PFAS$bmi_mom_prepreg_d
+PFAS$smoke <- PFAS$smokpreg_final_d
+PFAS$income <- PFAS$income_hh_epq_epqa_d
+PFAS$income_cat2 <- PFAS$gt70k
+PFAS$parity <- PFAS$parity_d
+PFAS$alc_bef <- PFAS$alc_d_bef_learn_f1
+PFAS$alc_aft <- PFAS$alc_d_aft_learn_f1
+PFAS$alc_tot <- PFAS$alc_d_f1
+
+
+##### RE-LABEL 
+PFAS$race <- ifelse(PFAS$race == "white", 0,
+                     ifelse(PFAS$race == "black", 1,
+                     ifelse(PFAS$race == "hispa", 2,
+                     ifelse(PFAS$race == "asian", 3,
+                     ifelse(PFAS$race == "other", 4, 4)))))
+PFAS$edu <- ifelse(PFAS$edu == 1, 1, 0)
+PFAS$bmi_cat <- ifelse(PFAS$bmi <18.5, 0,
+                         ifelse(PFAS$bmi >=18.5 & PFAS$bmi < 25.0, 1, 
+                         ifelse(PFAS$bmi >=25.0 & PFAS$bmi < 30.0, 2, 
+                         ifelse(PFAS$bmi >=30.0 & PFAS$bmi < 35.0, 3,
+                         ifelse(PFAS$bmi >=35.0, 4, 99)))))
+PFAS$smoke <- ifelse(PFAS$smoke == "former", 0,
+                         ifelse(PFAS$smoke == "smoke preg", 1,
+                         ifelse(PFAS$smoke == "xnever", 2, 2)))
+PFAS$income_cat2 <- ifelse(PFAS$income_cat2 == 1, 1, 0)
+PFAS$income_cat3 <- ifelse(PFAS$income == 2, 0,
+                       ifelse(PFAS$income == 3, 0,
+                       ifelse(PFAS$income == 4, 0,
+                       ifelse(PFAS$income == 5, 1,
+                       ifelse(PFAS$income == 6, 2,0)))))
+PFAS$parity <- ifelse(PFAS$parity == 0, 0,
+                        ifelse(PFAS$parity == 1, 1,
+                        ifelse(PFAS$parity > 1, 2, 0)))
+PFAS$alc_bef <- ifelse(PFAS$alc_bef > 0, 1, 0)
+PFAS$alc_aft <- ifelse(PFAS$alc_aft > 0, 1, 0)
+PFAS$alc_tot <- ifelse(PFAS$alc_tot > 0, 1, 0)
+
+
+##### REFACTOR
+PFAS$race <- factor(PFAS$race,
+                        levels = c(0, 1, 2, 3, 4),
+                        labels = c("White", "Black", "Hispanic", "Asian", "Other/More than 1 race"))
+PFAS$edu <- factor(PFAS$edu,
+                       levels = c(0, 1),
+                       labels = c(" < college degree", ">= college degree"))
+PFAS$bmi_cat <- factor(PFAS$bmi_cat,
+                       levels = c(0, 1, 2, 3, 4),
+                       labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
+                                  "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
+                                  "Extremely obese (>= 35)"))
+PFAS$smoke <- factor(PFAS$smoke,
+                         levels = c(0, 1, 2),
+                         labels = c("Former smoker", "Smoked during pregnancy", "Never smoked"))
+PFAS$income_cat2 <- factor(PFAS$income_cat2,
+                       levels = c(0, 1),
+                       labels = c(" <= $70,000", "> $70,000"))
+PFAS$income_cat3 <- factor(PFAS$income,
+                          levels = c(0, 1, 2),
+                          labels = c("<= $40,000", "$40,001-$70,000", "> $70,000"))
+PFAS$parity <- factor(PFAS$parity,
+                          levels = c(0, 1, 2),
+                          labels = c("0", "1", ">= 2"))
+PFAS$alc_bef <- factor(PFAS$alc_bef,
+                          levels = c(0, 1),
+                          labels = c("No", "Yes"))
+PFAS$alc_aft <- factor(PFAS$alc_aft,
+                          levels = c(0, 1),
+                          labels = c("No", "Yes"))
+PFAS$alc_tot <- factor(PFAS$alc_tot,
+                          levels = c(0, 1),
+                          labels = c("No", "Yes"))
+
+##### LABEL
+label(PFAS$age_enroll) <- "Maternal age at enrollment"
+label(PFAS$age_dxa) <- "Follow-up time"
+label(PFAS$exer) <- "Physical activity"
+label(PFAS$race) <- "Race/Ethnicity"
+label(PFAS$edu) <- "Education"
+label(PFAS$bmi_cat) <- "Pre-pregnancy BMI"
+label(PFAS$smoke) <- "Smoking status"
+label(PFAS$income_cat2) <- "Annual household income"
+label(PFAS$income_cat3) <- "Annual household income"
+label(PFAS$parity) <- "Parity"
+label(PFAS$alc_bef) <- "Consumed alcohol 3 months before learning about pregnancy"
+label(PFAS$alc_aft) <- "Consumed alcohol during pregnancy"
+
+##### ADD UNITS
+units(PFAS$age_enroll)  <- "years"
+units(PFAS$age_dxa)  <- "years"
+units(PFAS$bmi_cat)  <- "kg/m2"
+units(PFAS$exer) <- "hrs/week"
+
+##### TABE 1
+table1(~ age_enroll + age_dxa + exer + race + bmi_cat + edu + smoke + income_cat2 + 
+         income_cat3 + parity + alc_bef + alc_aft + alc_tot,
+       data = PFAS, overall="Total")
+
+```
+
+```{r}
+##### PFAS DISTRIBUTION TABLE
+summary(PFAS$PFOS)
+summary(PFAS$PFOA)
+summary(PFAS$PFNA2)
+summary(PFAS$PFHxS)
+summary(PFAS$Me_PFOSA_AcOH2)
+summary(PFAS$Et_PFOSA_AcOH)
+
+##### PFAS CORRELATION MATRIX
+PFAS_corr <- PFAS[ , c("PFOS", "PFOA", "PFNA2", "PFHxS", "Me_PFOSA_AcOH2", "Et_PFOSA_AcOH")]
+p_corr <- cor(PFAS_corr)
+round(p_corr, 2)
+
+corrplot(p_corr, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+```
+
+```{r}
+##### OUTCOMES DISTRIBUTION TABLE
+summary(PFAS$VAT_AREA_mdxa17)
+summary(PFAS$SAT_AREA_mdxa17)
+summary(PFAS$TAT_AREA_mdxa17)
+summary(PFAS$WEIGHT_mdxa17)
+summary(PFAS$mom_waist_ma17)
+summary(PFAS$mom_bodyfat_ma17)
+
+##### OUTCOMES CORRELATION MATRIX
+OUTCOMES_corr <- PFAS[ , c("VAT_AREA_mdxa17", "SAT_AREA_mdxa17", "TAT_AREA_mdxa17", "WEIGHT_mdxa17", 
+                       "mom_waist_ma17", "mom_bodyfat_ma17")]
+o_corr <- cor(OUTCOMES_corr)
+round(o_corr, 2)
+
+corrplot(o_corr, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+```
+
+```{r}
+##### SAVE DATASET
+write.csv(PFAS, file = "C:/Users/jarva/Desktop/James-Todd Lab/PFASandMidlife/Data/PFAS_DEMO.csv", row.names = T)
+
+```
