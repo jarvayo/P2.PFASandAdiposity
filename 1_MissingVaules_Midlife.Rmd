@@ -66,11 +66,11 @@ summary(PFAS_NA$race2_mom_epi_epia_d)
 summary(PFAS_NA$smokpreg_final_d)      # 1 NAs
 
 ##### TABLE OF MISSINGNESS
-table1(~ mom_age_days_mdxa17 + g_age_days_COLL_D_BLD1 + mod_pre_d + vig_pre_d + 
-         race2_mom_epi_epia_d + bmi_mom_prepreg_d + coll_grad, data = PFAS_NA, overall="Total")
+table1(~ age_mom_enroll_d + mom_age_days_mdxa17 + bmi_mom_prepreg_d + parity_d +
+         mod_pre_d + vig_pre_d, data = PFAS_NA, overall="Total")
 
-table1(~ smokpreg_final_d + income_hh_epq_epqa_d + gt70k + parity_d +
-         alc_d_bef_learn_f1 + alc_d_aft_learn_f1 + alc_d_f1, data = PFAS_NA, overall="Total")
+table1(~ race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k,
+         data = PFAS_NA, overall="Total")
 
 ```
 
@@ -103,19 +103,19 @@ PFAS_COMP <- PFAS_COMP %>% select(-contains(".1"))
 
 ```{r}
 ##### RE-CHECK VARIABLE DISTRIBUTION FOR DATASET WITH IMPUTED DATA 
-table1(~ mom_age_days_mdxa17 + g_age_days_COLL_D_BLD1 + mod_pre_d + vig_pre_d + 
-         race2_mom_epi_epia_d + bmi_mom_prepreg_d + coll_grad, data = PFAS_COMP, overall="Total")
+table1(~ age_mom_enroll_d + mom_age_days_mdxa17 + bmi_mom_prepreg_d + parity_d +
+         mod_pre_d + vig_pre_d, data = PFAS_COMP, overall="Total")
 
-table1(~ smokpreg_final_d + income_hh_epq_epqa_d + gt70k + parity_d +
-         alc_d_bef_learn_f1 + alc_d_aft_learn_f1 + alc_d_f1, data = PFAS_COMP, overall="Total")
+table1(~ race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k, 
+       data = PFAS_COMP, overall="Total")
 
 ```
 
 
 ```{r}
 ##### SAVE DATASET
-write.csv(PFAS_COMP, file = "C:/Users/jarva/Desktop/James-Todd Lab/PFASandMidlife/Data/PFAS_C_COMP.csv", row.names = T)
-write_sas(PFAS_COMP, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandMidlife/Data/PFAS_C_COMP.sas7bdat")
+write.csv(PFAS_COMP, file = "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_C_COMP.csv", row.names = T)
+write_sas(PFAS_COMP, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_C_COMP.sas7bdat")
 # THE "C_COMP" AT THE END OF THE SAVED FILE NAMES INDICATE THAT THESE DATASETS ARE CLEAN AND HAVE NO MISSING DATA
 
 ```
