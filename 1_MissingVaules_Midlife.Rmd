@@ -15,7 +15,7 @@ library("tidyverse")
 
 ```{r}
 ##### LOAD DATASET
-PFAS_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandMidlife/Data/PFAS_C.sas7bdat")
+PFAS_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_C.sas7bdat")
 
 ```
 
@@ -40,15 +40,16 @@ PFAS_NA$race2_mom_epi_epia_d <- ifelse(PFAS_NA$race2_mom_epi_epia_d == "more tha
                                        "other", PFAS_NA$race2_mom_epi_epia_d)
 
 ##### CHECK MISSINGNESS OF CONTINUOUS DEMOGRAPHIC VARIABLES
+summary(PFAS_NA$age_mom_enroll_d)
 summary(PFAS_NA$mom_age_days_mdxa17)
 summary(PFAS_NA$bmi_mom_prepreg_d)     
-summary(PFAS_NA$income_hh_epq_epqa_d)  # 34 NAs
 summary(PFAS_NA$parity_d)              
 summary(PFAS_NA$mod_pre_d)             # 50 NAs
 summary(PFAS_NA$vig_pre_d)             # 46 NAs
-summary(PFAS_NA$alc_d_bef_learn_f1)    # 31 NAs
-summary(PFAS_NA$alc_d_aft_learn_f1)    # 31 NAs
-summary(PFAS_NA$alc_d_f1)              # 31 NAs
+#summary(PFAS_NA$income_hh_epq_epqa_d)  # 34 NAs
+#summary(PFAS_NA$alc_d_bef_learn_f1)    # 31 NAs
+#summary(PFAS_NA$alc_d_aft_learn_f1)    # 31 NAs
+#summary(PFAS_NA$alc_d_f1)              # 31 NAs
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
 PFAS_NA$coll_grad <- as.factor(PFAS_NA$coll_grad)
@@ -57,8 +58,8 @@ PFAS_NA$gt70k <- as.factor(PFAS_NA$gt70k)
 PFAS_NA$race2_mom_epi_epia_d <- as.factor(PFAS_NA$race2_mom_epi_epia_d)
 PFAS_NA$smokpreg_final_d <- as.factor(PFAS_NA$smokpreg_final_d)
 
-summary(PFAS_NA$parity_d)              
-summary(PFAS_NA$income_hh_epq_epqa_d)  # 34 NAs
+#summary(PFAS_NA$parity_d)              
+#summary(PFAS_NA$income_hh_epq_epqa_d)  # 34 NAs
 summary(PFAS_NA$gt70k)                 # 34 NAs
 summary(PFAS_NA$coll_grad)             
 summary(PFAS_NA$race2_mom_epi_epia_d)
@@ -103,10 +104,10 @@ PFAS_COMP <- PFAS_COMP %>% select(-contains(".1"))
 ```{r}
 ##### RE-CHECK VARIABLE DISTRIBUTION FOR DATASET WITH IMPUTED DATA 
 table1(~ mom_age_days_mdxa17 + g_age_days_COLL_D_BLD1 + mod_pre_d + vig_pre_d + 
-         race2_mom_epi_epia_d + bmi_mom_prepreg_d + coll_grad, data = PFAS_NA, overall="Total")
+         race2_mom_epi_epia_d + bmi_mom_prepreg_d + coll_grad, data = PFAS_COMP, overall="Total")
 
 table1(~ smokpreg_final_d + income_hh_epq_epqa_d + gt70k + parity_d +
-         alc_d_bef_learn_f1 + alc_d_aft_learn_f1 + alc_d_f1, data = PFAS_NA, overall="Total")
+         alc_d_bef_learn_f1 + alc_d_aft_learn_f1 + alc_d_f1, data = PFAS_COMP, overall="Total")
 
 ```
 
