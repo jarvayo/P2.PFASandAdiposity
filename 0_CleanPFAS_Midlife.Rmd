@@ -56,6 +56,7 @@ summary(PFAS$WEIGHT_mdxa17) # INDIVIDUALS ARE MISSING ALL OR NONE OF EACH DXA ME
 
 summary(PFAS$bmi_mom_prepreg_d) # 16 MISSING
 summary(PFAS$mom_waist_ma17) # 1419 MISSING
+summary(PFAS$mom_bodyfat_ma17) # 1427 MISSING
 
 
 ##### EXCLUDE INELEGIBLE PARTICIPANTS
@@ -72,8 +73,6 @@ summary(PFAS_2$g_age_days_COLL_D_BLD1)
 table(PFAS_5$t1diab_mom_epi_epia_d)
 table(PFAS_5$t2diab_mom_epi_epia_d)
 PFAS_6 <- subset(PFAS_5, t1diab_mom_epi_epia_d != 1 & t2diab_mom_epi_epia_d != 1) # HISTORY OF DIABETES
-
-summary(PFAS_6$mom_bodyfat_ma17)
 
 ```
 
