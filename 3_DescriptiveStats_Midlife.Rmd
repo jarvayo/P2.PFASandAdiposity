@@ -231,6 +231,11 @@ round(o_corr, 2)
 corrplot(o_corr, type = "upper", order = "hclust", 
          tl.col = "black", tl.srt = 45)
 
+corrplot.mixed(cor(o_corr),
+               upper = "circle",
+               tl.col = "black",
+               addCoef.col = 'black')
+
 ```
 
 ```{r}
