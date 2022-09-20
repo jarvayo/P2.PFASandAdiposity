@@ -1,0 +1,121 @@
+#####                                 #####
+##### IMPUTE MISSING COVARIATE VALUES #####
+#####                                 #####
+
+```{r}
+##### LOAD PACKAGES
+library("sas7bdat")
+library("haven")
+library("Hmisc")
+library("dplyr")
+library("table1")
+library("tidyverse")
+
+```
+
+```{r}
+##### LOAD DATASET
+PFAS_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_C.sas7bdat")
+
+```
+
+
+```{r}
+##### REPLACE MISSING VALUES AND BLANK SPACES WITH "NA"
+PFAS_NA <- PFAS_NA %>% mutate_all(~ifelse(is.nan(.), NA, .))
+PFAS_NA[PFAS_NA == ""] <- NA
+
+##### FOR THE INCOME VARIABLE, REPLACE "IDK" ANSWERS WITH "NA"
+PFAS_NA$income_hh_epq_epqa_d <- ifelse(PFAS_NA$income_hh_epq_epqa_d == 9, NA, 
+                                       PFAS_NA$income_hh_epq_epqa_d)
+
+##### FOR THE INCOME VARIABLE, DUE TO SMALL NUMBERS OF OBSERVATIONS PER CATEGORY,
+##### COMBINED THE TWO LOWEST CATEGORIES
+PFAS_NA$income_hh_epq_epqa_d <- ifelse(PFAS_NA$income_hh_epq_epqa_d == 1 | PFAS_NA$income_hh_epq_epqa_d == 2, 3, 
+                                       PFAS_NA$income_hh_epq_epqa_d)
+
+##### FOR THE RACE VARIABLE, DUE TO SMALL NUMBERS OF OBSERVATIONS PER CATEGORY,
+##### COMBINED THE CATEGORIES "OTHER" AND ">1 RACE"
+PFAS_NA$race2_mom_epi_epia_d <- ifelse(PFAS_NA$race2_mom_epi_epia_d == "more than 1 race", 
+                                       "other", PFAS_NA$race2_mom_epi_epia_d)
+
+##### CHECK MISSINGNESS OF CONTINUOUS DEMOGRAPHIC VARIABLES
+summary(PFAS_NA$age_mom_enroll_d)
+summary(PFAS_NA$mom_age_days_mdxa17)
+summary(PFAS_NA$bmi_mom_prepreg_d)     
+summary(PFAS_NA$parity_d)              
+summary(PFAS_NA$mod_pre_d)             # 50 NAs
+summary(PFAS_NA$vig_pre_d)             # 46 NAs
+#summary(PFAS_NA$income_hh_epq_epqa_d)  # 34 NAs
+#summary(PFAS_NA$alc_d_bef_learn_f1)    # 31 NAs
+#summary(PFAS_NA$alc_d_aft_learn_f1)    # 31 NAs
+#summary(PFAS_NA$alc_d_f1)              # 31 NAs
+
+##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
+PFAS_NA$coll_grad <- as.factor(PFAS_NA$coll_grad)
+PFAS_NA$income_hh_epq_epqa_d <- as.factor(PFAS_NA$income_hh_epq_epqa_d)
+PFAS_NA$gt70k <- as.factor(PFAS_NA$gt70k)
+PFAS_NA$race2_mom_epi_epia_d <- as.factor(PFAS_NA$race2_mom_epi_epia_d)
+PFAS_NA$smokpreg_final_d <- as.factor(PFAS_NA$smokpreg_final_d)
+
+#summary(PFAS_NA$parity_d)              
+#summary(PFAS_NA$income_hh_epq_epqa_d)  # 34 NAs
+summary(PFAS_NA$gt70k)                 # 34 NAs
+summary(PFAS_NA$coll_grad)             
+summary(PFAS_NA$race2_mom_epi_epia_d)
+summary(PFAS_NA$smokpreg_final_d)      # 1 NAs
+
+##### TABLE OF MISSINGNESS
+table1(~ age_mom_enroll_d + mom_age_days_mdxa17 + bmi_mom_prepreg_d + parity_d +
+         mod_pre_d + vig_pre_d, data = PFAS_NA, overall="Total")
+
+table1(~ race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k,
+         data = PFAS_NA, overall="Total")
+
+```
+
+```{r}
+##### IMPUTE MISSING VALUES USING "HMISC".
+##### aregImpute() ALLOWS MEAN IMUPTATION USING ADDITIVE REGRESSION BOOTSTRAPPING, AND PREDICTIVE MEAN MATCHING.
+##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
+set.seed(1234)
+
+PFAS_ARG <- aregImpute(~ mod_pre_d + vig_pre_d + alc_d_bef_learn_f1 +
+                         alc_d_aft_learn_f1 + alc_d_f1 + income_hh_epq_epqa_d +
+                         gt70k + smokpreg_final_d + bmi_mom_prepreg_d + parity_d + 
+                         coll_grad + race2_mom_epi_epia_d + g_age_days_COLL_D_BLD1 + 
+                         mom_age_days_mdxa17 + PFNA2 + PFHxS + 
+                         Me_PFOSA_AcOH2 + Et_PFOSA_AcOH + PFOA + PFOS, 
+                         nk = 0, data = PFAS_NA, n.impute = 5)
+
+##### EXTRACT IMPUTED VALUES AND FORM A DATASET
+PFAS_IMP <- as.data.frame(impute.transcan(PFAS_ARG, imputation=5, data=PFAS_NA, 
+                                          list.out=TRUE, pr=FALSE, check=FALSE))
+
+##### MERGE ORIGNIAL DATASET WITH IMPUTED DATASET
+PFAS_BIND <- cbind(PFAS_NA ,PFAS_IMP)
+
+##### DROP VARIABLES WITH MISSING (NON-IMPUTED) DATA
+PFAS_COMP <- PFAS_BIND[ , colSums(is.na(PFAS_BIND)) == 0]
+PFAS_COMP <- PFAS_COMP %>% select(-contains(".1"))
+
+```
+
+```{r}
+##### RE-CHECK VARIABLE DISTRIBUTION FOR DATASET WITH IMPUTED DATA 
+table1(~ age_mom_enroll_d + mom_age_days_mdxa17 + bmi_mom_prepreg_d + parity_d +
+         mod_pre_d + vig_pre_d, data = PFAS_COMP, overall="Total")
+
+table1(~ race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k, 
+       data = PFAS_COMP, overall="Total")
+
+```
+
+
+```{r}
+##### SAVE DATASET
+write.csv(PFAS_COMP, file = "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_C_COMP.csv", row.names = T)
+write_sas(PFAS_COMP, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_C_COMP.sas7bdat")
+# THE "C_COMP" AT THE END OF THE SAVED FILE NAMES INDICATE THAT THESE DATASETS ARE CLEAN AND HAVE NO MISSING DATA
+
+```
