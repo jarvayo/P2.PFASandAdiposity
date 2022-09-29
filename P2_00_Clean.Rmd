@@ -72,17 +72,14 @@ table(PFAS_1$t2diab_mom_epi_epia_d)
 PFAS_2 <- subset(PFAS_1, t1diab_mom_epi_epia_d == 2 | is.na(t1diab_mom_epi_epia_d)) # HISTORY OF T1 DIABETES
 PFAS_2 <- subset(PFAS_2, t2diab_mom_epi_epia_d == 2 | is.na(t2diab_mom_epi_epia_d)) # HISTORY OF T2 DIABETES
 
-PFAS_3 <- subset(PFAS_2, !is.na(VAT_AREA_mdxa17)) # MISSING DXA MEASURES
-PFAS_4 <- subset(PFAS_3, !is.na(mom_waist_ma17)) # MISSING WAIST CIRCUMFERENCE
-PFAS_5 <- subset(PFAS_4, !is.na(mom_bodyfat_ma17)) # MISSING TOTAL BODY FAT %
-summary(PFAS_2$g_age_days_COLL_D_BLD1)
+PFAS_3 <- subset(PFAS_2, !is.na(mom_bmi_MT)) # MISSING BMI (N = 1076)
+PFAS_4 <- subset(PFAS_3, !is.na(mom_waist_ma17)) # MISSING WAIST MEASUREMENT (N = 0)
+PFAS_5 <- subset(PFAS_4, !is.na(mom_hip_ma17)) # MISSING HIP MEASUREMENT (N = 1)
+PFAS_6 <- subset(PFAS_5, !is.na(mom_bodyfat_ma17)) # MISSING TOTAL BODY FAT % (N = 3)
+PFAS_7 <- subset(PFAS_6, !is.na(mom_fat_ma17)) # MISSING BODY FAT MASS (N = 1)
+PFAS_8 <- subset(PFAS_7, !is.na(WEIGHT_mdxa17)) # MISSING BODY WEIGHT (N = 1)
 
-#table(PFAS_4$highbp_mom_epi_epia_d)
-#PFAS_5 <- subset(PFAS_4, highbp_mom_epi_epia_d != 1) # HISTORY OF HYPERTENSION
-
-table(PFAS_5$t1diab_mom_epi_epia_d)
-table(PFAS_5$t2diab_mom_epi_epia_d)
-PFAS_6 <- subset(PFAS_5, t1diab_mom_epi_epia_d != 1 & t2diab_mom_epi_epia_d != 1) # HISTORY OF DIABETES
+PFAS_9 <- subset(PFAS_8, !is.na(VAT_AREA_mdxa17)) # MISSING DXA MEASURES (N = 121)
 
 ```
 
