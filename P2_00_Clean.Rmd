@@ -54,17 +54,24 @@ summary(PFAS$SAT_MASS_mdxa17)
 summary(PFAS$SAT_VOLUME_mdxa17)
 summary(PFAS$TAT_AREA_mdxa17)
 summary(PFAS$TAT_MASS_mdxa17)
-summary(PFAS$TAT_VOLUME_mdxa17) 
-summary(PFAS$WEIGHT_mdxa17) # INDIVIDUALS ARE MISSING ALL OR NONE OF EACH DXA MEASURE (N = 1577)
+summary(PFAS$TAT_VOLUME_mdxa17) # INDIVIDUALS ARE MISSING ALL OR NONE OF EACH DXA MEASURE (N = 1577)
 
-summary(PFAS$bmi_mom_prepreg_d) # 16 MISSING
+summary(PFAS$WEIGHT_mdxa17) # 1577 MISSING
+summary(PFAS$mom_bmi_MT) # 1424 MISSING
 summary(PFAS$mom_waist_ma17) # 1419 MISSING
-summary(PFAS$mom_bodyfat_ma17) # 1427 MISSING
+summary(PFAS$mom_hip_ma17) # 1420 MISSING
+summary(PFAS$mom_bodyfat_ma17) # 1427 MISSING, BODY FAT %
+summary(PFAS$mom_fat_ma17) # 1428 MISSING, BODY FAT MASS
 
 
 ##### EXCLUDE INELEGIBLE PARTICIPANTS
-PFAS_1 <- subset(PFAS, !is.na(PFOS)) # MISSING PFASBP DATA
-PFAS_2 <- subset(PFAS_1, g_age_days_COLL_D_BLD1 <= 154) # MISSING 1ST OR 2ND TRIMESTER PFAS DATA (I.E., 22 WEEKS GESTATION)
+PFAS_1 <- subset(PFAS, !is.na(PFOS)) # MISSING 1ST OR 2ND TRIMESTER PFAS DATA (I.E., 22 WEEKS GESTATION)
+
+table(PFAS_1$t1diab_mom_epi_epia_d)
+table(PFAS_1$t2diab_mom_epi_epia_d)
+PFAS_2 <- subset(PFAS_1, t1diab_mom_epi_epia_d == 2 | is.na(t1diab_mom_epi_epia_d)) # HISTORY OF T1 DIABETES
+PFAS_2 <- subset(PFAS_2, t2diab_mom_epi_epia_d == 2 | is.na(t2diab_mom_epi_epia_d)) # HISTORY OF T2 DIABETES
+
 PFAS_3 <- subset(PFAS_2, !is.na(VAT_AREA_mdxa17)) # MISSING DXA MEASURES
 PFAS_4 <- subset(PFAS_3, !is.na(mom_waist_ma17)) # MISSING WAIST CIRCUMFERENCE
 PFAS_5 <- subset(PFAS_4, !is.na(mom_bodyfat_ma17)) # MISSING TOTAL BODY FAT %
