@@ -85,13 +85,39 @@ PFAS_9 <- subset(PFAS_8, !is.na(VAT_AREA_mdxa17)) # MISSING DXA MEASURES (N = 12
 
 ```{r}
 ##### DROP UNNECESSARY VARIABLES
-#PFAS_5 <- subset(PFASBP_5, select = -c(htn_rx_preg, t1diab_mom_epi_epia_d, t2diab_mom_epi_epia_d,
-#                                     highbp_mom_epi_epia_d))
+ls(PFAS_7)
+PFAS_7 <- subset(PFAS_7, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, age_mom_enroll_d, 
+                                    bmi_mom_prepreg_d, coll_grad, Et_PFOSA_AcOH, PFDeA, PFHxS, PFNA2, PFOA, 
+                                    PFOS, PFOSA, Me_PFOSA_AcOH2, g_age_days_COLL_D_BLD1, gt70k, 
+                                    income_hh_epq_epqa_d, marital_epi_epia_d, married_cohab, 
+                                    mom_age_days_comp_d_ma17, mom_age_days_mdxa17, mom_bmi_MT,
+                                    mom_bodyfat_ma17, mom_fat_ma17, mom_hip_ma17, mom_waist_ma17,
+                                    mom_weight_ma17.x, nullip,parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
+                                    SAT_MASS_mdxa17, SAT_VOLUME_mdxa17, smokpreg_final_d, TAT_AREA_mdxa17,
+                                    TAT_MASS_mdxa17, TAT_VOLUME_mdxa17, VAT_AREA_mdxa17, VAT_MASS_mdxa17,
+                                    VAT_VOLUME_mdxa17, WEIGHT_mdxa17))
+
+PFAS_8 <- subset(PFAS_8, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, age_mom_enroll_d, 
+                                    bmi_mom_prepreg_d, coll_grad, Et_PFOSA_AcOH, PFDeA, PFHxS, PFNA2, PFOA, 
+                                    PFOS, PFOSA, Me_PFOSA_AcOH2, g_age_days_COLL_D_BLD1, gt70k, 
+                                    income_hh_epq_epqa_d, marital_epi_epia_d, married_cohab, 
+                                    mom_age_days_comp_d_ma17, mom_age_days_mdxa17, mom_bmi_MT,
+                                    mom_bodyfat_ma17, mom_fat_ma17, mom_hip_ma17, mom_waist_ma17,
+                                    mom_weight_ma17.x, nullip,parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
+                                    SAT_MASS_mdxa17, SAT_VOLUME_mdxa17, smokpreg_final_d, TAT_AREA_mdxa17,
+                                    TAT_MASS_mdxa17, TAT_VOLUME_mdxa17, VAT_AREA_mdxa17, VAT_MASS_mdxa17,
+                                    VAT_VOLUME_mdxa17, WEIGHT_mdxa17))
 
 ##### SAVE DATASET
-write.csv(PFAS_6, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_C.csv", row.names = T)
-write_sas(PFAS_6, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_C.sas7bdat")
+write.csv(PFAS_7, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_BF_C.csv", row.names = T)
+write_sas(PFAS_7, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_BF_C.sas7bdat")
+
+write.csv(PFAS_8, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_DXABF_C.csv", row.names = T)
+write_sas(PFAS_8, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_DXABF_C.sas7bdat")
+
 # THE "C" AT THE END OF THE SAVED FILES INDICATES THAT THE DATASET IS CLEAN
+# THE "BF" INDICATES THAT NO BODY FAT MEASURES AREM MISSING
+# THE "DXA" INDICATES THAT THERE ARE NO DXA MEASURES MISSING
 
 ```
 
