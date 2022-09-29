@@ -14,7 +14,7 @@ library("data.table")
 ##### LOAD DATASET
 PFAS <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/ja_062922.sas7bdat")
 BMI <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/ja_071022.sas7bdat")
-PFAS <- merge(PFAS, BMI, by = "aid")
+PFAS <- merge(BMI, PFAS, by = "aid", all.y = T)
 
 PFAS[PFAS == "NaN"] <- NA
 PFAS[PFAS == ""] <- NA
