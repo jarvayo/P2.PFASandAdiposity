@@ -15,22 +15,10 @@ library("data.table")
 PFAS <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/ja_062922.sas7bdat")
 BMI <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/ja_071022.sas7bdat")
 PFAS <- merge(BMI, PFAS, by = "aid", all.y = T)
+PFAS$mom_weight_ma17 <- PFAS$mom_weight_ma17.x 
 
 PFAS[PFAS == "NaN"] <- NA
 PFAS[PFAS == ""] <- NA
-
-```
-
-
-```{r}
-##### DROP UNNECESSARY VARIABLES
-#PFAS <- subset(PFASBP, select = c(aid, ga_days, mom_agey_bp, g_age_days_COLL_D_BLD1, sys, dias,  
-#                                      Me_PFOSA_AcOH2, PFOA, PFHxS, PFNA2, PFOS, Et_PFOSA_AcOH,
-#                                      bmi_mom_prepreg_d,  race2_mom_epi_epia_d,parity_d, coll_grad, 
-#                                      gt70k, income_hh_epq_epqa_d, htn_rx_preg, t1diab_mom_epi_epia_d, 
-#                                      t2diab_mom_epi_epia_d, highbp_mom_epi_epia_d,mod_pre_d, 
-#                                      vig_pre_d, smokpreg_final_d,alc_d_f1,alc_d_bef_learn_f1, 
-#                                      alc_d_aft_learn_f1, count))
 
 ```
 
@@ -63,7 +51,9 @@ summary(PFAS$mom_hip_ma17) # 1420 MISSING
 summary(PFAS$mom_bodyfat_ma17) # 1427 MISSING, BODY FAT %
 summary(PFAS$mom_fat_ma17) # 1428 MISSING, BODY FAT MASS
 
+```
 
+```{r}
 ##### EXCLUDE INELEGIBLE PARTICIPANTS
 PFAS_1 <- subset(PFAS, !is.na(PFOS)) # MISSING 1ST OR 2ND TRIMESTER PFAS DATA (I.E., 22 WEEKS GESTATION)
 
@@ -92,7 +82,7 @@ PFAS_7 <- subset(PFAS_7, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, 
                                     income_hh_epq_epqa_d, marital_epi_epia_d, married_cohab, 
                                     mom_age_days_comp_d_ma17, mom_age_days_mdxa17, mom_bmi_MT,
                                     mom_bodyfat_ma17, mom_fat_ma17, mom_hip_ma17, mom_waist_ma17,
-                                    mom_weight_ma17.x, nullip,parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
+                                    mom_weight_ma17, nullip,parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
                                     SAT_MASS_mdxa17, SAT_VOLUME_mdxa17, smokpreg_final_d, TAT_AREA_mdxa17,
                                     TAT_MASS_mdxa17, TAT_VOLUME_mdxa17, VAT_AREA_mdxa17, VAT_MASS_mdxa17,
                                     VAT_VOLUME_mdxa17, WEIGHT_mdxa17))
@@ -103,7 +93,7 @@ PFAS_8 <- subset(PFAS_8, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, 
                                     income_hh_epq_epqa_d, marital_epi_epia_d, married_cohab, 
                                     mom_age_days_comp_d_ma17, mom_age_days_mdxa17, mom_bmi_MT,
                                     mom_bodyfat_ma17, mom_fat_ma17, mom_hip_ma17, mom_waist_ma17,
-                                    mom_weight_ma17.x, nullip,parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
+                                    mom_weight_ma17, nullip,parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
                                     SAT_MASS_mdxa17, SAT_VOLUME_mdxa17, smokpreg_final_d, TAT_AREA_mdxa17,
                                     TAT_MASS_mdxa17, TAT_VOLUME_mdxa17, VAT_AREA_mdxa17, VAT_MASS_mdxa17,
                                     VAT_VOLUME_mdxa17, WEIGHT_mdxa17))
