@@ -15,7 +15,8 @@ library("tidyverse")
 
 ```{r}
 ##### LOAD DATASET
-PFAS_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_C.sas7bdat")
+PFAS_BF_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_BF_C.sas7bdat")
+PFAS_DXABF_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_DXABF_C.sas7bdat")
 
 ```
 
@@ -47,9 +48,6 @@ summary(PFAS_NA$parity_d)
 summary(PFAS_NA$mod_pre_d)             # 50 NAs
 summary(PFAS_NA$vig_pre_d)             # 46 NAs
 #summary(PFAS_NA$income_hh_epq_epqa_d)  # 34 NAs
-#summary(PFAS_NA$alc_d_bef_learn_f1)    # 31 NAs
-#summary(PFAS_NA$alc_d_aft_learn_f1)    # 31 NAs
-#summary(PFAS_NA$alc_d_f1)              # 31 NAs
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
 PFAS_NA$coll_grad <- as.factor(PFAS_NA$coll_grad)
