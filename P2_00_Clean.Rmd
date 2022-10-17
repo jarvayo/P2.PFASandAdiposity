@@ -76,29 +76,46 @@ PFAS_9 <- subset(PFAS_8, !is.na(VAT_AREA_mdxa17)) # MISSING DXA MEASURES (N = 12
 ```
 
 ```{r}
+##### CREATE A DATASET OF INDIVIDUALS EXCLUDED FROM THE MAIN ANALYSIS
+PFAS_9$include <- 1+0
+PFAS_X <- merge(PFAS, PFAS_9, by = "aid", all.x = TRUE)
+PFAS_X <- subset(PFAS_X, is.na(include))
+
+colnames(PFAS_X)<-gsub(".y","",colnames(PFAS_X))
+colnames(PFAS_X)<-gsub(".x","",colnames(PFAS_X))
+
+```
+
+
+```{r}
 ##### DROP UNNECESSARY VARIABLES
 ls(PFAS_2)
 PFAS_8 <- subset(PFAS_8, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, age_mom_enroll_d, 
                                     bmi_mom_prepreg_d, coll_grad, Et_PFOSA_AcOH, PFDeA, PFHxS, PFNA2, PFOA, 
                                     PFOS, PFOSA, Me_PFOSA_AcOH2, g_age_days_COLL_D_BLD1, gt70k, 
-                                    income_hh_epq_epqa_d, marital_epi_epia_d, married_cohab, 
+                                    income_hh_epq_epqa_d, married_cohab, mom_muac_ma17,
                                     mom_age_days_comp_d_ma17, mom_age_days_mdxa17, mom_bmi_MT,
                                     mom_bodyfat_ma17, mom_fat_ma17, mom_hip_ma17, mom_waist_ma17,
-                                    mom_weight_ma17, nullip,parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
+                                    mom_weight_ma17, nullip, parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
                                     SAT_MASS_mdxa17, SAT_VOLUME_mdxa17, smokpreg_final_d, TAT_AREA_mdxa17,
                                     TAT_MASS_mdxa17, TAT_VOLUME_mdxa17, VAT_AREA_mdxa17, VAT_MASS_mdxa17,
-                                    VAT_VOLUME_mdxa17, WEIGHT_mdxa17, mom_muac_ma17))
+                                    VAT_VOLUME_mdxa17, WEIGHT_mdxa17))
 
 PFAS_9 <- subset(PFAS_9, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, age_mom_enroll_d, 
                                     bmi_mom_prepreg_d, coll_grad, Et_PFOSA_AcOH, PFDeA, PFHxS, PFNA2, PFOA, 
                                     PFOS, PFOSA, Me_PFOSA_AcOH2, g_age_days_COLL_D_BLD1, gt70k, 
-                                    income_hh_epq_epqa_d, marital_epi_epia_d, married_cohab, 
+                                    income_hh_epq_epqa_d, married_cohab, mom_muac_ma17,
                                     mom_age_days_comp_d_ma17, mom_age_days_mdxa17, mom_bmi_MT,
                                     mom_bodyfat_ma17, mom_fat_ma17, mom_hip_ma17, mom_waist_ma17,
-                                    mom_weight_ma17, nullip,parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
+                                    mom_weight_ma17, nullip, parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
                                     SAT_MASS_mdxa17, SAT_VOLUME_mdxa17, smokpreg_final_d, TAT_AREA_mdxa17,
                                     TAT_MASS_mdxa17, TAT_VOLUME_mdxa17, VAT_AREA_mdxa17, VAT_MASS_mdxa17,
-                                    VAT_VOLUME_mdxa17, WEIGHT_mdxa17, mom_muac_ma17))
+                                    VAT_VOLUME_mdxa17, WEIGHT_mdxa17))
+
+PFAS_X <- subset(PFAS_X, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, age_mom_enroll_d, 
+                                    bmi_mom_prepreg_d, coll_grad, Et_PFOSA_AcOH, PFDeA, PFHxS, PFNA2, PFOA, 
+                                    PFOS, PFOSA, Me_PFOSA_AcOH2, g_age_days_COLL_D_BLD1, gt70k, 
+                                    income_hh_epq_epqa_d, married_cohab, nullip,parity_d, race2_mom_epi_epia_d))
 
 ##### SAVE DATASET
 write.csv(PFAS_8, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_BF_C.csv", row.names = T)
@@ -110,5 +127,10 @@ write_sas(PFAS_9, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P
 # THE "C" AT THE END OF THE SAVED FILES INDICATES THAT THE DATASET IS CLEAN
 # THE "BF" INDICATES THAT NO BODY FAT MEASURES AREM MISSING
 # THE "DXA" INDICATES THAT THERE ARE NO DXA MEASURES MISSING
+
+write.csv(PFAS_X, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_X.csv", row.names = T)
+write_sas(PFAS_X, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_X.sas7bdat")
+
+# THE "X" AT THE END OF THE SAVED FILES INDICATES THAT THE DATASET IS COMPOSED OF EXCLUDED INDIVIDUALS
 
 ```
