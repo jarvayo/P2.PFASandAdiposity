@@ -116,15 +116,15 @@ PFAS_X <- subset(PFAS_X, select = c(aid, age_mom_enroll_d, bmi_mom_prepreg_d, co
                                     married_cohab, nullip, pari_d, race2_mom_epi_epia_d, smokpreg_final_d))
 
 ##### SAVE DATASET
-write.csv(PFAS_8, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_BF_C.csv", row.names = T)
-write_sas(PFAS_8, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_BF_C.sas7bdat")
+write.csv(PFAS_8, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_B_C.csv", row.names = T)
+write_sas(PFAS_8, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_B_C.sas7bdat")
 
-write.csv(PFAS_9, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_DXABF_C.csv", row.names = T)
-write_sas(PFAS_9, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_DXABF_C.sas7bdat")
+write.csv(PFAS_9, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_BD_C.csv", row.names = T)
+write_sas(PFAS_9, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_BD_C.sas7bdat")
 
 # THE "C" AT THE END OF THE SAVED FILES INDICATES THAT THE DATASET IS CLEAN
-# THE "BF" INDICATES THAT NO BODY FAT MEASURES AREM MISSING
-# THE "DXA" INDICATES THAT THERE ARE NO DXA MEASURES MISSING
+# THE "B" INDICATES THAT NO BODY FAT MEASURES AREM MISSING
+# THE "BD" INDICATES THAT THERE ARE NO BODY FAT OR DXA MEASURES MISSING
 
 write.csv(PFAS_X, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_X.csv", row.names = T)
 write_sas(PFAS_X, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_X.sas7bdat")
