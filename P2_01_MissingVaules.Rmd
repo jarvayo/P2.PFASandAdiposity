@@ -39,9 +39,12 @@ PFAS_BF_NA$income_hh_epq_epqa_d <- ifelse(PFAS_BF_NA$income_hh_epq_epqa_d == 1 |
 PFAS_BF_NA$race2_mom_epi_epia_d <- ifelse(PFAS_BF_NA$race2_mom_epi_epia_d == "more than 1 race", 
                                        "other", PFAS_BF_NA$race2_mom_epi_epia_d)
 
+table(PFAS_BF_NA$race2_mom_epi_epia_d)
+
 ##### CHECK MISSINGNESS OF CONTINUOUS DEMOGRAPHIC VARIABLES
 summary(PFAS_BF_NA$age_mom_enroll_d)
-summary(PFAS_BF_NA$mom_age_days_comp_d_ma17)
+PFAS_BF_NA$mom_age_comp_d_ma17 <- PFAS_BF_NA$mom_age_days_comp_d_ma17/365
+summary(PFAS_BF_NA$mom_age_comp_d_ma17)
 summary(PFAS_BF_NA$bmi_mom_prepreg_d)     # 1 NA
 summary(PFAS_BF_NA$parity_d)              
 
@@ -51,21 +54,21 @@ PFAS_BF_NA$coll_grad <- as.factor(PFAS_BF_NA$coll_grad)
 PFAS_BF_NA$income_hh_epq_epqa_d <- as.factor(PFAS_BF_NA$income_hh_epq_epqa_d)
 PFAS_BF_NA$gt70k <- as.factor(PFAS_BF_NA$gt70k)
 PFAS_BF_NA$smokpreg_final_d <- as.factor(PFAS_BF_NA$smokpreg_final_d)
-PFAS_BF_NA$marital_epi_epia_d <- as.factor(PFAS_BF_NA$marital_epi_epia_d)
+PFAS_BF_NA$married_cohab <- as.factor(PFAS_BF_NA$married_cohab)
 
-summary(PFAS_BF_NA$race2_mom_epi_epia_d)
+summary(PFAS_BF_NA$race2_mom_epi_epia_d)  # 2 NAs
 summary(PFAS_BF_NA$coll_grad)             # 2 NAs
 summary(PFAS_BF_NA$income_hh_epq_epqa_d)  # 45 NAs
 summary(PFAS_BF_NA$gt70k)                 # 45 NAs
 summary(PFAS_BF_NA$smokpreg_final_d)      # 1 NAs
-summary(PFAS_BF_NA$marital_epi_epia_d)    # 2 NAs
+summary(PFAS_BF_NA$married_cohab)    # 2 NAs
 
 ##### TABLE OF MISSINGNESS
-table1(~ age_mom_enroll_d + mom_age_days_comp_d_ma17 + bmi_mom_prepreg_d + parity_d, 
+table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + bmi_mom_prepreg_d + parity_d, 
        data = PFAS_BF_NA, overall="Total")
 
 table1(~ race2_mom_epi_epia_d + coll_grad + income_hh_epq_epqa_d + gt70k +
-         smokpreg_final_d + marital_epi_epia_d,
+         smokpreg_final_d + married_cohab,
        data = PFAS_BF_NA, overall="Total")
 
 ```
@@ -89,35 +92,37 @@ PFAS_DXABF_NA$income_hh_epq_epqa_d <- ifelse(PFAS_DXABF_NA$income_hh_epq_epqa_d 
 PFAS_DXABF_NA$race2_mom_epi_epia_d <- ifelse(PFAS_DXABF_NA$race2_mom_epi_epia_d == "more than 1 race", 
                                        "other", PFAS_DXABF_NA$race2_mom_epi_epia_d)
 
+table(PFAS_DXABF_NA$race2_mom_epi_epia_d)
+
 ##### CHECK MISSINGNESS OF CONTINUOUS DEMOGRAPHIC VARIABLES
 summary(PFAS_DXABF_NA$age_mom_enroll_d)
-summary(PFAS_DXABF_NA$mom_age_days_mdxa17)
-summary(PFAS_DXABF_NA$bmi_mom_prepreg_d)     
+PFAS_DXABF_NA$mom_age_comp_d_ma17 <- PFAS_DXABF_NA$mom_age_days_comp_d_ma17/365
+summary(PFAS_DXABF_NA$mom_age_comp_d_ma17)
+summary(PFAS_DXABF_NA$bmi_mom_prepreg_d)     # 1 NA
 summary(PFAS_DXABF_NA$parity_d)              
-summary(PFAS_DXABF_NA$mod_pre_d)             # 50 NAs
-summary(PFAS_DXABF_NA$vig_pre_d)             # 46 NAs
-#summary(PFAS_DXABF_NA$income_hh_epq_epqa_d)  # 34 NAs
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
+PFAS_DXABF_NA$race2_mom_epi_epia_d <- as.factor(PFAS_DXABF_NA$race2_mom_epi_epia_d)
 PFAS_DXABF_NA$coll_grad <- as.factor(PFAS_DXABF_NA$coll_grad)
 PFAS_DXABF_NA$income_hh_epq_epqa_d <- as.factor(PFAS_DXABF_NA$income_hh_epq_epqa_d)
 PFAS_DXABF_NA$gt70k <- as.factor(PFAS_DXABF_NA$gt70k)
-PFAS_DXABF_NA$race2_mom_epi_epia_d <- as.factor(PFAS_DXABF_NA$race2_mom_epi_epia_d)
 PFAS_DXABF_NA$smokpreg_final_d <- as.factor(PFAS_DXABF_NA$smokpreg_final_d)
+PFAS_DXABF_NA$married_cohab <- as.factor(PFAS_DXABF_NA$married_cohab)
 
-#summary(PFAS_DXABF_NA$parity_d)              
-#summary(PFAS_DXABF_NA$income_hh_epq_epqa_d)  # 34 NAs
-summary(PFAS_DXABF_NA$gt70k)                 # 34 NAs
-summary(PFAS_DXABF_NA$coll_grad)             
-summary(PFAS_DXABF_NA$race2_mom_epi_epia_d)
+summary(PFAS_DXABF_NA$race2_mom_epi_epia_d)  # 2 NAs
+summary(PFAS_DXABF_NA$coll_grad)             # 2 NAs
+summary(PFAS_DXABF_NA$income_hh_epq_epqa_d)  # 45 NAs
+summary(PFAS_DXABF_NA$gt70k)                 # 45 NAs
 summary(PFAS_DXABF_NA$smokpreg_final_d)      # 1 NAs
+summary(PFAS_DXABF_NA$married_cohab)         # 2 NAs
 
 ##### TABLE OF MISSINGNESS
-table1(~ age_mom_enroll_d + mom_age_days_mdxa17 + bmi_mom_prepreg_d + parity_d +
-         mod_pre_d + vig_pre_d, data = PFAS_DXABF_NA, overall="Total")
+table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + bmi_mom_prepreg_d + parity_d, 
+       data = PFAS_DXABF_NA, overall="Total")
 
-table1(~ race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k,
-         data = PFAS_DXABF_NA, overall="Total")
+table1(~ race2_mom_epi_epia_d + coll_grad + income_hh_epq_epqa_d + gt70k +
+         smokpreg_final_d + married_cohab,
+       data = PFAS_DXABF_NA, overall="Total")
 
 ```
 
