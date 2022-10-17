@@ -15,7 +15,8 @@ library("Hmisc")
 
 ```{r}
 ##### LOAD DATASET
-PFAS <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_C_COMP.csv")
+PFAS_B <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_B_COMP.csv")
+PFAS_BD <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_BD_COMP.csv")
 
 ```
 
