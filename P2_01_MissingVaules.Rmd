@@ -67,8 +67,7 @@ summary(PFAS_BF_NA$married_cohab)    # 2 NAs
 table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + bmi_mom_prepreg_d + parity_d, 
        data = PFAS_BF_NA, overall="Total")
 
-table1(~ race2_mom_epi_epia_d + coll_grad + income_hh_epq_epqa_d + gt70k +
-         smokpreg_final_d + married_cohab,
+table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + married_cohab,
        data = PFAS_BF_NA, overall="Total")
 
 ```
@@ -96,8 +95,8 @@ table(PFAS_DXABF_NA$race2_mom_epi_epia_d)
 
 ##### CHECK MISSINGNESS OF CONTINUOUS DEMOGRAPHIC VARIABLES
 summary(PFAS_DXABF_NA$age_mom_enroll_d)
-PFAS_DXABF_NA$mom_age_comp_d_ma17 <- PFAS_DXABF_NA$mom_age_days_comp_d_ma17/365
-summary(PFAS_DXABF_NA$mom_age_comp_d_ma17)
+PFAS_DXABF_NA$mom_age_mdxa17 <- PFAS_DXABF_NA$mom_age_days_mdxa17/365
+summary(PFAS_DXABF_NA$mom_age_mdxa17)
 summary(PFAS_DXABF_NA$bmi_mom_prepreg_d)     # 1 NA
 summary(PFAS_DXABF_NA$parity_d)              
 
@@ -117,11 +116,10 @@ summary(PFAS_DXABF_NA$smokpreg_final_d)      # 1 NAs
 summary(PFAS_DXABF_NA$married_cohab)         # 2 NAs
 
 ##### TABLE OF MISSINGNESS
-table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + bmi_mom_prepreg_d + parity_d, 
+table1(~ age_mom_enroll_d + mom_age_mdxa17 + bmi_mom_prepreg_d + parity_d, 
        data = PFAS_DXABF_NA, overall="Total")
 
-table1(~ race2_mom_epi_epia_d + coll_grad + income_hh_epq_epqa_d + gt70k +
-         smokpreg_final_d + married_cohab,
+table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + married_cohab,
        data = PFAS_DXABF_NA, overall="Total")
 
 ```
@@ -132,11 +130,10 @@ table1(~ race2_mom_epi_epia_d + coll_grad + income_hh_epq_epqa_d + gt70k +
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_BF_ARG <- aregImpute(~ mod_pre_d + vig_pre_d + alc_d_bef_learn_f1 +
-                         alc_d_aft_learn_f1 + alc_d_f1 + income_hh_epq_epqa_d +
+PFAS_BF_ARG <- aregImpute(~ income_hh_epq_epqa_d + married_cohab +
                          gt70k + smokpreg_final_d + bmi_mom_prepreg_d + parity_d + 
                          coll_grad + race2_mom_epi_epia_d + g_age_days_COLL_D_BLD1 + 
-                         mom_age_days_mdxa17 + PFNA2 + PFHxS + 
+                         mom_age_comp_d_ma17 + PFNA2 + PFHxS + 
                          Me_PFOSA_AcOH2 + Et_PFOSA_AcOH + PFOA + PFOS, 
                          nk = 0, data = PFAS_BF_NA, n.impute = 5)
 
@@ -159,8 +156,7 @@ PFAS_BF_COMP <- PFAS_BF_COMP %>% select(-contains(".1"))
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_DXABF_ARG <- aregImpute(~ mod_pre_d + vig_pre_d + alc_d_bef_learn_f1 +
-                         alc_d_aft_learn_f1 + alc_d_f1 + income_hh_epq_epqa_d +
+PFAS_DXABF_ARG <- aregImpute(~ income_hh_epq_epqa_d + married_cohab +
                          gt70k + smokpreg_final_d + bmi_mom_prepreg_d + parity_d + 
                          coll_grad + race2_mom_epi_epia_d + g_age_days_COLL_D_BLD1 + 
                          mom_age_days_mdxa17 + PFNA2 + PFHxS + 
@@ -183,17 +179,17 @@ PFAS_DXABF_COMP <- PFAS_DXABF_COMP %>% select(-contains(".1"))
 
 ```{r}
 ##### RE-CHECK VARIABLE DISTRIBUTION FOR DATASET WITH IMPUTED DATA 
-table1(~ age_mom_enroll_d + mom_age_days_mdxa17 + bmi_mom_prepreg_d + pari y_d +
-         mod_pre_d + vig_pre_d, data = PFAS_BF_COMP, overall="Total")
+table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + bmi_mom_prepreg_d + parity_d, 
+       data = PFAS_BF_COMP, overall="Total")
 
-table1(~ race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k, 
+table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + married_cohab, 
        data = PFAS_BF_COMP, overall="Total")
 
 ##### RE-CHECK VARIABLE DISTRIBUTION FOR DATASET WITH IMPUTED DATA 
-table1(~ age_mom_enroll_d + mom_age_days_mdxa17 + bmi_mom_prepreg_d + pari y_d +
-         mod_pre_d + vig_pre_d, data = PFAS_DXABF_COMP, overall="Total")
+table1(~ age_mom_enroll_d + mom_age_days_mdxa17 + bmi_mom_prepreg_d + parity_d, 
+       data = PFAS_DXABF_COMP, overall="Total")
 
-table1(~ race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k, 
+table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + married_cohab, 
        data = PFAS_DXABF_COMP, overall="Total")
 
 ```
