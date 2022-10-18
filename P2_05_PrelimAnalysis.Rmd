@@ -146,174 +146,223 @@ modelsummary(a.unad.lnm.fat)
 ```{r}
 ##### RUN UNADJUSTED LINEAR REGRESSION MODELS, ANTHRO + DXA DATASET
 
-# PFOS
-ad.unad.m.pfos <- list(
-  "BMI (kg/m2)" = glm(BMI ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "Weight (kg)" = glm(Weight ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "Waist Circumference (cm)" = glm(Waist ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "Hip Circumference (cm)" = glm(Hip ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "Total Body Fat %" = glm(FatPct ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "Total Body Fat Mass (kg/m2)" = glm(FatMass ~ LNPFOS, family = gaussian, data = PFAS_AD))
-modelsummary(ad.unad.m.pfos)
+# BMI
+ad.unad.m.bmi <- list(
+  "PFOS" = glm(BMI ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(BMI ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(BMI ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(BMI ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(BMI ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(BMI ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.m.bmi)
 
-ad.unad.lnm.pfos <- list(
-  "VAT Area (cm3)" = glm(LNVAT_AREA ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "SAAT Area (cm3)" = glm(LNSAT_AREA ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "TAAT Area (cm3)" = glm(LNTAT_AREA ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "VAT Mass (kg)" = glm(LNVAT_MASS ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "SAAT Mass (kg)" = glm(LNSAT_MASS ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "TAAT Mass (kg)" = glm(LNTAT_MASS ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "VAT Volume (cm3)" = glm(LNVAT_VOLUME ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "SAAT Volume (cm3)" = glm(LNSAT_VOLUME ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "TAAT Volume (cm3)" = glm(LNTAT_VOLUME ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "BMI (kg/m2)" = glm(LNBMI ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "Weight (kg)" = glm(LNWT ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "Waist Circumference (cm)" = glm(LNWAIST ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "Hip Circumference (cm)" = glm(LNHIP ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "Total Body Fat %" = glm(LNBFAT ~ LNPFOS, family = gaussian, data = PFAS_AD),
-  "Total Body Fat Mass (kg/m2)" = glm(LNFAT ~ LNPFOS, family = gaussian, data = PFAS_AD))
-modelsummary(ad.unad.lnm.pfos)
+ad.unad.lnm.bmi <- list(
+  "PFOS" = glm(LNBMI ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNBMI ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNBMI ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNBMI ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNBMI ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNBMI ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.bmi)
 
 
-# PFOA
-ad.unad.m.pfoa <- list(
-  "BMI (kg/m2)" = glm(BMI ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "Weight (kg)" = glm(Weight ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "Waist Circumference (cm)" = glm(Waist ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "Hip Circumference (cm)" = glm(Hip ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "Total Body Fat %" = glm(FatPct ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "Total Body Fat Mass (kg/m2)" = glm(FatMass ~ LNPFOA, family = gaussian, data = PFAS_AD))
-modelsummary(ad.unad.m.pfoa)
+# WEIGHT
+ad.unad.m.wt <- list(
+  "PFOS" = glm(Weight ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(Weight ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(Weight ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(Weight ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(Weight ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(Weight ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.m.wt)
 
-ad.unad.lnm.pfoa <- list(
-  "VAT Area (cm3)" = glm(LNVAT_AREA ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "SAAT Area (cm3)" = glm(LNSAT_AREA ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "TAAT Area (cm3)" = glm(LNTAT_AREA ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "VAT Mass (kg)" = glm(LNVAT_MASS ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "SAAT Mass (kg)" = glm(LNSAT_MASS ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "TAAT Mass (kg)" = glm(LNTAT_MASS ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "VAT Volume (cm3)" = glm(LNVAT_VOLUME ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "SAAT Volume (cm3)" = glm(LNSAT_VOLUME ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "TAAT Volume (cm3)" = glm(LNTAT_VOLUME ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "BMI (kg/m2)" = glm(LNBMI ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "Weight (kg)" = glm(LNWT ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "Waist Circumference (cm)" = glm(LNWAIST ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "Hip Circumference (cm)" = glm(LNHIP ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "Total Body Fat %" = glm(LNBFAT ~ LNPFOA, family = gaussian, data = PFAS_AD),
-  "Total Body Fat Mass (kg/m2)" = glm(LNFAT ~ LNPFOA, family = gaussian, data = PFAS_AD))
-modelsummary(ad.unad.lnm.pfoa)
+ad.unad.lnm.wt <- list(
+  "PFOS" = glm(LNWT ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNWT ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNWT ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNWT ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNWT ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNWT ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.wt)
 
-# PFNA
-ad.unad.m.pfna <- list(
-  "BMI (kg/m2)" = glm(BMI ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "Weight (kg)" = glm(Weight ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "Waist Circumference (cm)" = glm(Waist ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "Hip Circumference (cm)" = glm(Hip ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "Total Body Fat %" = glm(FatPct ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "Total Body Fat Mass (kg/m2)" = glm(FatMass ~ LNPFNA2, family = gaussian, data = PFAS_AD))
-modelsummary(ad.unad.m.pfna)
 
-ad.unad.lnm.pfna <- list(
-  "VAT Area (cm3)" = glm(LNVAT_AREA ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "SAAT Area (cm3)" = glm(LNSAT_AREA ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "TAAT Area (cm3)" = glm(LNTAT_AREA ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "VAT Mass (kg)" = glm(LNVAT_MASS ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "SAAT Mass (kg)" = glm(LNSAT_MASS ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "TAAT Mass (kg)" = glm(LNTAT_MASS ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "VAT Volume (cm3)" = glm(LNVAT_VOLUME ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "SAAT Volume (cm3)" = glm(LNSAT_VOLUME ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "TAAT Volume (cm3)" = glm(LNTAT_VOLUME ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "BMI (kg/m2)" = glm(LNBMI ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "Weight (kg)" = glm(LNWT ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "Waist Circumference (cm)" = glm(LNWAIST ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "Hip Circumference (cm)" = glm(LNHIP ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "Total Body Fat %" = glm(LNBFAT ~ LNPFNA2, family = gaussian, data = PFAS_AD),
-  "Total Body Fat Mass (kg/m2)" = glm(LNFAT ~ LNPFNA2, family = gaussian, data = PFAS_AD))
-modelsummary(ad.unad.lnm.pfna)
+# WAIST CIRCUMFERENCE
+ad.unad.m.waist <- list(
+  "PFOS" = glm(Waist ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(Waist ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(Waist ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(Waist ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(Waist ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(Waist ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.m.waist)
 
-# PFHxS
-ad.unad.m.pfhxs <- list(
-  "BMI (kg/m2)" = glm(BMI ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "Weight (kg)" = glm(Weight ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "Waist Circumference (cm)" = glm(Waist ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "Hip Circumference (cm)" = glm(Hip ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "Total Body Fat %" = glm(FatPct ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "Total Body Fat Mass (kg/m2)" = glm(FatMass ~ LNPFHxS, family = gaussian, data = PFAS_AD))
-modelsummary(ad.unad.m.pfhxs)
+ad.unad.lnm.waist <- list(
+  "PFOS" = glm(LNWAIST ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNWAIST ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNWAIST ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNWAIST ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNWAIST ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNWAIST ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.waist)
 
-ad.unad.lnm.pfhxs <- list(
-  "VAT Area (cm3)" = glm(LNVAT_AREA ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "SAAT Area (cm3)" = glm(LNSAT_AREA ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "TAAT Area (cm3)" = glm(LNTAT_AREA ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "VAT Mass (kg)" = glm(LNVAT_MASS ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "SAAT Mass (kg)" = glm(LNSAT_MASS ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "TAAT Mass (kg)" = glm(LNTAT_MASS ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "VAT Volume (cm3)" = glm(LNVAT_VOLUME ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "SAAT Volume (cm3)" = glm(LNSAT_VOLUME ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "TAAT Volume (cm3)" = glm(LNTAT_VOLUME ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "BMI (kg/m2)" = glm(LNBMI ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "Weight (kg)" = glm(LNWT ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "Waist Circumference (cm)" = glm(LNWAIST ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "Hip Circumference (cm)" = glm(LNHIP ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "Total Body Fat %" = glm(LNBFAT ~ LNPFHxS, family = gaussian, data = PFAS_AD),
-  "Total Body Fat Mass (kg/m2)" = glm(LNFAT ~ LNPFHxS, family = gaussian, data = PFAS_AD))
-modelsummary(ad.unad.lnm.pfhxs)
 
-# Me_FOSSA
-ad.unad.m.mefossa <- list(
-  "BMI (kg/m2)" = glm(BMI ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "Weight (kg)" = glm(Weight ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "Waist Circumference (cm)" = glm(Waist ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "Hip Circumference (cm)" = glm(Hip ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "Total Body Fat %" = glm(FatPct ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "Total Body Fat Mass (kg/m2)" = glm(FatMass ~ LNME_PFOSA, family = gaussian, data = PFAS_AD))
-modelsummary(ad.unad.m.mefossa)
+# HIP CIRCUMFERENCE
+ad.unad.m.hip <- list(
+  "PFOS" = glm(Hip ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(Hip ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(Hip ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(Hip ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(Hip ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(Hip ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.m.hip)
 
-ad.unad.lnm.mefossa <- list(
-  "VAT Area (cm3)" = glm(LNVAT_AREA ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "SAAT Area (cm3)" = glm(LNSAT_AREA ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "TAAT Area (cm3)" = glm(LNTAT_AREA ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "VAT Mass (kg)" = glm(LNVAT_MASS ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "SAAT Mass (kg)" = glm(LNSAT_MASS ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "TAAT Mass (kg)" = glm(LNTAT_MASS ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "VAT Volume (cm3)" = glm(LNVAT_VOLUME ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "SAAT Volume (cm3)" = glm(LNSAT_VOLUME ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "TAAT Volume (cm3)" = glm(LNTAT_VOLUME ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "BMI (kg/m2)" = glm(LNBMI ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "Weight (kg)" = glm(LNWT ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "Waist Circumference (cm)" = glm(LNWAIST ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "Hip Circumference (cm)" = glm(LNHIP ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "Total Body Fat %" = glm(LNBFAT ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
-  "Total Body Fat Mass (kg/m2)" = glm(LNFAT ~ LNME_PFOSA, family = gaussian, data = PFAS_AD))
-modelsummary(ad.unad.lnm.mefossa)
+ad.unad.lnm.hip <- list(
+  "PFOS" = glm(LNHIP ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNHIP ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNHIP ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNHIP ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNHIP ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNHIP ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.hip)
 
-# Et_FOSSA
-ad.unad.m.etfossa <- list(
-  "BMI (kg/m2)" = glm(BMI ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "Weight (kg)" = glm(Weight ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "Waist Circumference (cm)" = glm(Waist ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "Hip Circumference (cm)" = glm(Hip ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "Total Body Fat %" = glm(FatPct ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "Total Body Fat Mass (kg/m2)" = glm(FatMass ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
-modelsummary(ad.unad.m.etfossa)
 
-ad.unad.lnm.etfossa <- list(
-  "VAT Area (cm3)" = glm(LNVAT_AREA ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "SAAT Area (cm3)" = glm(LNSAT_AREA ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "TAAT Area (cm3)" = glm(LNTAT_AREA ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "VAT Mass (kg)" = glm(LNVAT_MASS ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "SAAT Mass (kg)" = glm(LNSAT_MASS ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "TAAT Mass (kg)" = glm(LNTAT_MASS ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "VAT Volume (cm3)" = glm(LNVAT_VOLUME ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "SAAT Volume (cm3)" = glm(LNSAT_VOLUME ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "TAAT Volume (cm3)" = glm(LNTAT_VOLUME ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "BMI (kg/m2)" = glm(LNBMI ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "Weight (kg)" = glm(LNWT ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "Waist Circumference (cm)" = glm(LNWAIST ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "Hip Circumference (cm)" = glm(LNHIP ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "Total Body Fat %" = glm(LNBFAT ~ LNET_PFOSA, family = gaussian, data = PFAS_AD),
-  "Total Body Fat Mass (kg/m2)" = glm(LNFAT ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
-modelsummary(ad.unad.lnm.etfossa)
+# BODY FAT %
+ad.unad.m.bfat <- list(
+  "PFOS" = glm(FatPct ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(FatPct ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(FatPct ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(FatPct ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(FatPct ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(FatPct ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.m.bfat)
+
+ad.unad.lnm.bfat <- list(
+  "PFOS" = glm(LNBFAT ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNBFAT ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNBFAT ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNBFAT ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNBFAT ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNBFAT ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.bfat)
+
+
+# BODY FAT MASS
+ad.unad.m.fat <- list(
+  "PFOS" = glm(FatMass ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(FatMass ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(FatMass ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(FatMass ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(FatMass ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(FatMass ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.m.fat)
+
+ad.unad.lnm.fat <- list(
+  "PFOS" = glm(LNFAT ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNFAT ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNFAT ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNFAT ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNFAT ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNFAT ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.fat)
+
+
+# VAT AREA
+ad.unad.lnm.vata <- list(
+  "PFOS" = glm(LNVAT_AREA ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNVAT_AREA ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNVAT_AREA ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNVAT_AREA ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNVAT_AREA ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNVAT_AREA ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.vata)
+
+
+# SAAT AREA
+ad.unad.lnm.sata <- list(
+  "PFOS" = glm(LNSAT_AREA ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNSAT_AREA ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNSAT_AREA ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNSAT_AREA ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNSAT_AREA ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNSAT_AREA ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.sata)
+
+
+# TAAT AREA
+ad.unad.lnm.tata <- list(
+  "PFOS" = glm(LNTAT_AREA ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNTAT_AREA ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNTAT_AREA ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNTAT_AREA ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNTAT_AREA ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNTAT_AREA ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.tata)
+
+
+# VAT MASS
+ad.unad.lnm.vatm <- list(
+  "PFOS" = glm(LNVAT_MASS ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNVAT_MASS ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNVAT_MASS ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNVAT_MASS ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNVAT_MASS ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNVAT_MASS ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.vatm)
+
+
+# SAAT MASS
+ad.unad.lnm.satm <- list(
+  "PFOS" = glm(LNSAT_MASS ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNSAT_MASS ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNSAT_MASS ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNSAT_MASS ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNSAT_MASS ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNSAT_MASS ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.satm)
+
+
+# TAAT MASS
+ad.unad.lnm.tatm <- list(
+  "PFOS" = glm(LNTAT_MASS ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNTAT_MASS ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNTAT_MASS ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNTAT_MASS ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNTAT_MASS ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNTAT_MASS ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.tatm)
+
+
+# VAT VOLUME
+ad.unad.lnm.vatv <- list(
+  "PFOS" = glm(LNVAT_VOLUME ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNVAT_VOLUME ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNVAT_VOLUME ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNVAT_VOLUME ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNVAT_VOLUME ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNVAT_VOLUME ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.vatv)
+
+
+# SAAT VOLUME
+ad.unad.lnm.satv <- list(
+  "PFOS" = glm(LNSAT_VOLUME ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNSAT_VOLUME ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNSAT_VOLUME ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNSAT_VOLUME ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNSAT_VOLUME ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNSAT_VOLUME ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.satv)
+
+
+# TAAT VOLUME
+ad.unad.lnm.tatv <- list(
+  "PFOS" = glm(LNTAT_VOLUME ~ LNPFOS, family = gaussian, data = PFAS_AD),
+  "PFOA" = glm(LNTAT_VOLUME ~ LNPFOA, family = gaussian, data = PFAS_AD),
+  "PFNA" = glm(LNTAT_VOLUME ~ LNPFNA2, family = gaussian, data = PFAS_AD),
+  "PFHxS" = glm(LNTAT_VOLUME ~ LNPFHxS, family = gaussian, data = PFAS_AD),
+  "MeFOSSA" = glm(LNTAT_VOLUME ~ LNME_PFOSA, family = gaussian, data = PFAS_AD),
+  "EtFOSSA" = glm(LNTAT_VOLUME ~ LNET_PFOSA, family = gaussian, data = PFAS_AD))
+modelsummary(ad.unad.lnm.tatv)
 
 ```
 
