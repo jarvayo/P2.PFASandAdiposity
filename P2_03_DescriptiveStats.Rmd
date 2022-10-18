@@ -483,12 +483,12 @@ summary(PFAS_A$mom_fat_ma17)
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_bmi_MT"] <- "BMI"
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_waist_ma17"] <- "Waist"
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_hip_ma17"] <- "Hip"
-colnames(PFAS_A)[colnames(PFAS_A) == "mom_bodyfat_ma17"] <- "Fat %"
-colnames(PFAS_A)[colnames(PFAS_A) == "mom_fat_ma17"] <- "Fat mass"
+colnames(PFAS_A)[colnames(PFAS_A) == "mom_bodyfat_ma17"] <- "FatPct"
+colnames(PFAS_A)[colnames(PFAS_A) == "mom_fat_ma17"] <- "FatMass"
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_weight_ma17"] <- "Weight"
 
 ##### OUTCOMES CORRELATION MATRIX
-OUTCOMES_A_corr <- PFAS_A[ , c("BMI", "Waist", "Hip", "Fat %", "Fat mass", "Weight")]
+OUTCOMES_A_corr <- PFAS_A[ , c("BMI", "Waist", "Hip", "FatPct", "FatMass", "Weight")]
 o_A_corr <- cor(OUTCOMES_A_corr)
 round(o_A_corr, 2)
 
@@ -535,13 +535,13 @@ colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_bmi_MT"] <- "BMI"
 colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_weight_ma17"] <- "Weight"
 colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_waist_ma17"] <- "Waist"
 colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_hip_ma17"] <- "Hip"
-colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_bodyfat_ma17"] <- "Fat %"
-colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_fat_ma17"] <- "Fat mass"
+colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_bodyfat_ma17"] <- "FatPct"
+colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_fat_ma17"] <- "FatMass"
 
 ##### OUTCOMES CORRELATION MATRIX
 OUTCOMES_AD_corr <- PFAS_AD[ , c("VT area", "ST area", "TT area", "VT vol", "ST vol", 
                                "TT vol", "VT mass", "ST mass", "TT mass", "BMI", 
-                               "Weight", "Waist", "Hip", "Fat %", "Fat mass")]
+                               "Weight", "Waist", "Hip", "FatPct", "FatMass")]
 o_AD_corr <- cor(OUTCOMES_AD_corr)
 round(o_AD_corr, 2)
 
