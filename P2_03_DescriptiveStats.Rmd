@@ -5,7 +5,7 @@
 ```{r}
 ##### LOAD PACKAGES
 library("tidyverse")
-library("plyr")
+library("dplyr")
 library("table1")
 library("gtools")
 library("corrplot")
@@ -17,9 +17,9 @@ library("Hmisc")
 ##### LOAD DATASET
 PFAS_A <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_A_COMP.csv")
 PFAS_AD <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_AD_COMP.csv")
+PFAS_X <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_X.csv")
 
 ```
-
 
 ```{r}
 ##### LOG-TRANSFORM PFAS TO OBSERVE SHAPE OF DISTRIBUTION
@@ -163,131 +163,308 @@ hist(PFAS_AD$LNFAT)
 ```
 
 ```{r}
+##### ANTHRO DATASET #####
+
 ##### RENAME
-PFAS$age_enroll <- PFAS$age_mom_enroll_d
-PFAS$age_fu <- (PFAS$mom_age_days_mdxa17)/365
-PFAS$fu_time <- (PFAS$age_days_mdxa17)/365
-PFAS$exer <- PFAS$mod_pre_d + PFAS$vig_pre_d
-PFAS$race <- PFAS$race2_mom_epi_epia_d
-PFAS$edu <- PFAS$coll_grad
-PFAS$bmi <- PFAS$bmi_mom_prepreg_d
-PFAS$smoke <- PFAS$smokpreg_final_d
-PFAS$income <- PFAS$income_hh_epq_epqa_d
-PFAS$income_cat2 <- PFAS$gt70k
-PFAS$parity <- PFAS$parity_d
-PFAS$alc_bef <- PFAS$alc_d_bef_learn_f1
-PFAS$alc_aft <- PFAS$alc_d_aft_learn_f1
-PFAS$alc_tot <- PFAS$alc_d_f1
+PFAS_A$age_enroll <- PFAS_A$age_mom_enroll_d
+PFAS_A$age_fu <- (PFAS_A$mom_age_days_comp_d_ma17)/365
+PFAS_A$fu_time <- (PFAS_A$age_days_comp_d_ma17)/365
+PFAS_A$race <- PFAS_A$race2_mom_epi_epia_d
+PFAS_A$edu <- PFAS_A$coll_grad
+PFAS_A$bmi <- PFAS_A$bmi_mom_prepreg_d
+PFAS_A$smoke <- PFAS_A$smokpreg_final_d
+PFAS_A$income <- PFAS_A$gt70k
+PFAS_A$parity <- PFAS_A$parity_d
+PFAS_A$married <- PFAS_A$married_cohab
 
 
 ##### RE-LABEL 
-PFAS$race <- ifelse(PFAS$race == "white", 0,
-                     ifelse(PFAS$race == "black", 1,
-                     ifelse(PFAS$race == "hispa", 2,
-                     ifelse(PFAS$race == "asian", 3,
-                     ifelse(PFAS$race == "other", 4, 4)))))
-PFAS$edu <- ifelse(PFAS$edu == 1, 1, 0)
-PFAS$bmi_cat <- ifelse(PFAS$bmi <18.5, 0,
-                         ifelse(PFAS$bmi >=18.5 & PFAS$bmi < 25.0, 1, 
-                         ifelse(PFAS$bmi >=25.0 & PFAS$bmi < 30.0, 2, 
-                         ifelse(PFAS$bmi >=30.0 & PFAS$bmi < 35.0, 3,
-                         ifelse(PFAS$bmi >=35.0, 4, 99)))))
-PFAS$smoke <- ifelse(PFAS$smoke == "former", 0,
-                         ifelse(PFAS$smoke == "smoke preg", 1,
-                         ifelse(PFAS$smoke == "xnever", 2, 2)))
-PFAS$income_cat2 <- ifelse(PFAS$income_cat2 == 1, 1, 0)
-PFAS$income_cat3 <- ifelse(PFAS$income == 2, 0,
-                       ifelse(PFAS$income == 3, 0,
-                       ifelse(PFAS$income == 4, 0,
-                       ifelse(PFAS$income == 5, 1,
-                       ifelse(PFAS$income == 6, 2,0)))))
-PFAS$parity <- ifelse(PFAS$parity == 0, 0,
-                        ifelse(PFAS$parity == 1, 1,
-                        ifelse(PFAS$parity > 1, 2, 0)))
-PFAS$alc_bef <- ifelse(PFAS$alc_bef > 0, 1, 0)
-PFAS$alc_aft <- ifelse(PFAS$alc_aft > 0, 1, 0)
-PFAS$alc_tot <- ifelse(PFAS$alc_tot > 0, 1, 0)
+PFAS_A$race <- ifelse(PFAS_A$race == "white", 0,
+                     ifelse(PFAS_A$race == "black", 1,
+                     ifelse(PFAS_A$race == "hispa", 2,
+                     ifelse(PFAS_A$race == "asian", 3,
+                     ifelse(PFAS_A$race == "other", 4, 4)))))
+PFAS_A$edu <- ifelse(PFAS_A$edu == 1, 1, 0)
+PFAS_A$bmi_cat <- ifelse(PFAS_A$bmi <18.5, 0,
+                         ifelse(PFAS_A$bmi >=18.5 & PFAS_A$bmi < 25.0, 1, 
+                         ifelse(PFAS_A$bmi >=25.0 & PFAS_A$bmi < 30.0, 2, 
+                         ifelse(PFAS_A$bmi >=30.0 & PFAS_A$bmi < 35.0, 3,
+                         ifelse(PFAS_A$bmi >=35.0, 4, 99)))))
+PFAS_A$smoke <- ifelse(PFAS_A$smoke == "former", 0,
+                         ifelse(PFAS_A$smoke == "smoke preg", 1,
+                         ifelse(PFAS_A$smoke == "xnever", 2, 2)))
+PFAS_A$income <- ifelse(PFAS_A$income == 1, 1, 0)
+PFAS_A$parity <- ifelse(PFAS_A$parity == 0, 0,
+                        ifelse(PFAS_A$parity == 1, 1,
+                        ifelse(PFAS_A$parity > 1, 2, 0)))
+PFAS_A$married <- ifelse(PFAS_A$married == 1, 1, 0)
 
 
 ##### REFACTOR
-PFAS$race <- factor(PFAS$race,
+PFAS_A$race <- factor(PFAS_A$race,
                         levels = c(0, 1, 2, 3, 4),
                         labels = c("White", "Black", "Hispanic", "Asian", "Other/More than 1 race"))
-PFAS$edu <- factor(PFAS$edu,
+PFAS_A$edu <- factor(PFAS_A$edu,
                        levels = c(0, 1),
                        labels = c(" < college degree", ">= college degree"))
-PFAS$bmi_cat <- factor(PFAS$bmi_cat,
+PFAS_A$bmi_cat <- factor(PFAS_A$bmi_cat,
                        levels = c(0, 1, 2, 3, 4),
                        labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
                                   "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
                                   "Extremely obese (>= 35)"))
-PFAS$smoke <- factor(PFAS$smoke,
+PFAS_A$smoke <- factor(PFAS_A$smoke,
                          levels = c(0, 1, 2),
                          labels = c("Former smoker", "Smoked during pregnancy", "Never smoked"))
-PFAS$income_cat2 <- factor(PFAS$income_cat2,
+PFAS_A$income <- factor(PFAS_A$income,
                        levels = c(0, 1),
                        labels = c(" <= $70,000", "> $70,000"))
-PFAS$income_cat3 <- factor(PFAS$income,
-                          levels = c(0, 1, 2),
-                          labels = c("<= $40,000", "$40,001-$70,000", "> $70,000"))
-PFAS$parity <- factor(PFAS$parity,
+PFAS_A$parity <- factor(PFAS_A$parity,
                           levels = c(0, 1, 2),
                           labels = c("0", "1", ">= 2"))
-PFAS$alc_bef <- factor(PFAS$alc_bef,
-                          levels = c(0, 1),
-                          labels = c("No", "Yes"))
-PFAS$alc_aft <- factor(PFAS$alc_aft,
-                          levels = c(0, 1),
-                          labels = c("No", "Yes"))
-PFAS$alc_tot <- factor(PFAS$alc_tot,
+PFAS_A$married <- factor(PFAS_A$married,
                           levels = c(0, 1),
                           labels = c("No", "Yes"))
 
 ##### LABEL
-label(PFAS$age_enroll) <- "Maternal age at enrollment"
-label(PFAS$age_fu) <- "Maternal age at follow-up"
-label(PFAS$fu_time) <- "Follow-up time"
-label(PFAS$exer) <- "Physical activity"
-label(PFAS$race) <- "Race/Ethnicity"
-label(PFAS$edu) <- "Education"
-label(PFAS$bmi_cat) <- "Pre-pregnancy BMI"
-label(PFAS$smoke) <- "Smoking status"
-label(PFAS$income_cat2) <- "Annual household income"
-label(PFAS$income_cat3) <- "Annual household income"
-label(PFAS$parity) <- "Parity"
-label(PFAS$alc_bef) <- "Consumed alcohol 3 months before learning about pregnancy"
-label(PFAS$alc_aft) <- "Consumed alcohol during pregnancy"
+label(PFAS_A$age_enroll) <- "Maternal age at enrollment"
+label(PFAS_A$age_fu) <- "Maternal age at follow-up"
+label(PFAS_A$fu_time) <- "Follow-up time"
+label(PFAS_A$race) <- "Race/Ethnicity"
+label(PFAS_A$edu) <- "Education"
+label(PFAS_A$bmi_cat) <- "Pre-pregnancy BMI"
+label(PFAS_A$smoke) <- "Smoking status"
+label(PFAS_A$income) <- "Annual household income"
+label(PFAS_A$parity) <- "Parity"
+label(PFAS_A$married) <- "Married or cohabitating"
 
 ##### ADD UNITS
-units(PFAS$age_enroll)  <- "years"
-units(PFAS$age_fu)  <- "years"
-units(PFAS$age_dxa)  <- "years"
-units(PFAS$bmi_cat)  <- "kg/m2"
-units(PFAS$exer) <- "hrs/week"
+units(PFAS_A$age_enroll)  <- "years"
+units(PFAS_A$age_fu)  <- "years"
+units(PFAS_A$fu_time)  <- "years"
+units(PFAS_A$bmi_cat)  <- "kg/m2"
 
 ##### TABE 1
-table1(~ age_enroll + age_fu + age_dxa + exer + race + bmi_cat + edu + smoke + income_cat2 + 
-         income_cat3 + parity + alc_bef + alc_aft + alc_tot,
-       data = PFAS, overall="Total")
+table1(~ age_enroll + age_fu + fu_time + race + bmi_cat + edu + income + parity + 
+         smoke + married, data = PFAS_A, overall = "Total")
 
 ```
 
 ```{r}
+##### ANTHRO + DXA DATASET #####
+
+##### RENAME
+PFAS_AD$age_enroll <- PFAS_AD$age_mom_enroll_d
+PFAS_AD$age_fu <- (PFAS_AD$mom_age_days_mdxa17)/365
+PFAS_AD$fu_time <- (PFAS_AD$age_days_mdxa17)/365
+PFAS_AD$race <- PFAS_AD$race2_mom_epi_epia_d
+PFAS_AD$edu <- PFAS_AD$coll_grad
+PFAS_AD$bmi <- PFAS_AD$bmi_mom_prepreg_d
+PFAS_AD$smoke <- PFAS_AD$smokpreg_final_d
+PFAS_AD$income <- PFAS_AD$gt70k
+PFAS_AD$parity <- PFAS_AD$parity_d
+PFAS_A$married <- PFAS_A$married_cohab
+
+##### RE-LABEL 
+PFAS_AD$race <- ifelse(PFAS_AD$race == "white", 0,
+                     ifelse(PFAS_AD$race == "black", 1,
+                     ifelse(PFAS_AD$race == "hispa", 2,
+                     ifelse(PFAS_AD$race == "asian", 3,
+                     ifelse(PFAS_AD$race == "other", 4, 4)))))
+PFAS_AD$edu <- ifelse(PFAS_AD$edu == 1, 1, 0)
+PFAS_AD$bmi_cat <- ifelse(PFAS_AD$bmi <18.5, 0,
+                         ifelse(PFAS_AD$bmi >=18.5 & PFAS_AD$bmi < 25.0, 1, 
+                         ifelse(PFAS_AD$bmi >=25.0 & PFAS_AD$bmi < 30.0, 2, 
+                         ifelse(PFAS_AD$bmi >=30.0 & PFAS_AD$bmi < 35.0, 3,
+                         ifelse(PFAS_AD$bmi >=35.0, 4, 99)))))
+PFAS_AD$smoke <- ifelse(PFAS_AD$smoke == "former", 0,
+                         ifelse(PFAS_AD$smoke == "smoke preg", 1,
+                         ifelse(PFAS_AD$smoke == "xnever", 2, 2)))
+PFAS_AD$income <- ifelse(PFAS_AD$income == 1, 1, 0)
+PFAS_AD$parity <- ifelse(PFAS_AD$parity == 0, 0,
+                        ifelse(PFAS_AD$parity == 1, 1,
+                        ifelse(PFAS_AD$parity > 1, 2, 0)))
+PFAS_AD$married <- ifelse(PFAS_AD$married == 1, 1, 0)
+
+
+##### REFACTOR
+PFAS_AD$race <- factor(PFAS_AD$race,
+                        levels = c(0, 1, 2, 3, 4),
+                        labels = c("White", "Black", "Hispanic", "Asian", "Other/More than 1 race"))
+PFAS_AD$edu <- factor(PFAS_AD$edu,
+                       levels = c(0, 1),
+                       labels = c(" < college degree", ">= college degree"))
+PFAS_AD$bmi_cat <- factor(PFAS_AD$bmi_cat,
+                       levels = c(0, 1, 2, 3, 4),
+                       labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
+                                  "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
+                                  "Extremely obese (>= 35)"))
+PFAS_AD$smoke <- factor(PFAS_AD$smoke,
+                         levels = c(0, 1, 2),
+                         labels = c("Former smoker", "Smoked during pregnancy", "Never smoked"))
+PFAS_AD$income <- factor(PFAS_AD$income,
+                       levels = c(0, 1),
+                       labels = c(" <= $70,000", "> $70,000"))
+PFAS_AD$parity <- factor(PFAS_AD$parity,
+                          levels = c(0, 1, 2),
+                          labels = c("0", "1", ">= 2"))
+PFAS_AD$married <- factor(PFAS_AD$married,
+                          levels = c(0, 1),
+                          labels = c("No", "Yes"))
+
+##### LABEL
+label(PFAS_AD$age_enroll) <- "Maternal age at enrollment"
+label(PFAS_AD$age_fu) <- "Maternal age at follow-up"
+label(PFAS_AD$fu_time) <- "Follow-up time"
+label(PFAS_AD$race) <- "Race/Ethnicity"
+label(PFAS_AD$edu) <- "Education"
+label(PFAS_AD$bmi_cat) <- "Pre-pregnancy BMI"
+label(PFAS_AD$smoke) <- "Smoking status"
+label(PFAS_AD$income) <- "Annual household income"
+label(PFAS_AD$parity) <- "Parity"
+label(PFAS_AD$married) <- "Married or cohabitating"
+
+##### ADD UNITS
+units(PFAS_AD$age_enroll)  <- "years"
+units(PFAS_AD$age_fu)  <- "years"
+units(PFAS_AD$fu_time)  <- "years"
+units(PFAS_AD$bmi_cat)  <- "kg/m2"
+
+##### TABE 1
+table1(~ age_enroll + age_fu + fu_time + race + bmi_cat + edu + income + parity + 
+         smoke + married, data = PFAS_AD, overall = "Total")
+
+```
+
+```{r}
+##### EXCLUSION DATASET #####
+
+##### RENAME
+PFAS_X$age_enroll <- PFAS_X$age_mom_enroll_d
+PFAS_X$race <- PFAS_X$race2_mom_epi_epia_d
+PFAS_X$edu <- PFAS_X$coll_grad
+PFAS_X$bmi <- PFAS_X$bmi_mom_prepreg_d
+PFAS_X$smoke <- PFAS_X$smokpreg_final_d
+PFAS_X$income <- PFAS_X$gt70k
+PFAS_X$parity <- PFAS_X$pari_d
+PFAS_A$married <- PFAS_A$married_cohab
+
+##### RE-LABEL 
+PFAS_X$race <- ifelse(PFAS_X$race == "white", 0,
+                     ifelse(PFAS_X$race == "black", 1,
+                     ifelse(PFAS_X$race == "hispa", 2,
+                     ifelse(PFAS_X$race == "asian", 3,
+                     ifelse(PFAS_X$race == "other", 4, 4)))))
+PFAS_X$edu <- ifelse(PFAS_X$edu == 1, 1, 0)
+PFAS_X$bmi_cat <- ifelse(PFAS_X$bmi <18.5, 0,
+                         ifelse(PFAS_X$bmi >=18.5 & PFAS_X$bmi < 25.0, 1, 
+                         ifelse(PFAS_X$bmi >=25.0 & PFAS_X$bmi < 30.0, 2, 
+                         ifelse(PFAS_X$bmi >=30.0 & PFAS_X$bmi < 35.0, 3,
+                         ifelse(PFAS_X$bmi >=35.0, 4, 99)))))
+PFAS_X$smoke <- ifelse(PFAS_X$smoke == "former", 0,
+                         ifelse(PFAS_X$smoke == "smoke preg", 1,
+                         ifelse(PFAS_X$smoke == "xnever", 2, 2)))
+PFAS_X$income <- ifelse(PFAS_X$income == 1, 1, 0)
+PFAS_X$parity <- ifelse(PFAS_X$parity == 0, 0,
+                        ifelse(PFAS_X$parity == 1, 1,
+                        ifelse(PFAS_X$parity > 1, 2, 0)))
+PFAS_X$married <- ifelse(PFAS_X$married == 1, 1, 0)
+
+
+##### REFACTOR
+PFAS_X$race <- factor(PFAS_X$race,
+                        levels = c(0, 1, 2, 3, 4),
+                        labels = c("White", "Black", "Hispanic", "Asian", "Other/More than 1 race"))
+PFAS_X$edu <- factor(PFAS_X$edu,
+                       levels = c(0, 1),
+                       labels = c(" < college degree", ">= college degree"))
+PFAS_X$bmi_cat <- factor(PFAS_X$bmi_cat,
+                       levels = c(0, 1, 2, 3, 4),
+                       labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
+                                  "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
+                                  "Extremely obese (>= 35)"))
+PFAS_X$smoke <- factor(PFAS_X$smoke,
+                         levels = c(0, 1, 2),
+                         labels = c("Former smoker", "Smoked during pregnancy", "Never smoked"))
+PFAS_X$income <- factor(PFAS_X$income,
+                       levels = c(0, 1),
+                       labels = c(" <= $70,000", "> $70,000"))
+PFAS_X$parity <- factor(PFAS_X$parity,
+                          levels = c(0, 1, 2),
+                          labels = c("0", "1", ">= 2"))
+PFAS_X$married <- factor(PFAS_X$married,
+                          levels = c(0, 1),
+                          labels = c("No", "Yes"))
+
+##### LABEL
+label(PFAS_X$age_enroll) <- "Maternal age at enrollment"
+label(PFAS_X$race) <- "Race/Ethnicity"
+label(PFAS_X$edu) <- "Education"
+label(PFAS_X$bmi_cat) <- "Pre-pregnancy BMI"
+label(PFAS_X$smoke) <- "Smoking status"
+label(PFAS_X$income) <- "Annual household income"
+label(PFAS_X$parity) <- "Parity"
+label(PFAS_X$married) <- "Married or cohabitating"
+
+##### ADD UNITS
+units(PFAS_X$age_enroll)  <- "years"
+units(PFAS_X$bmi_cat)  <- "kg/m2"
+
+##### TABE 1
+table1(~ age_enroll + race + bmi_cat + edu + income + parity + 
+         smoke + married, data = PFAS_X, overall = "Total")
+
+```
+
+```{r}
+##### ANTHRO DATASET #####
+
 ##### PFAS DISTRIBUTION TABLE
-summary(PFAS$PFOS)
-summary(PFAS$PFOA)
-summary(PFAS$PFNA2)
-summary(PFAS$PFHxS)
-summary(PFAS$Me_PFOSA_AcOH2)
-summary(PFAS$Et_PFOSA_AcOH)
+summary(PFAS_A$PFOS)
+summary(PFAS_A$PFOA)
+summary(PFAS_A$PFNA2)
+summary(PFAS_A$PFHxS)
+summary(PFAS_A$Me_PFOSA_AcOH2)
+summary(PFAS_A$Et_PFOSA_AcOH)
+
+# RENAME PFAS FOR THE PLOT
+colnames(PFAS_A)[colnames(PFAS_A) == "Me_PFOSA_AcOH2"] <- "MeFOSSA"
+colnames(PFAS_A)[colnames(PFAS_A) == "Et_PFOSA_AcOH"] <- "EtFOSSA"
+colnames(PFAS_A)[colnames(PFAS_A) == "PFNA2"] <- "PFNA"
 
 ##### PFAS CORRELATION MATRIX
-PFAS_corr <- PFAS[ , c("PFOS", "PFOA", "PFNA2", "PFHxS", "Me_PFOSA_AcOH2", "Et_PFOSA_AcOH")]
-p_corr <- cor(PFAS_corr)
+PFAS_A_corr <- PFAS_A[ , c("PFOS", "PFOA", "PFNA", "PFHxS", "MeFOSSA", "EtFOSSA")]
+p_corr <- cor(PFAS_A_corr)
 round(p_corr, 2)
 
 corrplot(p_corr, type = "upper", order = "hclust", 
          tl.col = "black", tl.srt = 45)
+
+```
+
+```{r}
+##### ANTHRO + DXA DATASET #####
+
+##### PFAS DISTRIBUTION TABLE
+summary(PFAS_AD$PFOS)
+summary(PFAS_AD$PFOA)
+summary(PFAS_AD$PFNA2)
+summary(PFAS_AD$PFHxS)
+summary(PFAS_AD$Me_PFOSA_AcOH2)
+summary(PFAS_AD$Et_PFOSA_AcOH)
+
+# RENAME PFAS FOR THE PLOT
+colnames(PFAS_AD)[colnames(PFAS_AD) == "Me_PFOSA_AcOH2"] <- "MeFOSSA"
+colnames(PFAS_AD)[colnames(PFAS_AD) == "Et_PFOSA_AcOH"] <- "EtFOSSA"
+colnames(PFAS_AD)[colnames(PFAS_AD) == "PFNA2"] <- "PFNA"
+
+##### PFAS CORRELATION MATRIX
+PFAS_AD_corr <- PFAS_AD[ , c("PFOS", "PFOA", "PFNA", "PFHxS", "MeFOSSA", "EtFOSSA")]
+p_corr <- cor(PFAS_AD_corr)
+round(p_corr, 2)
+
+corrplot(p_corr, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
 
 ```
 
