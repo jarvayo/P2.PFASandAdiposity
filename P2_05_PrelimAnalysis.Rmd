@@ -9,6 +9,7 @@ library("modelsummary")
 library("kableExtra")
 library("gt")
 library("shiny")
+library("olsrr")
 
 ```
 
@@ -366,129 +367,136 @@ modelsummary(ad.unad.lnm.tatv)
 
 ```
 
+
 ```{r}
-##### RUN ADJUSTED LINEAR REGRESSION MODELS
-# PFOS
-ad.models.pfos <- list(
-  "Weight Gain" = glm(WEIGHT_mdxa17 ~ LNPFOS + age_enroll + age_dxa + exer + race + 
-                        bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "Waist Circumference" = glm(LNWAIST ~ LNPFOS + age_enroll + age_dxa + exer + race + 
-                                bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "Total Body Fat %" = glm(LNWAIST ~ LNPFOS + age_enroll + age_dxa + exer + race + 
-                             bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "VAT Area" = glm(LNVAT_AREA ~ LNPFOS + age_enroll + age_dxa + exer + race + 
-                     bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "SAAT Area" = glm(LNSAT_AREA ~ LNPFOS + age_enroll + age_dxa + exer + race + 
-                      bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "TAAT Area" = glm(LNTAT_AREA ~ LNPFOS + age_enroll + age_dxa + exer + race + 
-                      bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS))
+##### RUN ADJUSTED LINEAR REGRESSION MODELS, ANTHRO DATASET
 
-modelsummary(ad.models.pfos, fmt = 2,
+# BMI
+a.ad.m.bmi <- list(
+  "PFOS" = glm(BMI ~ LNPFOS + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(BMI ~ LNPFOA + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(BMI ~ LNPFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(BMI ~ LNPFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+                  parity + married, family = gaussian, data = PFAS_A),
+  "MeFOSSA" = glm(BMI ~ LNME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A),
+  "EtFOSSA" = glm(BMI ~ LNET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A))
+
+modelsummary(a.ad.m.bmi, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
              coef_omit = "Interc")
 
-# PFOA
-ad.models.pfoa <- list(
-  "Weight Gain" = glm(WEIGHT_mdxa17 ~ LNPFOA + age_enroll + age_dxa + exer + race + 
-                        bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "Waist Circumference" = glm(LNWAIST ~ LNPFOA + age_enroll + age_dxa + exer + race + 
-                                bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "Total Body Fat %" = glm(LNWAIST ~ LNPFOA + age_enroll + age_dxa + exer + race + 
-                             bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "VAT Area" = glm(LNVAT_AREA ~ LNPFOA + age_enroll + age_dxa + exer + race + 
-                     bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "SAAT Area" = glm(LNSAT_AREA ~ LNPFOA + age_enroll + age_dxa + exer + race + 
-                      bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "TAAT Area" = glm(LNTAT_AREA ~ LNPFOA + age_enroll + age_dxa + exer + race + 
-                      bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS))
 
-modelsummary(ad.models.pfoa, fmt = 2,
+# WEIGHT
+a.ad.m.wt <- list(
+  "PFOS" = glm(Weight ~ LNPFOS + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(Weight ~ LNPFOA + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(Weight ~ LNPFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(Weight ~ LNPFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+                  parity + married, family = gaussian, data = PFAS_A),
+  "MeFOSSA" = glm(Weight ~ LNME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A),
+  "EtFOSSA" = glm(Weight ~ LNET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A))
+
+modelsummary(a.ad.m.wt, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
              coef_omit = "Interc")
 
-# PFNA
-ad.models.pfna <- list(
-  "Weight Gain" = glm(WEIGHT_mdxa17 ~ LNPFNA2 + age_enroll + age_dxa + exer + race + 
-                        bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "Waist Circumference" = glm(LNWAIST ~ LNPFNA2 + age_enroll + age_dxa + exer + race + 
-                                bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "Total Body Fat %" = glm(LNWAIST ~ LNPFNA2 + age_enroll + age_dxa + exer + race + 
-                             bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "VAT Area" = glm(LNVAT_AREA ~ LNPFNA2 + age_enroll + age_dxa + exer + race + 
-                     bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "SAAT Area" = glm(LNSAT_AREA ~ LNPFNA2 + age_enroll + age_dxa + exer + race + 
-                      bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "TAAT Area" = glm(LNTAT_AREA ~ LNPFNA2 + age_enroll + age_dxa + exer + race + 
-                      bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS))
 
-modelsummary(ad.models.pfna, fmt = 2,
+# WAIST CIRCUMFERENCE
+a.ad.m.waist <- list(
+  "PFOS" = glm(Waist ~ LNPFOS + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(Waist ~ LNPFOA + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(Waist ~ LNPFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(Waist ~ LNPFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+                  parity + married, family = gaussian, data = PFAS_A),
+  "MeFOSSA" = glm(Waist ~ LNME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A),
+  "EtFOSSA" = glm(Waist ~ LNET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A))
+
+modelsummary(a.ad.m.waist, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
              coef_omit = "Interc")
 
-# PFHxS
-ad.models.pfhxs <- list(
-  "Weight Gain" = glm(WEIGHT_mdxa17 ~ LNPFHxS + age_enroll + age_dxa + exer + race + 
-                        bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "Waist Circumference" = glm(LNWAIST ~ LNPFHxS + age_enroll + age_dxa + exer + race + 
-                                bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "Total Body Fat %" = glm(LNWAIST ~ LNPFHxS + age_enroll + age_dxa + exer + race + 
-                             bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "VAT Area" = glm(LNVAT_AREA ~ LNPFHxS + age_enroll + age_dxa + exer + race + 
-                     bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "SAAT Area" = glm(LNSAT_AREA ~ LNPFHxS + age_enroll + age_dxa + exer + race + 
-                      bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "TAAT Area" = glm(LNTAT_AREA ~ LNPFHxS + age_enroll + age_dxa + exer + race + 
-                      bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS))
 
-modelsummary(ad.models.pfhxs, fmt = 2,
+# HIP CIRCUMFERENCE
+a.ad.m.hip <- list(
+  "PFOS" = glm(Hip ~ LNPFOS + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(Hip ~ LNPFOA + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(Hip ~ LNPFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(Hip ~ LNPFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+                  parity + married, family = gaussian, data = PFAS_A),
+  "MeFOSSA" = glm(Hip ~ LNME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A),
+  "EtFOSSA" = glm(Hip ~ LNET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A))
+
+modelsummary(a.ad.m.wt, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
              coef_omit = "Interc")
 
-# Me_FOSSA
-ad.models.mefos <- list(
-  "Weight Gain" = glm(WEIGHT_mdxa17 ~ LNME_PFOSA + age_enroll + age_dxa + exer + race + 
-                        bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "Waist Circumference" = glm(LNWAIST ~ LNME_PFOSA + age_enroll + age_dxa + exer + race + 
-                                bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "Total Body Fat %" = glm(LNWAIST ~ LNME_PFOSA + age_enroll + age_dxa + exer + race + 
-                             bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "VAT Area" = glm(LNVAT_AREA ~ LNME_PFOSA + age_enroll + age_dxa + exer + race + 
-                     bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "SAAT Area" = glm(LNSAT_AREA ~ LNME_PFOSA + age_enroll + age_dxa + exer + race + 
-                      bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "TAAT Area" = glm(LNTAT_AREA ~ LNME_PFOSA + age_enroll + age_dxa + exer + race + 
-                      bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS))
 
-modelsummary(ad.models.mefos, fmt = 2,
+# BODY FAT %
+a.ad.m.bfat <- list(
+  "PFOS" = glm(FatPct ~ LNPFOS + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(FatPct ~ LNPFOA + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(FatPct ~ LNPFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(FatPct ~ LNPFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+                  parity + married, family = gaussian, data = PFAS_A),
+  "MeFOSSA" = glm(FatPct ~ LNME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A),
+  "EtFOSSA" = glm(FatPct ~ LNET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A))
+
+modelsummary(a.ad.m.bfat, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
              coef_omit = "Interc")
 
-# Et_FOSSA
-ad.models.etfos <- list(
-  "Weight Gain" = glm(WEIGHT_mdxa17 ~ LNET_PFOSA + age_enroll + age_dxa + exer + race + 
-                        bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "Waist Circumference" = glm(LNWAIST ~ LNET_PFOSA + age_enroll + age_dxa + exer + race + 
-                                bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "Total Body Fat %" = glm(LNWAIST ~ LNET_PFOSA + age_enroll + age_dxa + exer + race + 
-                             bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "VAT Area" = glm(LNVAT_AREA ~ LNET_PFOSA + age_enroll + age_dxa + exer + race + 
-                     bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "SAAT Area" = glm(LNSAT_AREA ~ LNET_PFOSA + age_enroll + age_dxa + exer + race + 
-                      bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS),
-  "TAAT Area" = glm(LNTAT_AREA ~ LNET_PFOSA + age_enroll + age_dxa + exer + race + 
-                      bmi_cat + edu + smoke + income_cat2 + parity, family = gaussian, data = PFAS))
 
-modelsummary(ad.models.etfos, fmt = 2,
+# BODY FAT MASS
+a.ad.m.fat <- list(
+  "PFOS" = glm(FatMass ~ LNPFOS + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(FatMass ~ LNPFOA + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(FatMass ~ LNPFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(FatMass ~ LNPFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+                  parity + married, family = gaussian, data = PFAS_A),
+  "MeFOSSA" = glm(FatMass ~ LNME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A),
+  "EtFOSSA" = glm(FatMass ~ LNET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A))
+
+modelsummary(a.ad.m.fat, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
@@ -498,12 +506,12 @@ modelsummary(ad.models.etfos, fmt = 2,
 
 ```{r}
 ##### PLOT THE ADJUSTED LINEAR MODEL COEFFICIENTS 
-modelplot(ad.models.pfos, coef_omit = "Interc")
-modelplot(ad.models.pfoa, coef_omit = "Interc")
-modelplot(ad.models.pfna, coef_omit = "Interc")
-modelplot(ad.models.pfhxs, coef_omit = "Interc")
-modelplot(ad.models.mefos, coef_omit = "Interc")
-modelplot(ad.models.etfos, coef_omit = "Interc")
+modelplot(a.ad.m.bmi, coef_omit = "Interc")
+modelplot(a.ad.m.wt, coef_omit = "Interc")
+modelplot(a.ad.m.waist, coef_omit = "Interc")
+modelplot(a.ad.m.hip, coef_omit = "Interc")
+modelplot(a.ad.m.bfat, coef_omit = "Interc")
+modelplot(a.ad.m.fat, coef_omit = "Interc")
 
 ```
 
