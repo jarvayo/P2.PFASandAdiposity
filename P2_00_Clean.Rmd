@@ -23,6 +23,18 @@ PFAS[PFAS == ""] <- NA
 ```
 
 ```{r}
+##### FOR PFAS CONCENTRATIONS BELOW THE LOD, REPLACE WITH "LOD/(SQRT(2))"
+
+PFAS$PFOS <- ifelse(!is.na(PFAS$PFOS) & PFAS$PFOS < 0.2, PFAS$PFOS == (0.2/(sqrt(2))), PFAS$PFOS)
+PFAS$PFOA <- ifelse(!is.na(PFAS$PFOA) & PFAS$PFOA < 0.1, PFAS$PFOA == (0.1/(sqrt(2))), PFAS$PFOA)
+PFAS$PFNA2 <- ifelse(!is.na(PFAS$PFNA2) & PFAS$PFNA2 < 0.1, PFAS$PFNA2 == (0.1/(sqrt(2))), PFAS$PFNA2)
+PFAS$PFHxS <- ifelse(!is.na(PFAS$PFHxS) & PFAS$PFHxS < 0.1, PFAS$PFHxS == (0.1/(sqrt(2))), PFAS$PFHxS)
+PFAS$Me_PFOSA_AcOH2 <- ifelse(!is.na(PFAS$Me_PFOSA_AcOH2) & PFAS$Me_PFOSA_AcOH2 < 0.1, PFAS$Me_PFOSA_AcOH2 == (0.1/(sqrt(2))), PFAS$Me_PFOSA_AcOH2)
+PFAS$Et_PFOSA_AcOH <- ifelse(!is.na(PFAS$Et_PFOSA_AcOH) & PFAS$Et_PFOSA_AcOH < 0.1, PFAS$Et_PFOSA_AcOH == (0.1/(sqrt(2))), PFAS$Et_PFOSA_AcOH)
+
+```
+
+```{r}
 ##### DETERMINE PFAS MISSINGNESS
 summary(PFAS$PFOS)
 summary(PFAS$PFOA)
