@@ -61,9 +61,9 @@ summary(PFAS$mom_weight_ma17) # 1424 MISSING
 summary(PFAS$mom_bmi_MT) # 1424 MISSING
 summary(PFAS$mom_waist_ma17) # 1419 MISSING
 summary(PFAS$mom_hip_ma17) # 1420 MISSING
+summary(PFAS$mom_muac_ma17) # 1420 MISSING
 summary(PFAS$mom_bodyfat_ma17) # 1427 MISSING, BODY FAT %
 summary(PFAS$mom_fat_ma17) # 1428 MISSING, BODY FAT MASS
-summary(PFAS$mom_muac_ma17)
 
 ```
 
@@ -73,11 +73,12 @@ PFAS_1 <- subset(PFAS, !is.na(PFOS)) # MISSING 1ST OR 2ND TRIMESTER PFAS DATA (I
 PFAS_2 <- subset(PFAS_1, t1diab_mom_epi_epia_d == 2 | is.na(t1diab_mom_epi_epia_d)) # HISTORY OF T1 DIABETES
 PFAS_2 <- subset(PFAS_2, t2diab_mom_epi_epia_d == 2 | is.na(t2diab_mom_epi_epia_d)) # HISTORY OF T2 DIABETES
 PFAS_3 <- subset(PFAS_2, !is.na(mom_bmi_MT)) # MISSING BMI (N = 1076)
-PFAS_4 <- subset(PFAS_3, !is.na(mom_waist_ma17)) # MISSING WAIST MEASUREMENT (N = 0)
-PFAS_5 <- subset(PFAS_4, !is.na(mom_hip_ma17)) # MISSING HIP MEASUREMENT (N = 1)
+PFAS_3 <- subset(PFAS_3, !is.na(mom_waist_ma17)) # MISSING WAIST MEASUREMENT (N = 0)
+PFAS_4 <- subset(PFAS_3, !is.na(mom_hip_ma17)) # MISSING HIP MEASUREMENT (N = 1)
+PFAS_5 <- subset(PFAS_4, !is.na(mom_muac_ma17)) # MISSING MUAC (N = 1)
 PFAS_6 <- subset(PFAS_5, !is.na(mom_bodyfat_ma17)) # MISSING TOTAL BODY FAT % (N = 3)
 PFAS_7 <- subset(PFAS_6, !is.na(mom_fat_ma17)) # MISSING BODY FAT MASS (N = 1)
-PFAS_8 <- subset(PFAS_7, !is.na(mom_weight_ma17)) # MISSING BODY WEIGHT (N = 1)
+PFAS_8 <- subset(PFAS_7, !is.na(mom_weight_ma17)) # MISSING BODY WEIGHT (N = 0)
 
 PFAS_9 <- subset(PFAS_8, !is.na(VAT_AREA_mdxa17)) # MISSING DXA MEASURES (N = 121)
 
