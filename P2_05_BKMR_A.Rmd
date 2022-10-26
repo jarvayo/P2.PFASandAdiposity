@@ -14,13 +14,11 @@ library("tidyverse")
 ```{r}
 ##### LOAD DATASET
 PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_A.csv")
-PFAS_AD <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_AD.csv")
 
 ```
 
 ```{r}
 ##### TRANSFORMVARIABLES TO NUMERIC FOR BKMR COVARIATE MATRIX
-##### ANTHRO DATASET (N = 549)
 
 # RENAME
 PFAS_A$age_enroll <- PFAS_A$age_mom_enroll_d
@@ -62,50 +60,6 @@ PFAS_A$married <- as.factor(PFAS_A$married)
 # CENTER AND SCALE CONTINUOUS VARIABLES
 PFAS_A$age_enroll <- scale(PFAS_A$age_enroll)
 
-
-
-##### ANTHRO + DXA DATASET (N = 429)
-
-# RENAME
-PFAS_AD$age_enroll <- PFAS_AD$age_mom_enroll_d
-PFAS_AD$race <- PFAS_AD$race2_mom_epi_epia_d
-PFAS_AD$edu <- PFAS_AD$coll_grad
-PFAS_AD$bmi <- PFAS_AD$bmi_mom_prepreg_d
-PFAS_AD$smoke <- PFAS_AD$smokpreg_final_d
-PFAS_AD$parity <- PFAS_AD$parity_d
-PFAS_AD$married <- PFAS_AD$married_cohab
-
-# REFACTOR AND RELABEL 
-PFAS_AD$race <- ifelse(PFAS_AD$race == "white", 0,
-                     ifelse(PFAS_AD$race == "black", 1,
-                     ifelse(PFAS_AD$race == "hispa", 2,
-                     ifelse(PFAS_AD$race == "asian", 3,
-                     ifelse(PFAS_AD$race == "other", 4, 4)))))
-PFAS_AD$edu <- ifelse(PFAS_AD$edu == 1, 1, 0)
-PFAS_AD$bmi_cat <- ifelse(PFAS_AD$bmi <18.5, 0,
-                         ifelse(PFAS_AD$bmi >=18.5 & PFAS_AD$bmi < 25.0, 1, 
-                         ifelse(PFAS_AD$bmi >=25.0 & PFAS_AD$bmi < 30.0, 2, 
-                         ifelse(PFAS_AD$bmi >=30.0 & PFAS_AD$bmi < 35.0, 3,
-                         ifelse(PFAS_AD$bmi >=35.0, 4, 99)))))
-PFAS_AD$smoke <- ifelse(PFAS_AD$smoke == "former", 0,
-                         ifelse(PFAS_AD$smoke == "smoke preg", 1,
-                         ifelse(PFAS_AD$smoke == "xnever", 2, 2)))
-PFAS_AD$parity <- ifelse(PFAS_AD$parity == 0, 0,
-                        ifelse(PFAS_AD$parity == 1, 1,
-                        ifelse(PFAS_AD$parity > 1, 2, 0)))
-PFAS_AD$married <- ifelse(PFAS_AD$married == 1, 1, 0)
-
-# SET CATEGORICAL VARIABLES AS FACTORS
-PFAS_AD$edu <- as.factor(PFAS_AD$edu)
-PFAS_AD$bmi_cat <- as.factor(PFAS_AD$bmi_cat)
-PFAS_AD$smoke <- as.factor(PFAS_AD$smoke)
-PFAS_AD$parity <- as.factor(PFAS_AD$parity)
-PFAS_AD$race <- as.factor(PFAS_AD$race)
-PFAS_AD$married <- as.factor(PFAS_AD$married)
-
-# CENTER AND SCALE CONTINUOUS VARIABLES
-PFAS_AD$age_enroll <- scale(PFAS_AD$age_enroll)
-
 ```
 
 
@@ -133,90 +87,53 @@ FatPct_a <- PFAS_A$FatPct
 FatMass_a <- PFAS_A$FatMass
 
 # CREAT THE COVARIATE MATRIX
-cov <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$race, PFAS_A$bmi_cat, PFAS_A$edu, 
+cov_a <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$race, PFAS_A$bmi_cat, PFAS_A$edu, 
                        PFAS_A$smoke, PFAS_A$parity, PFAS_A$married))
 
 # SET THE SEED
 set.seed(127)
 
 # CREATE KNOTS
-knots <- fields::cover.design(lnmixture_a_z, nd = 50)$design
-
-
-##### ANTHRO + DXA DATASET (N = 429)
-
-# CREATE MIXTURE OF PFAS
-mixture_ad <- as.matrix(cbind(PFAS_AD$PFOS, PFAS_AD$PFOA, PFAS_AD$PFNA, PFAS_AD$PFHxS, 
-                              PFAS_AD$MeFOSSA, PFAS_AD$EtFOSSA))
-
-# LN-TRANSFORM MIXTURE
-lnmixture_ad <- apply(mixture_ad, 2, log)     
-
-# SCALE MIXTURE VARIABLES TO THE MEAN
-lnmixture_ad_z <- scale(lnmixture_ad)
-
-# SET THE OUTCOME
-VAT_A <- PFAS_AD$LNVAT_AREA
-SAAT_A <- PFAS_AD$LNSAT_AREA
-TAAT_A <- PFAS_AD$LNTAT_AREA
-VAT_M <- PFAS_AD$LNVAT_MASS
-SAAT_M <- PFAS_AD$LNSAT_MASS
-TAAT_M <- PFAS_AD$LNTAT_MASS
-VAT_V <- PFAS_AD$LNVAT_VOLUME
-SAAT_V <- PFAS_AD$LNSAT_VOLUME
-TAAT_V <- PFAS_AD$LNTAT_VOLUME
-BMI_ad <- PFAS_AD$BMI
-Weight_ad <- PFAS_AD$Weight
-Waist_ad <- PFAS_AD$Waist
-Hip_ad <- PFAS_AD$Hip
-MUAC_ad <- PFAS_AD$MUAC
-FatPct_ad <- PFAS_AD$FatPct
-FatMass_ad <- PFAS_AD$FatMass
-
-# CREAT THE COVARIATE MATRIX
-cov <- as.matrix(cbind(PFAS_AD$age_enroll, PFAS_AD$race, PFAS_AD$bmi_cat, PFAS_AD$edu, 
-                       PFAS_AD$smoke, PFAS_AD$parity, PFAS_AD$married))
-
-# SET THE SEED
-set.seed(127)
-
-# CREATE KNOTS
-knots <- fields::cover.design(lnmixture_ad_z, nd = 40)$design
+knots_a <- fields::cover.design(lnmixture_a_z, nd = 50)$design
 
 ```
 
 ```{r}
 ##### BUILD BKMR MODELS 
-# VAT
-mod.vat <- kmbayes(y=PFAS_AD$LNVAT_AREA, Z=lnmixture_ad_z, X=cov, iter=25000, family = "gaussian", 
-                     verbose=FALSE, varsel=TRUE, knots = knots)
+# BMI
+m_a_bmi <- kmbayes(y = BMI_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
-# SAAT
-mod.saat <- kmbayes(y=SAAT, Z=lnmixture_z, X=cov, iter=25000, family = "gaussian", 
-                     verbose=FALSE, varsel=TRUE, knots = knots)
+# WEIGHT
+m_a_wt <- kmbayes(y = Weight_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
-# TAAT
-mod.taat <- kmbayes(y=TAAT, Z=lnmixture_z, X=cov, iter=25000, family = "gaussian", 
-                     verbose=FALSE, varsel=TRUE, knots = knots)
+# WAIST CIRCUMFERENCE
+m_a_waist <- kmbayes(y = Waist_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
-# Weight
-mod.weight <- kmbayes(y=Weight, Z=lnmixture_z, X=cov, iter=25000, family = "gaussian", 
-                     verbose=FALSE, varsel=TRUE, knots = knots)
+# HIP CIRCUMFERENCE
+m_a_hip <- kmbayes(y = Hip_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
-# Waist
-mod.waist <- kmbayes(y=Waist, Z=lnmixture_z, X=cov, iter=25000, family = "gaussian", 
-                     verbose=FALSE, varsel=TRUE, knots = knots)
+# MUAC
+m_a_muac <- kmbayes(y = MUAC_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
-# Fat
-mod.fat <- kmbayes(y=Fat, Z=lnmixture_z, X=cov, iter=25000, family = "gaussian", 
-                     verbose=FALSE, varsel=TRUE, knots = knots)
+# BODY FAT %
+m_a_bfat <- kmbayes(y = FatPct_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
+# BODY FAT MASS
+m_a_fat <- kmbayes(y = FatMass_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_a)
+beep(sound=5, expr=NULL)
 
 ```
 
