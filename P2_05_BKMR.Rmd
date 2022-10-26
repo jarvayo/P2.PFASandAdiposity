@@ -20,7 +20,7 @@ PFAS_AD <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/
 
 ```{r}
 ##### TRANSFORMVARIABLES TO NUMERIC FOR BKMR COVARIATE MATRIX
-##### ANTHRO DATASET
+##### ANTHRO DATASET (N = 549)
 
 # RENAME
 PFAS_A$age_enroll <- PFAS_A$age_mom_enroll_d
@@ -64,7 +64,7 @@ PFAS_A$age_enroll <- scale(PFAS_A$age_enroll)
 
 
 
-##### ANTHRO + DXA DATASET
+##### ANTHRO + DXA DATASET (N = 429)
 
 # RENAME
 PFAS_AD$age_enroll <- PFAS_AD$age_mom_enroll_d
@@ -111,7 +111,39 @@ PFAS_AD$age_enroll <- scale(PFAS_AD$age_enroll)
 
 ```{r}
 ##### PREPARE VARIABLES FOR BKMR MODELS #####
-##### ANTHRO + DXA DATASET
+##### ANTHRO DATASET (N = 549)
+
+# CREATE MIXTURE OF PFAS
+mixture_a <- as.matrix(cbind(PFAS_A$PFOS, PFAS_A$PFOA, PFAS_A$PFNA, PFAS_A$PFHxS, 
+                              PFAS_A$MeFOSSA, PFAS_A$EtFOSSA))
+
+# LN-TRANSFORM MIXTURE
+lnmixture_a <- apply(mixture_a, 2, log)     
+
+# SCALE MIXTURE VARIABLES TO THE MEAN
+lnmixture_a_z <- scale(lnmixture_a)
+
+# SET THE OUTCOME
+BMI_a <- PFAS_A$BMI
+Weight_a <- PFAS_A$Weight
+Waist_a <- PFAS_A$Waist
+Hip_a <- PFAS_A$Hip
+MUAC_a <- PFAS_A$MUAC
+FatPct_a <- PFAS_A$FatPct
+FatMass_a <- PFAS_A$FatMass
+
+# CREAT THE COVARIATE MATRIX
+cov <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$race, PFAS_A$bmi_cat, PFAS_A$edu, 
+                       PFAS_A$smoke, PFAS_A$parity, PFAS_A$married))
+
+# SET THE SEED
+set.seed(127)
+
+# CREATE KNOTS
+knots <- fields::cover.design(lnmixture_a_z, nd = 50)$design
+
+
+##### ANTHRO + DXA DATASET (N = 429)
 
 # CREATE MIXTURE OF PFAS
 mixture_ad <- as.matrix(cbind(PFAS_AD$PFOS, PFAS_AD$PFOA, PFAS_AD$PFNA, PFAS_AD$PFHxS, 
@@ -123,7 +155,7 @@ lnmixture_ad <- apply(mixture_ad, 2, log)
 # SCALE MIXTURE VARIABLES TO THE MEAN
 lnmixture_ad_z <- scale(lnmixture_ad)
 
-##### SET THE OUTCOME
+# SET THE OUTCOME
 VAT_A <- PFAS_AD$LNVAT_AREA
 SAAT_A <- PFAS_AD$LNSAT_AREA
 TAAT_A <- PFAS_AD$LNTAT_AREA
@@ -133,19 +165,22 @@ TAAT_M <- PFAS_AD$LNTAT_MASS
 VAT_V <- PFAS_AD$LNVAT_VOLUME
 SAAT_V <- PFAS_AD$LNSAT_VOLUME
 TAAT_V <- PFAS_AD$LNTAT_VOLUME
+BMI_ad <- PFAS_AD$BMI
+Weight_ad <- PFAS_AD$Weight
+Waist_ad <- PFAS_AD$Waist
+Hip_ad <- PFAS_AD$Hip
+MUAC_ad <- PFAS_AD$MUAC
+FatPct_ad <- PFAS_AD$FatPct
+FatMass_ad <- PFAS_AD$FatMass
 
-Weight <- PFAS_AD$WEIGHT_mdxa17
-Waist <- PFAS_AD$mom_waist_ma17
-Fat <- PFAS$mom_bodyfat_ma17
+# CREAT THE COVARIATE MATRIX
+cov <- as.matrix(cbind(PFAS_AD$age_enroll, PFAS_AD$race, PFAS_AD$bmi_cat, PFAS_AD$edu, 
+                       PFAS_AD$smoke, PFAS_AD$parity, PFAS_AD$married))
 
-##### CREAT THE COVARIATE MATRIX
-cov <- as.matrix(cbind(PFAS_AD$age_enroll, PFAS_AD$race2_mom_epi_epia_d, PFAS_AD$bmi_cat, PFAS_AD$coll_grad, 
-                       PFAS_AD$smokpreg_final_d, PFAS_AD$parity, PFAS_AD$married_cohab))
-
-##### SET THE SEED
+# SET THE SEED
 set.seed(127)
 
-##### CREATE KNOTS
+# CREATE KNOTS
 knots <- fields::cover.design(lnmixture_ad_z, nd = 40)$design
 
 ```
