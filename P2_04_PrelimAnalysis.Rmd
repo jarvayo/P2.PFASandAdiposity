@@ -21,7 +21,7 @@ PFAS_AD <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/
 ```
 
 ```{r}
-##### RUN UNADJUSTED LINEAR REGRESSION MODELS, ANTHRO DATASET
+##### RUN UNADJUSTED LINEAR REGRESSION MODELS, ANTHRO DATASET (N = 549)
 
 # BMI
 a.unad.m.bmi <- list(
@@ -165,7 +165,7 @@ modelsummary(a.unad.lnm.fat, fmt = 2)
 ```
 
 ```{r}
-##### RUN UNADJUSTED LINEAR REGRESSION MODELS, ANTHRO + DXA DATASET
+##### RUN UNADJUSTED LINEAR REGRESSION MODELS, ANTHRO + DXA DATASET (N = 429)
 
 # BMI
 ad.unad.m.bmi <- list(
@@ -409,7 +409,7 @@ modelsummary(ad.unad.lnm.tatv, fmt = 2)
 
 
 ```{r}
-##### RUN ADJUSTED LINEAR REGRESSION MODELS, ANTHRO DATASET
+##### RUN ADJUSTED LINEAR REGRESSION MODELS, ANTHRO DATASET (N = 549)
 
 # BMI
 a.ad.m.bmi <- list(
@@ -578,7 +578,7 @@ modelplot(a.ad.m.fat, coef_omit = "Interc")
 ```
 
 ```{r}
-##### RUN ADJUSTED LINEAR REGRESSION MODELS, ANTHRO + DXA DATASET
+##### RUN ADJUSTED LINEAR REGRESSION MODELS, ANTHRO + DXA DATASET (N = 429)
 
 # BMI
 ad.ad.m.bmi <- list(
