@@ -289,6 +289,42 @@ ExtractPIPs(m_ad_fat, sel = sel_final)
 
 ```{r}
 ##### PREDICT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
+# VAT AREA
+univar_ad_vata <- PredictorResponseUnivar(fit = m_ad_vata, sel = sel_final, method = "approx")
+univar_ad_vata
+
+# SAAT AREA
+univar_ad_saata <- PredictorResponseUnivar(fit = m_ad_saata, sel = sel_final, method = "approx")
+univar_ad_saata
+
+# TAAT AREA
+univar_ad_taata <- PredictorResponseUnivar(fit = m_ad_taata, sel = sel_final, method = "approx")
+univar_ad_taata
+
+# VAT MASS
+univar_ad_vatm <- PredictorResponseUnivar(fit = m_ad_vatm, sel = sel_final, method = "approx")
+univar_ad_vatm
+
+# SAAT MASS
+univar_ad_saatm <- PredictorResponseUnivar(fit = m_ad_saatm, sel = sel_final, method = "approx")
+univar_ad_saatm
+
+# TAAT MASS
+univar_ad_taatm <- PredictorResponseUnivar(fit = m_ad_taatm, sel = sel_final, method = "approx")
+univar_ad_taatm
+
+# VAT VOLUME
+univar_ad_vata <- PredictorResponseUnivar(fit = m_ad_vata, sel = sel_final, method = "approx")
+univar_ad_vata
+
+# SAAT VOLUME
+univar_ad_saatv <- PredictorResponseUnivar(fit = m_ad_saatv, sel = sel_final, method = "approx")
+univar_ad_saatv
+
+# TAAT VOLUME
+univar_ad_taatv <- PredictorResponseUnivar(fit = m_ad_taatv, sel = sel_final, method = "approx")
+univar_ad_taatv
+
 # BMI
 univar_ad_bmi <- PredictorResponseUnivar(fit = m_ad_bmi, sel = sel_final, method = "approx")
 univar_ad_bmi
@@ -319,6 +355,330 @@ univar_ad_fat
 
 
 ##### PLOT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
+# VAT AREA
+uni_ad_vata <- ggplot(univar_ad_vata, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni1_ad_vata <- ggplot(univar_ad_vata[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni2_ad_vata <- ggplot(univar_ad_vata[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni3_ad_vata <- ggplot(univar_ad_vata[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFNA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni4_ad_vata <- ggplot(univar_ad_vata[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni5_ad_vata <- ggplot(univar_ad_vata[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni6_ad_vata <- ggplot(univar_ad_vata[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni_ad_vata
+uni1_ad_vata
+uni2_ad_vata
+uni3_ad_vata
+uni4_ad_vata
+uni5_ad_vata
+uni6_ad_vata
+
+# SAAT AREA
+uni_ad_saata <- ggplot(univar_ad_saata, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni1_ad_saata <- ggplot(univar_ad_saata[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni2_ad_saata <- ggplot(univar_ad_saata[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni3_ad_saata <- ggplot(univar_ad_saata[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFNA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni4_ad_saata <- ggplot(univar_ad_saata[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni5_ad_saata <- ggplot(univar_ad_saata[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni6_ad_saata <- ggplot(univar_ad_saata[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni_ad_saata
+uni1_ad_saata
+uni2_ad_saata
+uni3_ad_saata
+uni4_ad_saata
+uni5_ad_saata
+uni6_ad_saata
+
+# TAAT AREA
+uni_ad_taata <- ggplot(univar_ad_taata, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni1_ad_taata <- ggplot(univar_ad_taata[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni2_ad_taata <- ggplot(univar_ad_taata[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni3_ad_taata <- ggplot(univar_ad_taata[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFNA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni4_ad_taata <- ggplot(univar_ad_taata[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni5_ad_taata <- ggplot(univar_ad_taata[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni6_ad_taata <- ggplot(univar_ad_taata[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni_ad_taata
+uni1_ad_taata
+uni2_ad_taata
+uni3_ad_taata
+uni4_ad_taata
+uni5_ad_taata
+uni6_ad_taata
+
+# VAT MASS
+uni_ad_vatm <- ggplot(univar_ad_vatm, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni1_ad_vatm <- ggplot(univar_ad_vatm[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni2_ad_vatm <- ggplot(univar_ad_vatm[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni3_ad_vatm <- ggplot(univar_ad_vatm[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFNA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni4_ad_vatm <- ggplot(univar_ad_vatm[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni5_ad_vatm <- ggplot(univar_ad_vatm[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni6_ad_vatm <- ggplot(univar_ad_vatm[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni_ad_vatm
+uni1_ad_vatm
+uni2_ad_vatm
+uni3_ad_vatm
+uni4_ad_vatm
+uni5_ad_vatm
+uni6_ad_vatm
+
+# SAAT MASS
+uni_ad_saatm <- ggplot(univar_ad_saatm, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni1_ad_saatm <- ggplot(univar_ad_saatm[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni2_ad_saatm <- ggplot(univar_ad_saatm[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni3_ad_saatm <- ggplot(univar_ad_saatm[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFNA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni4_ad_saatm <- ggplot(univar_ad_saatm[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni5_ad_saatm <- ggplot(univar_ad_saatm[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni6_ad_saatm <- ggplot(univar_ad_saatm[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni_ad_saatm
+uni1_ad_saatm
+uni2_ad_saatm
+uni3_ad_saatm
+uni4_ad_saatm
+uni5_ad_saatm
+uni6_ad_saatm
+
+# TAAT MASS
+uni_ad_taatm <- ggplot(univar_ad_taatm, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni1_ad_taatm <- ggplot(univar_ad_taatm[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni2_ad_taatm <- ggplot(univar_ad_taatm[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni3_ad_taatm <- ggplot(univar_ad_taatm[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFNA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni4_ad_taatm <- ggplot(univar_ad_taatm[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni5_ad_taatm <- ggplot(univar_ad_taatm[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni6_ad_taatm <- ggplot(univar_ad_taatm[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni_ad_taatm
+uni1_ad_taatm
+uni2_ad_taatm
+uni3_ad_taatm
+uni4_ad_taatm
+uni5_ad_taatm
+uni6_ad_taatm
+
+# VAT VOLUME
+uni_ad_vatv <- ggplot(univar_ad_vatv, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni1_ad_vatv <- ggplot(univar_ad_vatv[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni2_ad_vatv <- ggplot(univar_ad_vatv[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni3_ad_vatv <- ggplot(univar_ad_vatv[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFNA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni4_ad_vatv <- ggplot(univar_ad_vatv[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni5_ad_vatv <- ggplot(univar_ad_vatv[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni6_ad_vatv <- ggplot(univar_ad_vatv[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni_ad_vatv
+uni1_ad_vatv
+uni2_ad_vatv
+uni3_ad_vatv
+uni4_ad_vatv
+uni5_ad_vatv
+uni6_ad_vatv
+
+# SAAT VOLUME
+uni_ad_saatv <- ggplot(univar_ad_saatv, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni1_ad_saatv <- ggplot(univar_ad_saatv[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni2_ad_saatv <- ggplot(univar_ad_saatv[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni3_ad_saatv <- ggplot(univar_ad_saatv[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFNA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni4_ad_saatv <- ggplot(univar_ad_saatv[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni5_ad_saatv <- ggplot(univar_ad_saatv[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni6_ad_saatv <- ggplot(univar_ad_saatv[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni_ad_saatv
+uni1_ad_saatv
+uni2_ad_saatv
+uni3_ad_saatv
+uni4_ad_saatv
+uni5_ad_saatv
+uni6_ad_saatv
+
+# TAAT VOLUME
+uni_ad_taatv <- ggplot(univar_ad_taatv, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni1_ad_taatv <- ggplot(univar_ad_taatv[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni2_ad_taatv <- ggplot(univar_ad_taatv[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFOA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni3_ad_taatv <- ggplot(univar_ad_taatv[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFNA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni4_ad_taatv <- ggplot(univar_ad_taatv[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni5_ad_taatv <- ggplot(univar_ad_taatv[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni6_ad_taatv <- ggplot(univar_ad_taatv[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+
+uni_ad_taatv
+uni1_ad_taatv
+uni2_ad_taatv
+uni3_ad_taatv
+uni4_ad_taatv
+uni5_ad_taatv
+uni6_ad_taatv
+
 # BMI
 uni_ad_bmi <- ggplot(univar_ad_bmi, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
   geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in BMI (kg/m^2)")
@@ -578,6 +938,11 @@ uni5_ad_fat
 uni6_ad_fat
 
 ```
+
+
+*** LEFT OFF HERE ****
+
+
 
 ```{r}
 ##### PREDICT BIVARIATE EXPOSURE-RESPONSE CURVE TO ASSESS POTENTIAL INTERACTIONS
