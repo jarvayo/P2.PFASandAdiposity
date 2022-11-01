@@ -101,37 +101,37 @@ knots_a <- fields::cover.design(lnmixture_a_z, nd = 50)$design
 ```{r}
 ##### BUILD BKMR MODELS 
 # BMI
-m_a_bmi <- kmbayes(y = BMI_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+m_a_bmi <- kmbayes(y = BMI_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
 # WEIGHT
-m_a_wt <- kmbayes(y = Weight_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+m_a_wt <- kmbayes(y = Weight_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
 # WAIST CIRCUMFERENCE
-m_a_waist <- kmbayes(y = Waist_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+m_a_waist <- kmbayes(y = Waist_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
 # HIP CIRCUMFERENCE
-m_a_hip <- kmbayes(y = Hip_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+m_a_hip <- kmbayes(y = Hip_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
 # MUAC
-m_a_muac <- kmbayes(y = MUAC_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+m_a_muac <- kmbayes(y = MUAC_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
 # BODY FAT %
-m_a_bfat <- kmbayes(y = FatPct_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+m_a_bfat <- kmbayes(y = FatPct_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
 # BODY FAT MASS
-m_a_fat <- kmbayes(y = FatMass_a, z = lnmixture_a_z, x = cov_a, iter=25000, family = "gaussian", 
+m_a_fat <- kmbayes(y = FatMass_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
@@ -143,12 +143,13 @@ beep(sound=5, expr=NULL)
 sel <- seq(0,25000,by = 50)
 
 ##### ACCESS CONVERGENCE WITH TRACEPLOTS
-TracePlot(fit = mod.vat, par = "beta", sel = sel)
-TracePlot(fit = mod.saat, par = "beta", sel = sel)
-TracePlot(fit = mod.taat, par = "beta", sel = sel)
-TracePlot(fit = mod.weight, par = "beta", sel = sel)
-TracePlot(fit = mod.waist, par = "beta", sel = sel)
-TracePlot(fit = mod.fat, par = "beta", sel = sel)
+TracePlot(fit = m_a_bmi, par = "beta", sel = sel)
+TracePlot(fit = m_a_wt, par = "beta", sel = sel)
+TracePlot(fit = m_a_waist, par = "beta", sel = sel)
+TracePlot(fit = m_a_hip, par = "beta", sel = sel)
+TracePlot(fit = m_a_muac, par = "beta", sel = sel)
+TracePlot(fit = m_a_bfat, par = "beta", sel = sel)
+TracePlot(fit = m_a_fat, par = "beta", sel = sel)
 
 ##### VALUES TO KEEP AFTER BURNING/THIN (ACCORDING TO THE TRACEPLOT FUNCTION ABOVE)
 sel_final <- seq(1200, 25000, by = 1)
@@ -157,39 +158,43 @@ sel_final <- seq(1200, 25000, by = 1)
 
 ```{r}
 ##### ESIMATE POSTERIOR INCLUSION PROBABILITIES
-# VAT
-summary(mod.vat)
-ExtractPIPs(mod.vat, sel = sel_final)
+# BMI
+summary(m_a_bmi)
+ExtractPIPs(m_a_bmi, sel = sel_final)
 
-# SAAT
-summary(mod.saat)
-ExtractPIPs(mod.saat, sel = sel_final)
+# WEIGHT
+summary(m_a_wt)
+ExtractPIPs(m_a_wt, sel = sel_final)
 
-# TAAT
-summary(mod.taat)
-ExtractPIPs(mod.taat, sel = sel_final)
+# WAIST CIRCUMFERENCE
+summary(m_a_waist)
+ExtractPIPs(m_a_waist, sel = sel_final)
 
-# Weight
-summary(mod.weight)
-ExtractPIPs(mod.weight, sel = sel_final)
+# HIP CIRCUMFERENCE
+summary(m_a_hip)
+ExtractPIPs(m_a_hip, sel = sel_final)
 
-# Waist
-summary(mod.waist)
-ExtractPIPs(mod.waist, sel = sel_final)
+# MUAC
+summary(m_a_muac)
+ExtractPIPs(m_a_muac, sel = sel_final)
 
-# Fat
-summary(mod.fat)
-ExtractPIPs(mod.fat, sel = sel_final)
+# BODT FAT %
+summary(m_a_bfat)
+ExtractPIPs(m_a_bfat, sel = sel_final)
+
+# BODY FAT MASS
+summary(m_a_fat)
+ExtractPIPs(m_a_fat, sel = sel_final)
 
 ```
 
 ```{r}
 ##### PREDICT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
-# VAT
+# BMI
 pred_univar_vat <- PredictorResponseUnivar(fit = mod.vat, sel = sel_final, method = "approx")
 pred_univar_vat
 
-# SAAT
+# WEIGHT
 pred_univar_saat <- PredictorResponseUnivar(fit = mod.saat, sel = sel_final, method = "approx")
 pred_univar_saat
 
@@ -244,13 +249,13 @@ uni_fat
 ```{r}
 ##### PREDICT BIVARIATE EXPOSURE-RESPONSE CURVE TO ASSESS POTENTIAL INTERACTIONS
 ##### SUBESQUENTLY, PREDICT INTERACTIONS AMONG PFAS
-# VAT
+# BMI
 pred_bivar_vat <- PredictorResponseBivar(fit = mod.vat, min.plot.dist = 1, sel = sel_final, method = "approx")
 pred_interact_vat <- PredictorResponseBivarLevels(pred.resp.df = pred_bivar_vat, Z = lnmixture_ad_z,
                                                         both_pairs = T, qs = c(0.25, 0.50, 0.75))
 pred_interact_vat_1090 <- PredictorResponseBivarLevels(pred.resp.df = pred_bivar_vat, Z = lnmixture_ad_z, 
                                                              both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
-# SAAT
+# WEIGHT
 pred_bivar_saat <- PredictorResponseBivar(fit = mod.saat, min.plot.dist = 1, sel = sel_final, method = "approx")
 pred_interact_saat <- PredictorResponseBivarLevels(pred.resp.df = pred_bivar_saat, Z = lnmixture_z,
                                                         both_pairs = T, qs = c(0.25, 0.50, 0.75))
@@ -285,7 +290,7 @@ pred_interact_fat_1090 <- PredictorResponseBivarLevels(pred.resp.df = pred_bivar
 
 ##### PLOT INTERACTIONS BETWEEN EXPOSURE AND RESPONSE
 ##### NON-PARALLEL LINES WOULD INDICATE POTENTIAL INTERACTIONS
-# VAT
+# BMI
 m1_interact_vat <- ggplot(pred_interact_vat, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
@@ -293,7 +298,7 @@ m1_interact_vat <- ggplot(pred_interact_vat, aes(z1, est)) +
   ggtitle("h(PFAS1 | Quantiles of PFAS2)") 
 m1_interact_vat
 
-# SAAT
+# WEIGHT
 m1_interact_saat <- ggplot(pred_interact_saat, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
@@ -338,14 +343,14 @@ m1_interact_fat
 ```{r}
 ##### DETERMINE RISK ASSOCIATED WITH THE OVERALL MIXTURE
 ##### SUBSEQUENTLY, ESTIMATE RISK FOR SINGLE PFAS AND INTERACTIONS AMONG PFAS
-# VAT
+# BMI
 risk_overall_vat <- OverallRiskSummaries(fit = mod.vat, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
 risks_singvar_vat <- SingVarRiskSummaries(fit = mod.vat, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
 risks_overall_interact_vat <- SingVarIntSummaries(fit = mod.vat, qs.diff = c(0.25, 0.75),
                                        qs.fixed = c(0.25, 0.75),sel=sel_final)
-# SAAT
+# WEIGHT
 risk_overall_saat <- OverallRiskSummaries(fit = mod.saat, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
 risks_singvar_saat <- SingVarRiskSummaries(fit = mod.saat, qs.diff = c(0.25, 0.75),
@@ -384,7 +389,7 @@ risks_overall_interact_fat <- SingVarIntSummaries(fit = mod.fat, qs.diff = c(0.2
 
 
 ##### PLOT RISK ASSOCIATED WITH THE OVERALL MIXTURE
-### VAT
+### BMI
 overall_vat <- ggplot(risk_overall_vat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
@@ -414,7 +419,7 @@ overall_interact_vat
 
 
 
-### SAAT
+### WEIGHT
 overall_saat <- ggplot(risk_overall_saat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
