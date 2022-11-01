@@ -540,56 +540,63 @@ interact_a_fat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_fat, 
 p_interact_a_bmi <- ggplot(interact_a_bmi, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("PFAS1") +
-  ggtitle("h(PFAS1 | Quantiles of PFAS2)") 
+  xlab ("Ln-transformed PFAS 1") +
+  ylab ("Difference in BMI (kg/m^2)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_vat
 
 # WEIGHT
 p_interact_a_wt <- ggplot(interact_a_wt, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("PFAS1") +
-  ggtitle("h(PFAS1 | Quantiles of PFAS2)") 
+  xlab ("Ln-transformed PFAS 1") +
+  ylab ("Difference in weight (kg)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_vat
 
 # WAIST
 p_interact_a_waist <- ggplot(interact_a_waist, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("PFAS1") +
-  ggtitle("h(PFAS1 | Quantiles of PFAS2)") 
+  xlab ("Ln-transformed PFAS 1") +
+  ylab ("Difference in waist circumference (cm)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_vat
 
 # HIP
 p_interact_a_hip <- ggplot(interact_a_hip, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("PFAS1") +
-  ggtitle("h(PFAS1 | Quantiles of PFAS2)") 
+  xlab ("Ln-transformed PFAS 1") +
+  ylab ("Difference in hip circumference (cm)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_vat
 
 # MUAC
 p_interact_a_muac <- ggplot(interact_a_muac, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("PFAS1") +
-  ggtitle("h(PFAS1 | Quantiles of PFAS2)") 
+  xlab ("Ln-transformed PFAS 1") +
+  ylab ("Difference in MUAC (cm)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_vat
 
 # BODY FAT %
 p_interact_a_bfat <- ggplot(interact_a_bfat, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("PFAS1") +
-  ggtitle("h(PFAS1 | Quantiles of PFAS2)") 
+  xlab ("Ln-transformed PFAS 1") +
+  ylab ("Difference in bofy fat (%)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_vat
 
 # BODY FAT MASS
 p_interact_a_fat <- ggplot(interact_a_fat, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("PFAS1") +
-  ggtitle("h(PFAS1 | Quantiles of PFAS2)") 
+  xlab ("Ln-transformed PFAS 1") +
+  ylab ("Difference in body fat (kg/m^2)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_vat
 
 ```
@@ -675,13 +682,15 @@ p_singvar_a_bmi <- ggplot(singvar_a_bmi, aes(variable, est, ymin = est - 1.96*sd
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "PFAS") + scale_y_continuous(name = "Change in BMI (kg/m^2)")
+  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in BMI (kg/m^2)")
 p_singvar_a_bmi
 
 # SINGLE VARIABLE INTERACTION TERMS
 p_overall_interact_a_bmi <- ggplot(overall_interact_a_bmi, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
-  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in BMI (kg/m^2)") +
+  xlab("PFAS")
 p_overall_interact_a_bmi
 
 
@@ -704,13 +713,15 @@ p_singvar_a_wt <- ggplot(singvar_a_wt, aes(variable, est, ymin = est - 1.96*sd, 
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "PFAS") + scale_y_continuous(name = "Change in weight (kg)")
+  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in weight (kg)")
 p_singvar_a_wt
 
 # SINGLE VARIABLE INTERACTION TERMS
 p_overall_interact_a_wt <- ggplot(overall_interact_a_wt, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
-  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in weight (kg)") +
+  xlab("PFAS")
 p_overall_interact_a_wt
 
 
@@ -733,13 +744,15 @@ p_singvar_a_waist <- ggplot(singvar_a_waist, aes(variable, est, ymin = est - 1.9
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "PFAS") + scale_y_continuous(name = "Change in waist circumference (cm)")
+  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in waist circumference (cm)")
 p_singvar_a_waist
 
 # SINGLE VARIABLE INTERACTION TERMS
 p_overall_interact_a_waist <- ggplot(overall_interact_a_waist, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
-  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in waist circumference (cm)") +
+  xlab("PFAS")
 p_overall_interact_a_waist
 
 
@@ -762,13 +775,15 @@ p_singvar_a_hip <- ggplot(singvar_a_hip, aes(variable, est, ymin = est - 1.96*sd
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "PFAS") + scale_y_continuous(name = "Change in hip circumference (cm)")
+  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in hip circumference (cm)")
 p_singvar_a_hip
 
 # SINGLE VARIABLE INTERACTION TERMS
 p_overall_interact_a_hip <- ggplot(overall_interact_a_hip, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
-  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in hip circumference (cm)") +
+  xlab("PFAS")
 p_overall_interact_a_hip
 
 
@@ -791,13 +806,15 @@ p_singvar_a_muac <- ggplot(singvar_a_muac, aes(variable, est, ymin = est - 1.96*
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "PFAS") + scale_y_continuous(name = "Change in MUAC (cm)")
+  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in MUAC (cm)")
 p_singvar_a_muac
 
 # SINGLE VARIABLE INTERACTION TERMS
 p_overall_interact_a_muac <- ggplot(overall_interact_a_muac, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
-  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in MUAC (cm)") +
+  xlab("PFAS")
 p_overall_interact_a_muac
 
 
@@ -820,13 +837,15 @@ p_singvar_a_bfat <- ggplot(singvar_a_bfat, aes(variable, est, ymin = est - 1.96*
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "PFAS") + scale_y_continuous(name = "Change in body fat (%)")
+  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in body fat (%)")
 p_singvar_a_bfat
 
 # SINGLE VARIABLE INTERACTION TERMS
 p_overall_interact_a_bfat <- ggplot(overall_interact_a_bfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
-  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in body fat (%)") +
+  xlab("PFAS")
 p_overall_interact_a_bfat
 
 
@@ -849,13 +868,15 @@ p_singvar_a_fat <- ggplot(singvar_a_fat, aes(variable, est, ymin = est - 1.96*sd
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "PFAS") + scale_y_continuous(name = "Change in body fat (kg/m^2)")
+  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in body fat (kg/m^2)")
 p_singvar_a_fat
 
 # SINGLE VARIABLE INTERACTION TERMS
 p_overall_interact_a_fat <- ggplot(overall_interact_a_fat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
-  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip()
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in body fat (kg/m^2)") +
+  xlab("PFAS")
 p_overall_interact_a_fat
 
 ```
