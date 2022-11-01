@@ -95,14 +95,14 @@ FatPct_ad <- PFAS_AD$FatPct
 FatMass_ad <- PFAS_AD$FatMass
 
 # CREAT THE COVARIATE MATRIX
-cov <- as.matrix(cbind(PFAS_AD$age_enroll, PFAS_AD$race, PFAS_AD$bmi_cat, PFAS_AD$edu, 
+cov_ad <- as.matrix(cbind(PFAS_AD$age_enroll, PFAS_AD$race, PFAS_AD$bmi_cat, PFAS_AD$edu, 
                        PFAS_AD$smoke, PFAS_AD$parity, PFAS_AD$married))
 
 # SET THE SEED
 set.seed(127)
 
 # CREATE KNOTS
-knots <- fields::cover.design(lnmixture_ad_z, nd = 40)$design
+knots_ad <- fields::cover.design(lnmixture_ad_z, nd = 40)$design
 
 ```
 
