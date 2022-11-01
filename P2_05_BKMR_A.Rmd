@@ -543,7 +543,7 @@ p_interact_a_bmi <- ggplot(interact_a_bmi, aes(z1, est)) +
   xlab ("Ln-transformed PFAS 1") +
   ylab ("Difference in BMI (kg/m^2)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_vat
+p_interact_a_bmi
 
 # WEIGHT
 p_interact_a_wt <- ggplot(interact_a_wt, aes(z1, est)) +
@@ -552,7 +552,7 @@ p_interact_a_wt <- ggplot(interact_a_wt, aes(z1, est)) +
   xlab ("Ln-transformed PFAS 1") +
   ylab ("Difference in weight (kg)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_vat
+p_interact_a_wt
 
 # WAIST
 p_interact_a_waist <- ggplot(interact_a_waist, aes(z1, est)) +
@@ -561,7 +561,7 @@ p_interact_a_waist <- ggplot(interact_a_waist, aes(z1, est)) +
   xlab ("Ln-transformed PFAS 1") +
   ylab ("Difference in waist circumference (cm)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_vat
+p_interact_a_waist 
 
 # HIP
 p_interact_a_hip <- ggplot(interact_a_hip, aes(z1, est)) +
@@ -570,7 +570,7 @@ p_interact_a_hip <- ggplot(interact_a_hip, aes(z1, est)) +
   xlab ("Ln-transformed PFAS 1") +
   ylab ("Difference in hip circumference (cm)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_vat
+p_interact_a_hip
 
 # MUAC
 p_interact_a_muac <- ggplot(interact_a_muac, aes(z1, est)) +
@@ -579,7 +579,7 @@ p_interact_a_muac <- ggplot(interact_a_muac, aes(z1, est)) +
   xlab ("Ln-transformed PFAS 1") +
   ylab ("Difference in MUAC (cm)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_vat
+p_interact_a_muac
 
 # BODY FAT %
 p_interact_a_bfat <- ggplot(interact_a_bfat, aes(z1, est)) +
@@ -588,7 +588,7 @@ p_interact_a_bfat <- ggplot(interact_a_bfat, aes(z1, est)) +
   xlab ("Ln-transformed PFAS 1") +
   ylab ("Difference in bofy fat (%)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_vat
+p_interact_a_bfat
 
 # BODY FAT MASS
 p_interact_a_fat <- ggplot(interact_a_fat, aes(z1, est)) +
@@ -597,7 +597,7 @@ p_interact_a_fat <- ggplot(interact_a_fat, aes(z1, est)) +
   xlab ("Ln-transformed PFAS 1") +
   ylab ("Difference in body fat (kg/m^2)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_vat
+p_interact_a_fat
 
 ```
 
