@@ -444,31 +444,31 @@ uni6_a_bfat
 
 # BODY FAT MASS
 uni_a_fat <- ggplot(univar_a_fat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in body fat (kg/m^2)")
+  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in body fat mass (kg)")
 
 uni1_a_fat <- ggplot(univar_a_fat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOS concentration") + ylab("Difference in body fat (kg/m^2)")
+  xlab("Scaled ln-PFOS concentration") + ylab("Difference in body fat mass (kg)")
 
 uni2_a_fat <- ggplot(univar_a_fat[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOA concentration") + ylab("Difference in body fat (kg/m^2)")
+  xlab("Scaled ln-PFOA concentration") + ylab("Difference in body fat mass (kg)")
 
 uni3_a_fat <- ggplot(univar_a_fat[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFNA concentration") + ylab("Difference in body fat (kg/m^2)")
+  xlab("Scaled ln-PFNA concentration") + ylab("Difference in body fat mass (kg)")
 
 uni4_a_fat <- ggplot(univar_a_fat[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in body fat (kg/m^2)")
+  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in body fat mass (kg)")
 
 uni5_a_fat <- ggplot(univar_a_fat[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in body fat (kg/m^2)")
+  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in body fat mass (kg)")
 
 uni6_a_fat <- ggplot(univar_a_fat[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in body fat (kg/m^2)")
+  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in body fat mass (kg)")
 
 uni_a_fat
 uni1_a_fat
@@ -595,7 +595,7 @@ p_interact_a_fat <- ggplot(interact_a_fat, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
   xlab ("Ln-transformed PFAS 1") +
-  ylab ("Difference in body fat (kg/m^2)") +
+  ylab ("Difference in body fat mass (kg)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_a_fat
 
@@ -853,7 +853,7 @@ p_overall_interact_a_bfat
 p_overall_a_fat <- ggplot(overall_a_fat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
-               scale_y_continuous(name = "Change in body fat (kg/m^2)")+
+               scale_y_continuous(name = "Change in body fat mass (kg)")+
                xlab("PFAS quantile") +
                theme_classic()+ theme(
                axis.text.x = element_text(size = 11),
@@ -868,14 +868,14 @@ p_singvar_a_fat <- ggplot(singvar_a_fat, aes(variable, est, ymin = est - 1.96*sd
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in body fat (kg/m^2)")
+  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in body fat mass (kg)")
 p_singvar_a_fat
 
 # SINGLE VARIABLE INTERACTION TERMS
 p_overall_interact_a_fat <- ggplot(overall_interact_a_fat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in body fat (kg/m^2)") +
+  ylab("Difference in body fat mass (kg)") +
   xlab("PFAS")
 p_overall_interact_a_fat
 
