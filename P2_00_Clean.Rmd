@@ -64,6 +64,7 @@ summary(PFAS$mom_hip_ma17) # 1420 MISSING
 summary(PFAS$mom_muac_ma17) # 1420 MISSING
 summary(PFAS$mom_bodyfat_ma17) # 1427 MISSING, BODY FAT %
 summary(PFAS$mom_fat_ma17) # 1428 MISSING, BODY FAT MASS
+summary(PFAS$mom_ffm_ma17) # 1427 MISSING, FAT FREE MASS
 
 ```
 
@@ -79,6 +80,7 @@ PFAS_5 <- subset(PFAS_4, !is.na(mom_muac_ma17)) # MISSING MUAC (N = 1)
 PFAS_6 <- subset(PFAS_5, !is.na(mom_bodyfat_ma17)) # MISSING TOTAL BODY FAT % (N = 3)
 PFAS_7 <- subset(PFAS_6, !is.na(mom_fat_ma17)) # MISSING BODY FAT MASS (N = 1)
 PFAS_8 <- subset(PFAS_7, !is.na(mom_weight_ma17)) # MISSING BODY WEIGHT (N = 0)
+PFAS_8 <- subset(PFAS_8, !is.na(mom_ffm_ma17)) # MISSING FAT FREE MASS (N = 0)
 
 PFAS_9 <- subset(PFAS_8, !is.na(VAT_AREA_mdxa17)) # MISSING DXA MEASURES (N = 121)
 
@@ -108,7 +110,7 @@ ls(PFAS_2)
 PFAS_8 <- subset(PFAS_8, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, age_mom_enroll_d, 
                                     bmi_mom_prepreg_d, coll_grad, Et_PFOSA_AcOH, PFDeA, PFHxS, PFNA2, PFOA, 
                                     PFOS, PFOSA, Me_PFOSA_AcOH2, g_age_days_COLL_D_BLD1, gt70k, 
-                                    income_hh_epq_epqa_d, married_cohab, mom_muac_ma17,
+                                    income_hh_epq_epqa_d, married_cohab, mom_muac_ma17, mom_ffm_ma17, 
                                     mom_age_days_comp_d_ma17, mom_age_days_mdxa17, mom_bmi_MT,
                                     mom_bodyfat_ma17, mom_fat_ma17, mom_hip_ma17, mom_waist_ma17,
                                     mom_weight_ma17, nullip, parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
@@ -119,7 +121,7 @@ PFAS_8 <- subset(PFAS_8, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, 
 PFAS_9 <- subset(PFAS_9, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, age_mom_enroll_d, 
                                     bmi_mom_prepreg_d, coll_grad, Et_PFOSA_AcOH, PFDeA, PFHxS, PFNA2, PFOA, 
                                     PFOS, PFOSA, Me_PFOSA_AcOH2, g_age_days_COLL_D_BLD1, gt70k, 
-                                    income_hh_epq_epqa_d, married_cohab, mom_muac_ma17,
+                                    income_hh_epq_epqa_d, married_cohab, mom_muac_ma17, mom_ffm_ma17,
                                     mom_age_days_comp_d_ma17, mom_age_days_mdxa17, mom_bmi_MT,
                                     mom_bodyfat_ma17, mom_fat_ma17, mom_hip_ma17, mom_waist_ma17,
                                     mom_weight_ma17, nullip, parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
