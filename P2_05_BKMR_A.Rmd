@@ -71,7 +71,10 @@ PFAS_A$age_enroll <- scale(PFAS_A$age_enroll)
 mixture_a <- as.matrix(cbind(PFAS_A$PFOS, PFAS_A$PFOA, PFAS_A$PFNA, PFAS_A$PFHxS, 
                               PFAS_A$MeFOSSA, PFAS_A$EtFOSSA))
 
-# LN-TRANSFORM MIXTURE
+# RENAME VARIABLES IN MIXTURE
+colnames(mixture_a) <- c("PFOS", "PFOA", "PFNA", "PFHxS", "MeFOSSA", "EtFOSSA")
+
+# LOG2-TRANSFORM MIXTURE
 lnmixture_a <- apply(mixture_a, 2, log)     
 
 # SCALE MIXTURE VARIABLES TO THE MEAN
@@ -159,31 +162,31 @@ sel_final <- seq(1200, 25000, by = 1)
 ```{r}
 ##### ESIMATE POSTERIOR INCLUSION PROBABILITIES
 # BMI
-summary(m_a_bmi)
+#summary(m_a_bmi)
 ExtractPIPs(m_a_bmi, sel = sel_final)
 
 # WEIGHT
-summary(m_a_wt)
+#summary(m_a_wt)
 ExtractPIPs(m_a_wt, sel = sel_final)
 
 # WAIST CIRCUMFERENCE
-summary(m_a_waist)
+#summary(m_a_waist)
 ExtractPIPs(m_a_waist, sel = sel_final)
 
 # HIP CIRCUMFERENCE
-summary(m_a_hip)
+#summary(m_a_hip)
 ExtractPIPs(m_a_hip, sel = sel_final)
 
 # MUAC
-summary(m_a_muac)
+#summary(m_a_muac)
 ExtractPIPs(m_a_muac, sel = sel_final)
 
 # BODT FAT %
-summary(m_a_bfat)
+#summary(m_a_bfat)
 ExtractPIPs(m_a_bfat, sel = sel_final)
 
 # BODY FAT MASS
-summary(m_a_fat)
+#summary(m_a_fat)
 ExtractPIPs(m_a_fat, sel = sel_final)
 
 ```
@@ -222,31 +225,38 @@ univar_a_fat
 ##### PLOT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
 # BMI
 uni_a_bmi <- ggplot(univar_a_bmi, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in BMI (kg/m^2)")
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in BMI (kg/m^2)") +
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni1_a_bmi <- ggplot(univar_a_bmi[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOS concentration") + ylab("Difference in BMI (kg/m^2)")
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in BMI (kg/m^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni2_a_bmi <- ggplot(univar_a_bmi[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOA concentration") + ylab("Difference in BMI (kg/m^2)")
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in BMI (kg/m^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni3_a_bmi <- ggplot(univar_a_bmi[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFNA concentration") + ylab("Difference in BMI (kg/m^2)")
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in BMI (kg/m^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni4_a_bmi <- ggplot(univar_a_bmi[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in BMI (kg/m^2)")
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in BMI (kg/m^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni5_a_bmi <- ggplot(univar_a_bmi[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in BMI (kg/m^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni6_a_bmi <- ggplot(univar_a_bmi[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in BMI (kg/m^2)")
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in BMI (kg/m^2)") +
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni_a_bmi
 uni1_a_bmi
@@ -259,31 +269,38 @@ uni6_a_bmi
 
 # WEIGHT
 uni_a_wt <- ggplot(univar_a_wt, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in weight (kg)")
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in weight (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni1_a_wt <- ggplot(univar_a_wt[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOS concentration") + ylab("Difference in weight (kg)")
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in weight (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni2_a_wt <- ggplot(univar_a_wt[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOA concentration") + ylab("Difference in weight (kg)")
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in weight (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni3_a_wt <- ggplot(univar_a_wt[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFNA concentration") + ylab("Difference in weight (kg)")
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in weight (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni4_a_wt <- ggplot(univar_a_wt[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in weight (kg)")
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in weight (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni5_a_wt <- ggplot(univar_a_wt[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in weight (kg)")
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in weight (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni6_a_wt <- ggplot(univar_a_wt[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in weight (kg)")
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in weight (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni_a_wt
 uni1_a_wt
@@ -296,31 +313,38 @@ uni6_a_wt
 
 # WAIST CIRCUMFERENCE
 uni_a_waist <- ggplot(univar_a_waist, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in waist circumference (cm)")
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in waist circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni1_a_waist <- ggplot(univar_a_waist[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOS concentration") + ylab("Difference in waist circumference (cm)")
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in waist circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni2_a_waist <- ggplot(univar_a_waist[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOA concentration") + ylab("Difference in waist circumference (cm)")
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in waist circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni3_a_waist <- ggplot(univar_a_waist[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFNA concentration") + ylab("Difference in waist circumference (cm)")
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in waist circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni4_a_waist <- ggplot(univar_a_waist[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in waist circumference (cm)")
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in waist circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni5_a_waist <- ggplot(univar_a_waist[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in waist circumference (cm)")
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in waist circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni6_a_waist <- ggplot(univar_a_waist[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in waist circumference (cm)")
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in waist circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni_a_waist
 uni1_a_waist
@@ -333,31 +357,38 @@ uni6_a_waist
 
 # HIP CIRCUMFERENCE
 uni_a_hip <- ggplot(univar_a_hip, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in hip circumference (cm)")
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni1_a_hip <- ggplot(univar_a_hip[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOS concentration") + ylab("Difference in hip circumference (cm)")
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni2_a_hip <- ggplot(univar_a_hip[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOA concentration") + ylab("Difference in hip circumference (cm)")
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni3_a_hip <- ggplot(univar_a_hip[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFNA concentration") + ylab("Difference in hip circumference (cm)")
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni4_a_hip <- ggplot(univar_a_hip[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in hip circumference (cm)")
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni5_a_hip <- ggplot(univar_a_hip[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in hip circumference (cm)")
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni6_a_hip <- ggplot(univar_a_hip[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in hip circumference (cm)")
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni_a_hip
 uni1_a_hip
@@ -370,31 +401,38 @@ uni6_a_hip
 
 # MUAC
 uni_a_muac <- ggplot(univar_a_muac, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in MUAC (cm)")
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in MUAC (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni1_a_muac <- ggplot(univar_a_muac[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOS concentration") + ylab("Difference in MUAC (cm)")
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in MUAC (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni2_a_muac <- ggplot(univar_a_muac[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOA concentration") + ylab("Difference in MUAC (cm)")
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in MUAC (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni3_a_muac <- ggplot(univar_a_muac[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFNA concentration") + ylab("Difference in MUAC (cm)")
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in MUAC (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni4_a_muac <- ggplot(univar_a_muac[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in MUAC (cm)")
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in MUAC (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni5_a_muac <- ggplot(univar_a_muac[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in MUAC (cm)")
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in MUAC (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni6_a_muac <- ggplot(univar_a_muac[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in MUAC (cm)")
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in MUAC (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni_a_muac
 uni1_a_muac
@@ -407,31 +445,38 @@ uni6_a_muac
 
 # BODY FAT %
 uni_a_bfat <- ggplot(univar_a_bfat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in body fat (%)")
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body fat (%)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni1_a_bfat <- ggplot(univar_a_bfat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOS concentration") + ylab("Difference in body fat (%)")
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in body fat (%)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni2_a_bfat <- ggplot(univar_a_bfat[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOA concentration") + ylab("Difference in body fat (%)")
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in body fat (%)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni3_a_bfat <- ggplot(univar_a_bfat[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFNA concentration") + ylab("Difference in body fat (%)")
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in body fat (%)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni4_a_bfat <- ggplot(univar_a_bfat[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in body fat (%)")
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in body fat (%)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni5_a_bfat <- ggplot(univar_a_bfat[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in body fat (%)")
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in body fat (%)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni6_a_bfat <- ggplot(univar_a_bfat[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in body fat (%)")
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in body fat (%)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni_a_bfat
 uni1_a_bfat
@@ -444,31 +489,38 @@ uni6_a_bfat
 
 # BODY FAT MASS
 uni_a_fat <- ggplot(univar_a_fat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Serum ln-transformed concentration") + ylab("Difference in body fat mass (kg)")
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni1_a_fat <- ggplot(univar_a_fat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOS concentration") + ylab("Difference in body fat mass (kg)")
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni2_a_fat <- ggplot(univar_a_fat[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFOA concentration") + ylab("Difference in body fat mass (kg)")
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni3_a_fat <- ggplot(univar_a_fat[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFNA concentration") + ylab("Difference in body fat mass (kg)")
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni4_a_fat <- ggplot(univar_a_fat[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-PFHxS concentration") + ylab("Difference in body fat mass (kg)")
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni5_a_fat <- ggplot(univar_a_fat[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-MeFOSSA concentration") + ylab("Difference in body fat mass (kg)")
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni6_a_fat <- ggplot(univar_a_fat[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled ln-EtFOSSA concentration") + ylab("Difference in body fat mass (kg)")
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni_a_fat
 uni1_a_fat
@@ -540,7 +592,7 @@ interact_a_fat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_fat, 
 p_interact_a_bmi <- ggplot(interact_a_bmi, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("Ln-transformed PFAS 1") +
+  xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in BMI (kg/m^2)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_a_bmi
@@ -549,7 +601,7 @@ p_interact_a_bmi
 p_interact_a_wt <- ggplot(interact_a_wt, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("Ln-transformed PFAS 1") +
+  xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in weight (kg)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_a_wt
@@ -558,7 +610,7 @@ p_interact_a_wt
 p_interact_a_waist <- ggplot(interact_a_waist, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("Ln-transformed PFAS 1") +
+  xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in waist circumference (cm)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_a_waist 
@@ -567,7 +619,7 @@ p_interact_a_waist
 p_interact_a_hip <- ggplot(interact_a_hip, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("Ln-transformed PFAS 1") +
+  xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in hip circumference (cm)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_a_hip
@@ -576,7 +628,7 @@ p_interact_a_hip
 p_interact_a_muac <- ggplot(interact_a_muac, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("Ln-transformed PFAS 1") +
+  xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in MUAC (cm)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_a_muac
@@ -585,7 +637,7 @@ p_interact_a_muac
 p_interact_a_bfat <- ggplot(interact_a_bfat, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("Ln-transformed PFAS 1") +
+  xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in bofy fat (%)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_a_bfat
@@ -594,7 +646,7 @@ p_interact_a_bfat
 p_interact_a_fat <- ggplot(interact_a_fat, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
-  xlab ("Ln-transformed PFAS 1") +
+  xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in body fat mass (kg)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_a_fat
@@ -682,7 +734,7 @@ p_singvar_a_bmi <- ggplot(singvar_a_bmi, aes(variable, est, ymin = est - 1.96*sd
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in BMI (kg/m^2)")
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in BMI (kg/m^2)")
 p_singvar_a_bmi
 
 # SINGLE VARIABLE INTERACTION TERMS
@@ -713,7 +765,7 @@ p_singvar_a_wt <- ggplot(singvar_a_wt, aes(variable, est, ymin = est - 1.96*sd, 
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in weight (kg)")
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in weight (kg)")
 p_singvar_a_wt
 
 # SINGLE VARIABLE INTERACTION TERMS
@@ -744,7 +796,7 @@ p_singvar_a_waist <- ggplot(singvar_a_waist, aes(variable, est, ymin = est - 1.9
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in waist circumference (cm)")
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in waist circumference (cm)")
 p_singvar_a_waist
 
 # SINGLE VARIABLE INTERACTION TERMS
@@ -775,7 +827,7 @@ p_singvar_a_hip <- ggplot(singvar_a_hip, aes(variable, est, ymin = est - 1.96*sd
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in hip circumference (cm)")
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in hip circumference (cm)")
 p_singvar_a_hip
 
 # SINGLE VARIABLE INTERACTION TERMS
@@ -806,7 +858,7 @@ p_singvar_a_muac <- ggplot(singvar_a_muac, aes(variable, est, ymin = est - 1.96*
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in MUAC (cm)")
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in MUAC (cm)")
 p_singvar_a_muac
 
 # SINGLE VARIABLE INTERACTION TERMS
@@ -837,7 +889,7 @@ p_singvar_a_bfat <- ggplot(singvar_a_bfat, aes(variable, est, ymin = est - 1.96*
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in body fat (%)")
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in body fat (%)")
 p_singvar_a_bfat
 
 # SINGLE VARIABLE INTERACTION TERMS
@@ -868,7 +920,7 @@ p_singvar_a_fat <- ggplot(singvar_a_fat, aes(variable, est, ymin = est - 1.96*sd
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Ln-transformed PFAS concentration") + scale_y_continuous(name = "Change in body fat mass (kg)")
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in body fat mass (kg)")
 p_singvar_a_fat
 
 # SINGLE VARIABLE INTERACTION TERMS
