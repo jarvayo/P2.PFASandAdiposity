@@ -62,6 +62,7 @@ PFAS_A$LNMUAC <- log(PFAS_A$mom_muac_ma17)
 PFAS_A$LNBFAT <- log(PFAS_A$mom_bodyfat_ma17)
 PFAS_A$LNFAT <- log(PFAS_A$mom_fat_ma17)
 PFAS_A$LNWT <- log(PFAS_A$mom_weight_ma17)
+PFAS_A$LNFFAT <- log(PFAS_A$mom_ffm_ma17)
 
 PFAS_AD$LNVAT_AREA <- log(PFAS_AD$VAT_AREA_mdxa17)
 PFAS_AD$LNSAT_AREA <- log(PFAS_AD$SAT_AREA_mdxa17)
@@ -72,13 +73,6 @@ PFAS_AD$LNTAT_MASS <- log(PFAS_AD$TAT_MASS_mdxa17)
 PFAS_AD$LNVAT_VOLUME <- log(PFAS_AD$VAT_VOLUME_mdxa17)
 PFAS_AD$LNSAT_VOLUME <- log(PFAS_AD$SAT_VOLUME_mdxa17)
 PFAS_AD$LNTAT_VOLUME <- log(PFAS_AD$TAT_VOLUME_mdxa17)
-PFAS_AD$LNWT <- log(PFAS_AD$WEIGHT_mdxa17)
-PFAS_AD$LNBMI <- log(PFAS_AD$mom_bmi_MT)
-PFAS_AD$LNWAIST <- log(PFAS_AD$mom_waist_ma17)
-PFAS_AD$LNHIP <- log(PFAS_AD$mom_hip_ma17)
-PFAS_AD$LNMUAC <- log(PFAS_AD$mom_muac_ma17)
-PFAS_AD$LNBFAT <- log(PFAS_AD$mom_bodyfat_ma17)
-PFAS_AD$LNFAT <- log(PFAS_AD$mom_fat_ma17)
 
 ```
 
@@ -144,7 +138,7 @@ hist(PFAS_A$mom_muac_ma17)
 hist(PFAS_A$mom_bodyfat_ma17)
 hist(PFAS_A$mom_fat_ma17)
 hist(PFAS_A$mom_weight_ma17)
-
+hist(PFAS_A$mom_ffm_ma17)
 
 boxplot(PFAS_A$mom_bmi_MT)
 boxplot(PFAS_A$mom_weight_ma17)
@@ -170,6 +164,7 @@ hist(PFAS_A$LNMUAC)
 hist(PFAS_A$LNBFAT)
 hist(PFAS_A$LNFAT)
 hist(PFAS_A$LNWT)
+hist(PFAS_A$LNFFAT)
 
 
 ##### DESCRIBE DISTRIBUTION OF OUTCOME MEASURES, ANTHRO + DXA DATASET
@@ -182,13 +177,7 @@ hist(PFAS_AD$TAT_MASS_mdxa17)
 hist(PFAS_AD$VAT_VOLUME_mdxa17)
 hist(PFAS_AD$SAT_VOLUME_mdxa17)
 hist(PFAS_AD$TAT_VOLUME_mdxa17)
-hist(PFAS_AD$mom_bmi_MT)
-hist(PFAS_AD$mom_waist_ma17)
-hist(PFAS_AD$mom_hip_ma17)
-hist(PFAS_AD$mom_muac_ma17)
-hist(PFAS_AD$mom_bodyfat_ma17)
-hist(PFAS_AD$mom_fat_ma17)
-hist(PFAS_AD$mom_weight_ma17)
+
 
 # DESCRIBE THE LOG-DISTRIBUTION OF OUTCOME MEASURES, ANTHRO + DXA DATASET
 hist(PFAS_AD$LNVAT_AREA)
@@ -200,13 +189,6 @@ hist(PFAS_AD$LNTAT_MASS)
 hist(PFAS_AD$LNVAT_VOLUME)
 hist(PFAS_AD$LNSAT_VOLUME)
 hist(PFAS_AD$LNTAT_VOLUME)
-hist(PFAS_AD$LNWT)
-hist(PFAS_AD$LNBMI)
-hist(PFAS_AD$LNWAIST)
-hist(PFAS_AD$LNHIP)
-hist(PFAS_AD$LNMUAC)
-hist(PFAS_AD$LNBFAT)
-hist(PFAS_AD$LNFAT)
 
 ks.test(PFAS_AD$VAT_AREA_mdxa17, 'pnorm')
 ks.test(PFAS_AD$SAT_AREA_mdxa17, 'pnorm')
@@ -216,16 +198,6 @@ ks.test(PFAS_AD$SAT_MASS_mdxa17, 'pnorm')
 ks.test(PFAS_AD$TAT_MASS_mdxa17, 'pnorm')
 ks.test(PFAS_AD$VAT_VOLUME_mdxa17, 'pnorm')
 ks.test(PFAS_AD$SAT_VOLUME_mdxa17, 'pnorm')
-ks.test(PFAS_AD$TAT_VOLUME_mdxa17, 'pnorm')
-ks.test(PFAS_AD$LNVAT_AREA, 'pnorm')
-ks.test(PFAS_AD$LNSAT_AREA, 'pnorm')
-ks.test(PFAS_AD$LNTAT_AREA, 'pnorm')
-ks.test(PFAS_AD$LNVAT_MASS, 'pnorm')
-ks.test(PFAS_AD$LNSAT_MASS, 'pnorm')
-ks.test(PFAS_AD$LNTAT_MASS, 'pnorm')
-ks.test(PFAS_AD$LNVAT_VOLUME, 'pnorm')
-ks.test(PFAS_AD$LNSAT_VOLUME, 'pnorm')
-ks.test(PFAS_AD$LNTAT_VOLUME, 'pnorm')
 
 ```
 
@@ -546,18 +518,20 @@ summary(PFAS_A$mom_hip_ma17)
 summary(PFAS_A$mom_muac_ma17)
 summary(PFAS_A$mom_bodyfat_ma17)
 summary(PFAS_A$mom_fat_ma17)
+summary(PFAS_A$mom_ffm_ma17)
 
 # RENAME PFAS FOR THE PLOT
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_bmi_MT"] <- "BMI"
+colnames(PFAS_A)[colnames(PFAS_A) == "mom_weight_ma17"] <- "Weight"
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_waist_ma17"] <- "Waist"
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_hip_ma17"] <- "Hip"
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_muac_ma17"] <- "MUAC"
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_bodyfat_ma17"] <- "FatPct"
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_fat_ma17"] <- "FatMass"
-colnames(PFAS_A)[colnames(PFAS_A) == "mom_weight_ma17"] <- "Weight"
+colnames(PFAS_A)[colnames(PFAS_A) == "mom_ffm_ma17"] <- "FatFreeMass"
 
 ##### OUTCOMES CORRELATION MATRIX
-OUTCOMES_A_corr <- PFAS_A[ , c("BMI", "Waist", "Hip", "MUAC", "FatPct", "FatMass", "Weight")]
+OUTCOMES_A_corr <- PFAS_A[ , c("BMI", "Weight","Waist", "Hip", "MUAC", "FatPct", "FatMass", "FatFreeMass")]
 o_A_corr <- cor(OUTCOMES_A_corr)
 round(o_A_corr, 2)
 
@@ -583,13 +557,6 @@ summary(PFAS_AD$TAT_MASS_mdxa17)
 summary(PFAS_AD$VAT_VOLUME_mdxa17)
 summary(PFAS_AD$SAT_VOLUME_mdxa17)
 summary(PFAS_AD$TAT_VOLUME_mdxa17)
-summary(PFAS_AD$mom_bmi_MT)
-summary(PFAS_AD$mom_weight_ma17)
-summary(PFAS_AD$mom_waist_ma17)
-summary(PFAS_AD$mom_hip_ma17)
-summary(PFAS_AD$mom_muac_ma17)
-summary(PFAS_AD$mom_bodyfat_ma17)
-summary(PFAS_AD$mom_fat_ma17)
 
 # RENAME PFAS FOR THE PLOT
 colnames(PFAS_AD)[colnames(PFAS_AD) == "VAT_AREA_mdxa17"] <- "VT area"
@@ -601,18 +568,11 @@ colnames(PFAS_AD)[colnames(PFAS_AD) == "TAT_VOLUME_mdxa17"] <- "TT vol"
 colnames(PFAS_AD)[colnames(PFAS_AD) == "VAT_MASS_mdxa17"] <- "VT mass"
 colnames(PFAS_AD)[colnames(PFAS_AD) == "SAT_MASS_mdxa17"] <- "ST mass"
 colnames(PFAS_AD)[colnames(PFAS_AD) == "TAT_MASS_mdxa17"] <- "TT mass"
-colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_bmi_MT"] <- "BMI"
-colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_weight_ma17"] <- "Weight"
-colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_waist_ma17"] <- "Waist"
-colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_hip_ma17"] <- "Hip"
-colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_muac_ma17"] <- "MUAC"
-colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_bodyfat_ma17"] <- "FatPct"
-colnames(PFAS_AD)[colnames(PFAS_AD) == "mom_fat_ma17"] <- "FatMass"
+
 
 ##### OUTCOMES CORRELATION MATRIX
 OUTCOMES_AD_corr <- PFAS_AD[ , c("VT area", "ST area", "TT area", "VT vol", "ST vol", 
-                               "TT vol", "VT mass", "ST mass", "TT mass", "BMI", 
-                               "Weight", "Waist", "Hip", "MUAC", "FatPct", "FatMass")]
+                               "TT vol", "VT mass", "ST mass", "TT mass")]
 o_AD_corr <- cor(OUTCOMES_AD_corr)
 round(o_AD_corr, 2)
 
