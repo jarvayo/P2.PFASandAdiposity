@@ -81,13 +81,13 @@ lnmixture_a <- apply(mixture_a, 2, log)
 lnmixture_a_z <- scale(lnmixture_a)
 
 # SET THE OUTCOME
-BMI_a <- PFAS_A$BMI
-Weight_a <- PFAS_A$Weight
-Waist_a <- PFAS_A$Waist
-Hip_a <- PFAS_A$Hip
-MUAC_a <- PFAS_A$MUAC
-FatPct_a <- PFAS_A$FatPct
-FatMass_a <- PFAS_A$FatMass
+BMI <- PFAS_A$BMI
+Weight <- PFAS_A$Weight
+Waist <- PFAS_A$Waist
+WHR <- PFAS_A$WHR
+MUAC <- PFAS_A$MUAC
+FatPct <- PFAS_A$FatPct
+FatMass <- PFAS_A$FatMass
 
 # CREAT THE COVARIATE MATRIX
 cov_a <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$race, PFAS_A$bmi_cat, PFAS_A$edu, 
@@ -104,37 +104,37 @@ knots_a <- fields::cover.design(lnmixture_a_z, nd = 50)$design
 ```{r}
 ##### BUILD BKMR MODELS 
 # BMI
-m_a_bmi <- kmbayes(y = BMI_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+m_bmi <- kmbayes(y = BMI, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
 # WEIGHT
-m_a_wt <- kmbayes(y = Weight_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+m_wt <- kmbayes(y = Weight, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
 # WAIST CIRCUMFERENCE
-m_a_waist <- kmbayes(y = Waist_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+m_waist <- kmbayes(y = Waist, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
 # HIP CIRCUMFERENCE
-m_a_hip <- kmbayes(y = Hip_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+m_whr <- kmbayes(y = WHR, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
 # MUAC
-m_a_muac <- kmbayes(y = MUAC_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+m_muac <- kmbayes(y = MUAC, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
 # BODY FAT %
-m_a_bfat <- kmbayes(y = FatPct_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+m_bfat <- kmbayes(y = FatPct, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
 # BODY FAT MASS
-m_a_fat <- kmbayes(y = FatMass_a, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+m_fat <- kmbayes(y = FatMass, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
@@ -146,13 +146,13 @@ beep(sound=5, expr=NULL)
 sel <- seq(0,25000,by = 50)
 
 ##### ACCESS CONVERGENCE WITH TRACEPLOTS
-TracePlot(fit = m_a_bmi, par = "beta", sel = sel)
-TracePlot(fit = m_a_wt, par = "beta", sel = sel)
-TracePlot(fit = m_a_waist, par = "beta", sel = sel)
-TracePlot(fit = m_a_hip, par = "beta", sel = sel)
-TracePlot(fit = m_a_muac, par = "beta", sel = sel)
-TracePlot(fit = m_a_bfat, par = "beta", sel = sel)
-TracePlot(fit = m_a_fat, par = "beta", sel = sel)
+TracePlot(fit = m_bmi, par = "beta", sel = sel)
+TracePlot(fit = m_wt, par = "beta", sel = sel)
+TracePlot(fit = m_waist, par = "beta", sel = sel)
+TracePlot(fit = m_whr, par = "beta", sel = sel)
+TracePlot(fit = m_muac, par = "beta", sel = sel)
+TracePlot(fit = m_bfat, par = "beta", sel = sel)
+TracePlot(fit = m_fat, par = "beta", sel = sel)
 
 ##### VALUES TO KEEP AFTER BURNING/THIN (ACCORDING TO THE TRACEPLOT FUNCTION ABOVE)
 sel_final <- seq(1200, 25000, by = 1)
@@ -162,373 +162,373 @@ sel_final <- seq(1200, 25000, by = 1)
 ```{r}
 ##### ESIMATE POSTERIOR INCLUSION PROBABILITIES
 # BMI
-#summary(m_a_bmi)
-ExtractPIPs(m_a_bmi, sel = sel_final)
+#summary(m_bmi)
+ExtractPIPs(m_bmi, sel = sel_final)
 
 # WEIGHT
-#summary(m_a_wt)
-ExtractPIPs(m_a_wt, sel = sel_final)
+#summary(m_wt)
+ExtractPIPs(m_wt, sel = sel_final)
 
 # WAIST CIRCUMFERENCE
-#summary(m_a_waist)
-ExtractPIPs(m_a_waist, sel = sel_final)
+#summary(m_waist)
+ExtractPIPs(m_waist, sel = sel_final)
 
 # HIP CIRCUMFERENCE
-#summary(m_a_hip)
-ExtractPIPs(m_a_hip, sel = sel_final)
+#summary(m_whr)
+ExtractPIPs(m_whr, sel = sel_final)
 
 # MUAC
-#summary(m_a_muac)
-ExtractPIPs(m_a_muac, sel = sel_final)
+#summary(m_muac)
+ExtractPIPs(m_muac, sel = sel_final)
 
 # BODT FAT %
-#summary(m_a_bfat)
-ExtractPIPs(m_a_bfat, sel = sel_final)
+#summary(m_bfat)
+ExtractPIPs(m_bfat, sel = sel_final)
 
 # BODY FAT MASS
-#summary(m_a_fat)
-ExtractPIPs(m_a_fat, sel = sel_final)
+#summary(m_fat)
+ExtractPIPs(m_fat, sel = sel_final)
 
 ```
 
 ```{r}
 ##### PREDICT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
 # BMI
-univar_a_bmi <- PredictorResponseUnivar(fit = m_a_bmi, sel = sel_final, method = "approx")
-univar_a_bmi
+univar_bmi <- PredictorResponseUnivar(fit = m_bmi, sel = sel_final, method = "approx")
+univar_bmi
 
 # WEIGHT
-univar_a_wt <- PredictorResponseUnivar(fit = m_a_wt, sel = sel_final, method = "approx")
-univar_a_wt
+univar_wt <- PredictorResponseUnivar(fit = m_wt, sel = sel_final, method = "approx")
+univar_wt
 
 # WAIST CIRCUMFERENCE
-univar_a_waist <- PredictorResponseUnivar(fit = m_a_waist, sel = sel_final, method = "approx")
-univar_a_waist
+univar_waist <- PredictorResponseUnivar(fit = m_waist, sel = sel_final, method = "approx")
+univar_waist
 
 # HIP CIRCUMFERENCE
-univar_a_hip <- PredictorResponseUnivar(fit = m_a_hip, sel = sel_final, method = "approx")
-univar_a_hip
+univar_whr <- PredictorResponseUnivar(fit = m_whr, sel = sel_final, method = "approx")
+univar_whr
 
 # MUAC
-univar_a_muac <- PredictorResponseUnivar(fit = m_a_muac, sel = sel_final, method = "approx")
-univar_a_muac
+univar_muac <- PredictorResponseUnivar(fit = m_muac, sel = sel_final, method = "approx")
+univar_muac
 
 # BODY FAT %
-univar_a_bfat <- PredictorResponseUnivar(fit = m_a_bfat, sel = sel_final, method = "approx")
-univar_a_bfat
+univar_bfat <- PredictorResponseUnivar(fit = m_bfat, sel = sel_final, method = "approx")
+univar_bfat
 
 # BODY FAT MASS
-univar_a_fat <- PredictorResponseUnivar(fit = m_a_fat, sel = sel_final, method = "approx")
-univar_a_fat
+univar_fat <- PredictorResponseUnivar(fit = m_fat, sel = sel_final, method = "approx")
+univar_fat
 
 
 ##### PLOT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
 # BMI
-uni_a_bmi <- ggplot(univar_a_bmi, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+uni_bmi <- ggplot(univar_bmi, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
   geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in BMI (kg/m^2)") +
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni1_a_bmi <- ggplot(univar_a_bmi[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni1_bmi <- ggplot(univar_bmi[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOS plasma concentration") + ylab("Difference in BMI (kg/m^2)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni2_a_bmi <- ggplot(univar_a_bmi[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni2_bmi <- ggplot(univar_bmi[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOA plasma concentration") + ylab("Difference in BMI (kg/m^2)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni3_a_bmi <- ggplot(univar_a_bmi[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni3_bmi <- ggplot(univar_bmi[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFNA plasma concentration") + ylab("Difference in BMI (kg/m^2)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni4_a_bmi <- ggplot(univar_a_bmi[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni4_bmi <- ggplot(univar_bmi[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFHxS plasma concentration") + ylab("Difference in BMI (kg/m^2)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni5_a_bmi <- ggplot(univar_a_bmi[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni5_bmi <- ggplot(univar_bmi[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in BMI (kg/m^2)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni6_a_bmi <- ggplot(univar_a_bmi[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni6_bmi <- ggplot(univar_bmi[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in BMI (kg/m^2)") +
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni_a_bmi
-uni1_a_bmi
-uni2_a_bmi
-uni3_a_bmi
-uni4_a_bmi
-uni5_a_bmi
-uni6_a_bmi
+uni_bmi
+uni1_bmi
+uni2_bmi
+uni3_bmi
+uni4_bmi
+uni5_bmi
+uni6_bmi
 
 
 # WEIGHT
-uni_a_wt <- ggplot(univar_a_wt, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+uni_wt <- ggplot(univar_wt, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
   geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in weight (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni1_a_wt <- ggplot(univar_a_wt[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni1_wt <- ggplot(univar_wt[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOS plasma concentration") + ylab("Difference in weight (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni2_a_wt <- ggplot(univar_a_wt[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni2_wt <- ggplot(univar_wt[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOA plasma concentration") + ylab("Difference in weight (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni3_a_wt <- ggplot(univar_a_wt[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni3_wt <- ggplot(univar_wt[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFNA plasma concentration") + ylab("Difference in weight (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni4_a_wt <- ggplot(univar_a_wt[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni4_wt <- ggplot(univar_wt[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFHxS plasma concentration") + ylab("Difference in weight (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni5_a_wt <- ggplot(univar_a_wt[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni5_wt <- ggplot(univar_wt[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in weight (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni6_a_wt <- ggplot(univar_a_wt[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni6_wt <- ggplot(univar_wt[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in weight (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni_a_wt
-uni1_a_wt
-uni2_a_wt
-uni3_a_wt
-uni4_a_wt
-uni5_a_wt
-uni6_a_wt
+uni_wt
+uni1_wt
+uni2_wt
+uni3_wt
+uni4_wt
+uni5_wt
+uni6_wt
 
 
 # WAIST CIRCUMFERENCE
-uni_a_waist <- ggplot(univar_a_waist, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+uni_waist <- ggplot(univar_waist, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
   geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in waist circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni1_a_waist <- ggplot(univar_a_waist[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni1_waist <- ggplot(univar_waist[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOS plasma concentration") + ylab("Difference in waist circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni2_a_waist <- ggplot(univar_a_waist[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni2_waist <- ggplot(univar_waist[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOA plasma concentration") + ylab("Difference in waist circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni3_a_waist <- ggplot(univar_a_waist[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni3_waist <- ggplot(univar_waist[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFNA plasma concentration") + ylab("Difference in waist circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni4_a_waist <- ggplot(univar_a_waist[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni4_waist <- ggplot(univar_waist[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFHxS plasma concentration") + ylab("Difference in waist circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni5_a_waist <- ggplot(univar_a_waist[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni5_waist <- ggplot(univar_waist[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in waist circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni6_a_waist <- ggplot(univar_a_waist[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni6_waist <- ggplot(univar_waist[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in waist circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni_a_waist
-uni1_a_waist
-uni2_a_waist
-uni3_a_waist
-uni4_a_waist
-uni5_a_waist
-uni6_a_waist
+uni_waist
+uni1_waist
+uni2_waist
+uni3_waist
+uni4_waist
+uni5_waist
+uni6_waist
 
 
 # HIP CIRCUMFERENCE
-uni_a_hip <- ggplot(univar_a_hip, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+uni_whr <- ggplot(univar_whr, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
   geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in hip circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni1_a_hip <- ggplot(univar_a_hip[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni1_whr <- ggplot(univar_whr[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOS plasma concentration") + ylab("Difference in hip circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni2_a_hip <- ggplot(univar_a_hip[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni2_whr <- ggplot(univar_whr[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOA plasma concentration") + ylab("Difference in hip circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni3_a_hip <- ggplot(univar_a_hip[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni3_whr <- ggplot(univar_whr[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFNA plasma concentration") + ylab("Difference in hip circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni4_a_hip <- ggplot(univar_a_hip[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni4_whr <- ggplot(univar_whr[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFHxS plasma concentration") + ylab("Difference in hip circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni5_a_hip <- ggplot(univar_a_hip[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni5_whr <- ggplot(univar_whr[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in hip circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni6_a_hip <- ggplot(univar_a_hip[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni6_whr <- ggplot(univar_whr[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in hip circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni_a_hip
-uni1_a_hip
-uni2_a_hip
-uni3_a_hip
-uni4_a_hip
-uni5_a_hip
-uni6_a_hip
+uni_whr
+uni1_whr
+uni2_whr
+uni3_whr
+uni4_whr
+uni5_whr
+uni6_whr
 
 
 # MUAC
-uni_a_muac <- ggplot(univar_a_muac, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+uni_muac <- ggplot(univar_muac, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
   geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in MUAC (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni1_a_muac <- ggplot(univar_a_muac[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni1_muac <- ggplot(univar_muac[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOS plasma concentration") + ylab("Difference in MUAC (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni2_a_muac <- ggplot(univar_a_muac[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni2_muac <- ggplot(univar_muac[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOA plasma concentration") + ylab("Difference in MUAC (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni3_a_muac <- ggplot(univar_a_muac[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni3_muac <- ggplot(univar_muac[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFNA plasma concentration") + ylab("Difference in MUAC (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni4_a_muac <- ggplot(univar_a_muac[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni4_muac <- ggplot(univar_muac[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFHxS plasma concentration") + ylab("Difference in MUAC (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni5_a_muac <- ggplot(univar_a_muac[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni5_muac <- ggplot(univar_muac[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in MUAC (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni6_a_muac <- ggplot(univar_a_muac[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni6_muac <- ggplot(univar_muac[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in MUAC (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni_a_muac
-uni1_a_muac
-uni2_a_muac
-uni3_a_muac
-uni4_a_muac
-uni5_a_muac
-uni6_a_muac
+uni_muac
+uni1_muac
+uni2_muac
+uni3_muac
+uni4_muac
+uni5_muac
+uni6_muac
 
 
 # BODY FAT %
-uni_a_bfat <- ggplot(univar_a_bfat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+uni_bfat <- ggplot(univar_bfat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
   geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body fat (%)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni1_a_bfat <- ggplot(univar_a_bfat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni1_bfat <- ggplot(univar_bfat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOS plasma concentration") + ylab("Difference in body fat (%)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni2_a_bfat <- ggplot(univar_a_bfat[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni2_bfat <- ggplot(univar_bfat[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOA plasma concentration") + ylab("Difference in body fat (%)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni3_a_bfat <- ggplot(univar_a_bfat[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni3_bfat <- ggplot(univar_bfat[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFNA plasma concentration") + ylab("Difference in body fat (%)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni4_a_bfat <- ggplot(univar_a_bfat[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni4_bfat <- ggplot(univar_bfat[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFHxS plasma concentration") + ylab("Difference in body fat (%)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni5_a_bfat <- ggplot(univar_a_bfat[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni5_bfat <- ggplot(univar_bfat[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in body fat (%)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni6_a_bfat <- ggplot(univar_a_bfat[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni6_bfat <- ggplot(univar_bfat[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in body fat (%)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni_a_bfat
-uni1_a_bfat
-uni2_a_bfat
-uni3_a_bfat
-uni4_a_bfat
-uni5_a_bfat
-uni6_a_bfat
+uni_bfat
+uni1_bfat
+uni2_bfat
+uni3_bfat
+uni4_bfat
+uni5_bfat
+uni6_bfat
 
 
 # BODY FAT MASS
-uni_a_fat <- ggplot(univar_a_fat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+uni_fat <- ggplot(univar_fat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
   geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body fat mass (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni1_a_fat <- ggplot(univar_a_fat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni1_fat <- ggplot(univar_fat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOS plasma concentration") + ylab("Difference in body fat mass (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni2_a_fat <- ggplot(univar_a_fat[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni2_fat <- ggplot(univar_fat[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOA plasma concentration") + ylab("Difference in body fat mass (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni3_a_fat <- ggplot(univar_a_fat[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni3_fat <- ggplot(univar_fat[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFNA plasma concentration") + ylab("Difference in body fat mass (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni4_a_fat <- ggplot(univar_a_fat[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni4_fat <- ggplot(univar_fat[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFHxS plasma concentration") + ylab("Difference in body fat mass (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni5_a_fat <- ggplot(univar_a_fat[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni5_fat <- ggplot(univar_fat[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in body fat mass (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni6_a_fat <- ggplot(univar_a_fat[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni6_fat <- ggplot(univar_fat[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in body fat mass (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
-uni_a_fat
-uni1_a_fat
-uni2_a_fat
-uni3_a_fat
-uni4_a_fat
-uni5_a_fat
-uni6_a_fat
+uni_fat
+uni1_fat
+uni2_fat
+uni3_fat
+uni4_fat
+uni5_fat
+uni6_fat
 
 ```
 
@@ -536,52 +536,52 @@ uni6_a_fat
 ##### PREDICT BIVARIATE EXPOSURE-RESPONSE CURVE TO ASSESS POTENTIAL INTERACTIONS
 ##### SUBESQUENTLY, PREDICT INTERACTIONS AMONG PFAS
 # BMI
-bivar_a_bmi <- PredictorResponseBivar(fit = m_a_bmi, min.plot.dist = 1, sel = sel_final, method = "approx")
-interact_a_bmi <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_bmi, Z = lnmixture_a_z,
+bivar_bmi <- PredictorResponseBivar(fit = m_bmi, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_bmi <- PredictorResponseBivarLevels(pred.resp.df = bivar_bmi, Z = lnmixture_a_z,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-interact_a_bmi_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_bmi, Z = lnmixture_a_z,
+interact_bmi_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_bmi, Z = lnmixture_a_z,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
 # WEIGHT
-bivar_a_wt <- PredictorResponseBivar(fit = m_a_wt, min.plot.dist = 1, sel = sel_final, method = "approx")
-interact_a_wt <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_wt, Z = lnmixture_a_z,
+bivar_wt <- PredictorResponseBivar(fit = m_wt, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_wt <- PredictorResponseBivarLevels(pred.resp.df = bivar_wt, Z = lnmixture_a_z,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-interact_a_wt_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_wt, Z = lnmixture_a_z,
+interact_wt_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_wt, Z = lnmixture_a_z,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
 # WAIST CIRCUMFERENCE
-bivar_a_waist <- PredictorResponseBivar(fit = m_a_waist, min.plot.dist = 1, sel = sel_final, method = "approx")
-interact_a_waist <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_waist, Z = lnmixture_a_z,
+bivar_waist <- PredictorResponseBivar(fit = m_waist, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_waist <- PredictorResponseBivarLevels(pred.resp.df = bivar_waist, Z = lnmixture_a_z,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-interact_a_waist_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_waist, Z = lnmixture_a_z,
+interact_waist_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_waist, Z = lnmixture_a_z,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
 # HIP CIRCUMFERENCE
-bivar_a_hip <- PredictorResponseBivar(fit = m_a_hip, min.plot.dist = 1, sel = sel_final, method = "approx")
-interact_a_hip <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_hip, Z = lnmixture_a_z,
+bivar_whr <- PredictorResponseBivar(fit = m_whr, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_whr <- PredictorResponseBivarLevels(pred.resp.df = bivar_whr, Z = lnmixture_a_z,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-interact_a_hip_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_hip, Z = lnmixture_a_z,
+interact_whr_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_whr, Z = lnmixture_a_z,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
 # MUAC
-bivar_a_muac <- PredictorResponseBivar(fit = m_a_muac, min.plot.dist = 1, sel = sel_final, method = "approx")
-interact_a_muac <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_muac, Z = lnmixture_a_z,
+bivar_muac <- PredictorResponseBivar(fit = m_muac, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_muac <- PredictorResponseBivarLevels(pred.resp.df = bivar_muac, Z = lnmixture_a_z,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-interact_a_muac_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_muac, Z = lnmixture_a_z,
+interact_muac_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_muac, Z = lnmixture_a_z,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
 # BODY FAT %
-bivar_a_bfat <- PredictorResponseBivar(fit = m_a_bfat, min.plot.dist = 1, sel = sel_final, method = "approx")
-interact_a_bfat <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_bfat, Z = lnmixture_a_z,
+bivar_bfat <- PredictorResponseBivar(fit = m_bfat, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_bfat <- PredictorResponseBivarLevels(pred.resp.df = bivar_bfat, Z = lnmixture_a_z,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-interact_a_bfat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_bfat, Z = lnmixture_a_z,
+interact_bfat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_bfat, Z = lnmixture_a_z,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
 # BODY FAT MASS
-bivar_a_fat <- PredictorResponseBivar(fit = m_a_fat, min.plot.dist = 1, sel = sel_final, method = "approx")
-interact_a_fat <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_fat, Z = lnmixture_a_z,
+bivar_fat <- PredictorResponseBivar(fit = m_fat, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_fat <- PredictorResponseBivarLevels(pred.resp.df = bivar_fat, Z = lnmixture_a_z,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-interact_a_fat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_fat, Z = lnmixture_a_z,
+interact_fat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_fat, Z = lnmixture_a_z,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
 
@@ -589,67 +589,67 @@ interact_a_fat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_a_fat, 
 ##### PLOT INTERACTIONS BETWEEN EXPOSURE AND RESPONSE
 ##### NON-PARALLEL LINES WOULD INDICATE POTENTIAL INTERACTIONS
 # BMI
-p_interact_a_bmi <- ggplot(interact_a_bmi, aes(z1, est)) +
+p_interact_bmi <- ggplot(interact_bmi, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in BMI (kg/m^2)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_a_bmi
+p_interact_bmi
 
 # WEIGHT
-p_interact_a_wt <- ggplot(interact_a_wt, aes(z1, est)) +
+p_interact_wt <- ggplot(interact_wt, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in weight (kg)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_a_wt
+p_interact_wt
 
 # WAIST
-p_interact_a_waist <- ggplot(interact_a_waist, aes(z1, est)) +
+p_interact_waist <- ggplot(interact_waist, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in waist circumference (cm)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_a_waist 
+p_interact_waist 
 
 # HIP
-p_interact_a_hip <- ggplot(interact_a_hip, aes(z1, est)) +
+p_interact_whr <- ggplot(interact_whr, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in hip circumference (cm)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_a_hip
+p_interact_whr
 
 # MUAC
-p_interact_a_muac <- ggplot(interact_a_muac, aes(z1, est)) +
+p_interact_muac <- ggplot(interact_muac, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in MUAC (cm)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_a_muac
+p_interact_muac
 
 # BODY FAT %
-p_interact_a_bfat <- ggplot(interact_a_bfat, aes(z1, est)) +
+p_interact_bfat <- ggplot(interact_bfat, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in bofy fat (%)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_a_bfat
+p_interact_bfat
 
 # BODY FAT MASS
-p_interact_a_fat <- ggplot(interact_a_fat, aes(z1, est)) +
+p_interact_fat <- ggplot(interact_fat, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in body fat mass (kg)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
-p_interact_a_fat
+p_interact_fat
 
 ```
 
@@ -657,66 +657,66 @@ p_interact_a_fat
 ##### DETERMINE RISK ASSOCIATED WITH THE OVERALL MIXTURE
 ##### SUBSEQUENTLY, ESTIMATE RISK FOR SINGLE PFAS AND INTERACTIONS AMONG PFAS
 # BMI
-overall_a_bmi <- OverallRiskSummaries(fit = m_a_bmi, q.fixed = 0.50, sel = sel_final,
+overall_bmi <- OverallRiskSummaries(fit = m_bmi, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
-singvar_a_bmi <- SingVarRiskSummaries(fit = m_a_bmi, qs.diff = c(0.25, 0.75),
+singvar_bmi <- SingVarRiskSummaries(fit = m_bmi, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
-overall_interact_a_bmi <- SingVarIntSummaries(fit = m_a_bmi, qs.diff = c(0.25, 0.75),
+overall_interact_bmi <- SingVarIntSummaries(fit = m_bmi, qs.diff = c(0.25, 0.75),
                                        qs.fixed = c(0.25, 0.75),sel=sel_final)
 
 # WEIGHT
-overall_a_wt <- OverallRiskSummaries(fit = m_a_wt, q.fixed = 0.50, sel = sel_final,
+overall_wt <- OverallRiskSummaries(fit = m_wt, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
-singvar_a_wt <- SingVarRiskSummaries(fit = m_a_wt, qs.diff = c(0.25, 0.75),
+singvar_wt <- SingVarRiskSummaries(fit = m_wt, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
-overall_interact_a_wt <- SingVarIntSummaries(fit = m_a_wt, qs.diff = c(0.25, 0.75),
+overall_interact_wt <- SingVarIntSummaries(fit = m_wt, qs.diff = c(0.25, 0.75),
                                        qs.fixed = c(0.25, 0.75),sel=sel_final)
 
 # WAIST CIRCUMFERENCE
-overall_a_waist <- OverallRiskSummaries(fit = m_a_waist, q.fixed = 0.50, sel = sel_final,
+overall_waist <- OverallRiskSummaries(fit = m_waist, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
-singvar_a_waist <- SingVarRiskSummaries(fit = m_a_waist, qs.diff = c(0.25, 0.75),
+singvar_waist <- SingVarRiskSummaries(fit = m_waist, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
-overall_interact_a_waist <- SingVarIntSummaries(fit = m_a_waist, qs.diff = c(0.25, 0.75),
+overall_interact_waist <- SingVarIntSummaries(fit = m_waist, qs.diff = c(0.25, 0.75),
                                        qs.fixed = c(0.25, 0.75),sel=sel_final)
 
 # HIP CIRCUMFERENCE
-overall_a_hip <- OverallRiskSummaries(fit = m_a_hip, q.fixed = 0.50, sel = sel_final,
+overall_whr <- OverallRiskSummaries(fit = m_whr, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
-singvar_a_hip <- SingVarRiskSummaries(fit = m_a_hip, qs.diff = c(0.25, 0.75),
+singvar_whr <- SingVarRiskSummaries(fit = m_whr, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
-overall_interact_a_hip <- SingVarIntSummaries(fit = m_a_hip, qs.diff = c(0.25, 0.75),
+overall_interact_whr <- SingVarIntSummaries(fit = m_whr, qs.diff = c(0.25, 0.75),
                                        qs.fixed = c(0.25, 0.75),sel=sel_final)
 
 # MUAC
-overall_a_muac <- OverallRiskSummaries(fit = m_a_muac, q.fixed = 0.50, sel = sel_final,
+overall_muac <- OverallRiskSummaries(fit = m_muac, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
-singvar_a_muac <- SingVarRiskSummaries(fit = m_a_muac, qs.diff = c(0.25, 0.75),
+singvar_muac <- SingVarRiskSummaries(fit = m_muac, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
-overall_interact_a_muac <- SingVarIntSummaries(fit = m_a_muac, qs.diff = c(0.25, 0.75),
+overall_interact_muac <- SingVarIntSummaries(fit = m_muac, qs.diff = c(0.25, 0.75),
                                        qs.fixed = c(0.25, 0.75),sel=sel_final)
 
 # BODY FAT %
-overall_a_bfat <- OverallRiskSummaries(fit = m_a_bfat, q.fixed = 0.50, sel = sel_final,
+overall_bfat <- OverallRiskSummaries(fit = m_bfat, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
-singvar_a_bfat <- SingVarRiskSummaries(fit = m_a_bfat, qs.diff = c(0.25, 0.75),
+singvar_bfat <- SingVarRiskSummaries(fit = m_bfat, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
-overall_interact_a_bfat <- SingVarIntSummaries(fit = m_a_bfat, qs.diff = c(0.25, 0.75),
+overall_interact_bfat <- SingVarIntSummaries(fit = m_bfat, qs.diff = c(0.25, 0.75),
                                        qs.fixed = c(0.25, 0.75),sel=sel_final)
 
 # BODT FAT MASS
-overall_a_fat <- OverallRiskSummaries(fit = m_a_fat, q.fixed = 0.50, sel = sel_final,
+overall_fat <- OverallRiskSummaries(fit = m_fat, q.fixed = 0.50, sel = sel_final,
                                       method = "approx", qs = seq(0.25, 0.75, by = 0.05))
-singvar_a_fat <- SingVarRiskSummaries(fit = m_a_fat, qs.diff = c(0.25, 0.75),
+singvar_fat <- SingVarRiskSummaries(fit = m_fat, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
-overall_interact_a_fat <- SingVarIntSummaries(fit = m_a_fat, qs.diff = c(0.25, 0.75),
+overall_interact_fat <- SingVarIntSummaries(fit = m_fat, qs.diff = c(0.25, 0.75),
                                               qs.fixed = c(0.25, 0.75),sel=sel_final)
 
 
 
 ##### PLOT RISK ASSOCIATED WITH THE OVERALL MIXTURE
 ### BMI
-p_overall_a_bmi <- ggplot(overall_a_bmi, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_bmi <- ggplot(overall_bmi, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
                scale_y_continuous(name = "Change in BMI (kg/m^2)")+
@@ -726,28 +726,28 @@ p_overall_a_bmi <- ggplot(overall_a_bmi, aes(quantile, est, ymin = est - 1.96*sd
                axis.text.y = element_text(size = 11),
                axis.title.x = element_text(angle = 0, color = 'black', size = 11),
                axis.title.y = element_text(angle = 90, color = 'black', size = 11))
-p_overall_a_bmi
+p_overall_bmi
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
-p_singvar_a_bmi <- ggplot(singvar_a_bmi, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+p_singvar_bmi <- ggplot(singvar_bmi, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in BMI (kg/m^2)")
-p_singvar_a_bmi
+p_singvar_bmi
 
 # SINGLE VARIABLE INTERACTION TERMS
-p_overall_interact_a_bmi <- ggplot(overall_interact_a_bmi, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_interact_bmi <- ggplot(overall_interact_bmi, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
   ylab("Difference in BMI (kg/m^2)") +
   xlab("PFAS")
-p_overall_interact_a_bmi
+p_overall_interact_bmi
 
 
 ### WEIGHT
-p_overall_a_wt <- ggplot(overall_a_wt, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_wt <- ggplot(overall_wt, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
                scale_y_continuous(name = "Change in weight (kg)")+
@@ -757,28 +757,28 @@ p_overall_a_wt <- ggplot(overall_a_wt, aes(quantile, est, ymin = est - 1.96*sd, 
                axis.text.y = element_text(size = 11),
                axis.title.x = element_text(angle = 0, color = 'black', size = 11),
                axis.title.y = element_text(angle = 90, color = 'black', size = 11))
-p_overall_a_wt
+p_overall_wt
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
-p_singvar_a_wt <- ggplot(singvar_a_wt, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+p_singvar_wt <- ggplot(singvar_wt, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in weight (kg)")
-p_singvar_a_wt
+p_singvar_wt
 
 # SINGLE VARIABLE INTERACTION TERMS
-p_overall_interact_a_wt <- ggplot(overall_interact_a_wt, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_interact_wt <- ggplot(overall_interact_wt, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
   ylab("Difference in weight (kg)") +
   xlab("PFAS")
-p_overall_interact_a_wt
+p_overall_interact_wt
 
 
 ### WAIST CIRCUMFERENCE
-p_overall_a_waist <- ggplot(overall_a_waist, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_waist <- ggplot(overall_waist, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
                scale_y_continuous(name = "Change in waist circumference (cm)")+
@@ -788,28 +788,28 @@ p_overall_a_waist <- ggplot(overall_a_waist, aes(quantile, est, ymin = est - 1.9
                axis.text.y = element_text(size = 11),
                axis.title.x = element_text(angle = 0, color = 'black', size = 11),
                axis.title.y = element_text(angle = 90, color = 'black', size = 11))
-p_overall_a_waist
+p_overall_waist
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
-p_singvar_a_waist <- ggplot(singvar_a_waist, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+p_singvar_waist <- ggplot(singvar_waist, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in waist circumference (cm)")
-p_singvar_a_waist
+p_singvar_waist
 
 # SINGLE VARIABLE INTERACTION TERMS
-p_overall_interact_a_waist <- ggplot(overall_interact_a_waist, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_interact_waist <- ggplot(overall_interact_waist, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
   ylab("Difference in waist circumference (cm)") +
   xlab("PFAS")
-p_overall_interact_a_waist
+p_overall_interact_waist
 
 
 ### HIP CIRCUMFERENCE
-p_overall_a_hip <- ggplot(overall_a_hip, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_whr <- ggplot(overall_whr, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
                scale_y_continuous(name = "Change in hip circumference (cm)")+
@@ -819,28 +819,28 @@ p_overall_a_hip <- ggplot(overall_a_hip, aes(quantile, est, ymin = est - 1.96*sd
                axis.text.y = element_text(size = 11),
                axis.title.x = element_text(angle = 0, color = 'black', size = 11),
                axis.title.y = element_text(angle = 90, color = 'black', size = 11))
-p_overall_a_hip
+p_overall_whr
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
-p_singvar_a_hip <- ggplot(singvar_a_hip, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+p_singvar_whr <- ggplot(singvar_whr, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in hip circumference (cm)")
-p_singvar_a_hip
+p_singvar_whr
 
 # SINGLE VARIABLE INTERACTION TERMS
-p_overall_interact_a_hip <- ggplot(overall_interact_a_hip, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_interact_whr <- ggplot(overall_interact_whr, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
   ylab("Difference in hip circumference (cm)") +
   xlab("PFAS")
-p_overall_interact_a_hip
+p_overall_interact_whr
 
 
 ### MUAC
-p_overall_a_muac <- ggplot(overall_a_muac, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_muac <- ggplot(overall_muac, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
                scale_y_continuous(name = "Change in MUAC (cm)")+
@@ -850,28 +850,28 @@ p_overall_a_muac <- ggplot(overall_a_muac, aes(quantile, est, ymin = est - 1.96*
                axis.text.y = element_text(size = 11),
                axis.title.x = element_text(angle = 0, color = 'black', size = 11),
                axis.title.y = element_text(angle = 90, color = 'black', size = 11))
-p_overall_a_muac
+p_overall_muac
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
-p_singvar_a_muac <- ggplot(singvar_a_muac, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+p_singvar_muac <- ggplot(singvar_muac, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in MUAC (cm)")
-p_singvar_a_muac
+p_singvar_muac
 
 # SINGLE VARIABLE INTERACTION TERMS
-p_overall_interact_a_muac <- ggplot(overall_interact_a_muac, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_interact_muac <- ggplot(overall_interact_muac, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
   ylab("Difference in MUAC (cm)") +
   xlab("PFAS")
-p_overall_interact_a_muac
+p_overall_interact_muac
 
 
 ### BODY FAT %
-p_overall_a_bfat <- ggplot(overall_a_bfat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_bfat <- ggplot(overall_bfat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
                scale_y_continuous(name = "Change in body fat (%)")+
@@ -881,28 +881,28 @@ p_overall_a_bfat <- ggplot(overall_a_bfat, aes(quantile, est, ymin = est - 1.96*
                axis.text.y = element_text(size = 11),
                axis.title.x = element_text(angle = 0, color = 'black', size = 11),
                axis.title.y = element_text(angle = 90, color = 'black', size = 11))
-p_overall_a_bfat
+p_overall_bfat
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
-p_singvar_a_bfat <- ggplot(singvar_a_bfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+p_singvar_bfat <- ggplot(singvar_bfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in body fat (%)")
-p_singvar_a_bfat
+p_singvar_bfat
 
 # SINGLE VARIABLE INTERACTION TERMS
-p_overall_interact_a_bfat <- ggplot(overall_interact_a_bfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_interact_bfat <- ggplot(overall_interact_bfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
   ylab("Difference in body fat (%)") +
   xlab("PFAS")
-p_overall_interact_a_bfat
+p_overall_interact_bfat
 
 
 ### BODY FAT MASS
-p_overall_a_fat <- ggplot(overall_a_fat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_fat <- ggplot(overall_fat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
                scale_y_continuous(name = "Change in body fat mass (kg)")+
@@ -912,24 +912,24 @@ p_overall_a_fat <- ggplot(overall_a_fat, aes(quantile, est, ymin = est - 1.96*sd
                axis.text.y = element_text(size = 11),
                axis.title.x = element_text(angle = 0, color = 'black', size = 11),
                axis.title.y = element_text(angle = 90, color = 'black', size = 11))
-p_overall_a_fat
+p_overall_fat
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
-p_singvar_a_fat <- ggplot(singvar_a_fat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+p_singvar_fat <- ggplot(singvar_fat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in body fat mass (kg)")
-p_singvar_a_fat
+p_singvar_fat
 
 # SINGLE VARIABLE INTERACTION TERMS
-p_overall_interact_a_fat <- ggplot(overall_interact_a_fat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+p_overall_interact_fat <- ggplot(overall_interact_fat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
   ylab("Difference in body fat mass (kg)") +
   xlab("PFAS")
-p_overall_interact_a_fat
+p_overall_interact_fat
 
 ```
 
