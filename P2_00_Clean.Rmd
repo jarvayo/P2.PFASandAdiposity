@@ -111,20 +111,15 @@ PFAS_8 <- subset(PFAS_8, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, 
                                     bmi_mom_prepreg_d, coll_grad, Et_PFOSA_AcOH, PFDeA, PFHxS, PFNA2, PFOA, 
                                     PFOS, PFOSA, Me_PFOSA_AcOH2, g_age_days_COLL_D_BLD1, gt70k, 
                                     income_hh_epq_epqa_d, married_cohab, mom_muac_ma17, mom_ffm_ma17, 
-                                    mom_age_days_comp_d_ma17, mom_age_days_mdxa17, mom_bmi_MT,
+                                    mom_age_days_comp_d_ma17, mom_bmi_MT,
                                     mom_bodyfat_ma17, mom_fat_ma17, mom_hip_ma17, mom_waist_ma17,
-                                    mom_weight_ma17, nullip, parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
-                                    SAT_MASS_mdxa17, SAT_VOLUME_mdxa17, smokpreg_final_d, TAT_AREA_mdxa17,
-                                    TAT_MASS_mdxa17, TAT_VOLUME_mdxa17, VAT_AREA_mdxa17, VAT_MASS_mdxa17,
-                                    VAT_VOLUME_mdxa17, WEIGHT_mdxa17))
+                                    mom_weight_ma17, nullip, parity_d, race2_mom_epi_epia_d, smokpreg_final_d))
 
 PFAS_9 <- subset(PFAS_9, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, age_mom_enroll_d, 
                                     bmi_mom_prepreg_d, coll_grad, Et_PFOSA_AcOH, PFDeA, PFHxS, PFNA2, PFOA, 
                                     PFOS, PFOSA, Me_PFOSA_AcOH2, g_age_days_COLL_D_BLD1, gt70k, 
                                     income_hh_epq_epqa_d, married_cohab, mom_muac_ma17, mom_ffm_ma17,
-                                    mom_age_days_comp_d_ma17, mom_age_days_mdxa17, mom_bmi_MT,
-                                    mom_bodyfat_ma17, mom_fat_ma17, mom_hip_ma17, mom_waist_ma17,
-                                    mom_weight_ma17, nullip, parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
+                                    mom_age_days_mdxa17, nullip, parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
                                     SAT_MASS_mdxa17, SAT_VOLUME_mdxa17, smokpreg_final_d, TAT_AREA_mdxa17,
                                     TAT_MASS_mdxa17, TAT_VOLUME_mdxa17, VAT_AREA_mdxa17, VAT_MASS_mdxa17,
                                     VAT_VOLUME_mdxa17, WEIGHT_mdxa17))
