@@ -131,12 +131,12 @@ PFAS_X <- subset(PFAS_X, select = c(aid, age_mom_enroll_d, bmi_mom_prepreg_d, co
 write.csv(PFAS_8, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_A_C.csv", row.names = T)
 write_sas(PFAS_8, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_A_C.sas7bdat")
 
-write.csv(PFAS_9, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_AD_C.csv", row.names = T)
-write_sas(PFAS_9, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_AD_C.sas7bdat")
+write.csv(PFAS_9, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_D_C.csv", row.names = T)
+write_sas(PFAS_9, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_D_C.sas7bdat")
 
 # THE "C" AT THE END OF THE SAVED FILES INDICATES THAT THE DATASET IS CLEAN
-# THE "A" INDICATES THAT NO ANTHROPOMETRIC MEASURES ARE MISSING
-# THE "AD" INDICATES THAT THERE ARE NO ANTHROPOMETRIC OR DXA MEASURES MISSING
+# THE "A" INDICATES THAT THE DATASET HAS THE ANTHROPOMETRIC MEASURES
+# THE "D" INDICATES THAT THE DATASET HAS THE DXA MEASURES
 
 write.csv(PFAS_X, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_X.csv", row.names = T)
 write_sas(PFAS_X, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_X.sas7bdat")
