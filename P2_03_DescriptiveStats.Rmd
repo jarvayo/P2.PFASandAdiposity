@@ -147,22 +147,6 @@ hist(PFAS_A$mom_fat_ma17)
 hist(PFAS_A$mom_weight_ma17)
 hist(PFAS_A$mom_ffm_ma17)
 
-boxplot(PFAS_A$mom_bmi_MT)
-boxplot(PFAS_A$mom_weight_ma17)
-boxplot(PFAS_A$mom_waist_ma17)
-boxplot(PFAS_A$WHR)
-boxplot(PFAS_A$mom_muac_ma17)
-boxplot(PFAS_A$mom_bodyfat_ma17)
-boxplot(PFAS_A$mom_fat_ma17)
-
-ks.test(PFAS_A$mom_bmi_MT, 'pnorm')
-ks.test(PFAS_A$mom_waist_ma17, 'pnorm')
-ks.test(PFAS_A$WHR, 'pnorm')
-ks.test(PFAS_A$mom_muac_ma17, 'pnorm')
-ks.test(PFAS_A$mom_bodyfat_ma17, 'pnorm')
-ks.test(PFAS_A$mom_fat_ma17, 'pnorm')
-ks.test(PFAS_A$mom_weight_ma17, 'pnorm')
-
 # DESCRIBE THE LOG-DISTRIBUTION OF OUTCOME MEASURES, ANTHRO DATASET
 hist(PFAS_A$LNBMI)
 hist(PFAS_A$LNWAIST)
@@ -196,15 +180,6 @@ hist(PFAS_D$LNTAT_MASS)
 hist(PFAS_D$LNVAT_VOLUME)
 hist(PFAS_D$LNSAT_VOLUME)
 hist(PFAS_D$LNTAT_VOLUME)
-
-ks.test(PFAS_D$VAT_AREA_mdxa17, 'pnorm')
-ks.test(PFAS_D$SAT_AREA_mdxa17, 'pnorm')
-ks.test(PFAS_D$TAT_AREA_mdxa17, 'pnorm')
-ks.test(PFAS_D$VAT_MASS_mdxa17, 'pnorm')
-ks.test(PFAS_D$SAT_MASS_mdxa17, 'pnorm')
-ks.test(PFAS_D$TAT_MASS_mdxa17, 'pnorm')
-ks.test(PFAS_D$VAT_VOLUME_mdxa17, 'pnorm')
-ks.test(PFAS_D$SAT_VOLUME_mdxa17, 'pnorm')
 
 ```
 
