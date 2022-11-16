@@ -90,7 +90,7 @@ FatPct <- PFAS_A$FatPct
 FatMass <- PFAS_A$FatMass
 
 # CREAT THE COVARIATE MATRIX
-cov_a <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$race, PFAS_A$bmi_cat, PFAS_A$edu, 
+cov_a <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$race, PFAS_A$bmi, PFAS_A$edu, 
                        PFAS_A$smoke, PFAS_A$parity, PFAS_A$married))
 
 # SET THE SEED
@@ -118,7 +118,7 @@ m_waist <- kmbayes(y = Waist, Z = lnmixture_a_z, X = cov_a, iter=25000, family =
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
-# HIP CIRCUMFERENCE
+# WAIST-TO-HIP-RATIO
 m_whr <- kmbayes(y = WHR, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
@@ -173,7 +173,7 @@ ExtractPIPs(m_wt, sel = sel_final)
 #summary(m_waist)
 ExtractPIPs(m_waist, sel = sel_final)
 
-# HIP CIRCUMFERENCE
+# WAIST-TO-HIP-RATIO
 #summary(m_whr)
 ExtractPIPs(m_whr, sel = sel_final)
 
@@ -205,7 +205,7 @@ univar_wt
 univar_waist <- PredictorResponseUnivar(fit = m_waist, sel = sel_final, method = "approx")
 univar_waist
 
-# HIP CIRCUMFERENCE
+# WAIST-TO-HIP-RATIO
 univar_whr <- PredictorResponseUnivar(fit = m_whr, sel = sel_final, method = "approx")
 univar_whr
 
@@ -355,39 +355,39 @@ uni5_waist
 uni6_waist
 
 
-# HIP CIRCUMFERENCE
+# WAIST-TO-HIP-RATIO
 uni_whr <- ggplot(univar_whr, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in waist-to-hip ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni1_whr <- ggplot(univar_whr[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled PFOS plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in waist-to-hip ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni2_whr <- ggplot(univar_whr[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled PFOA plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in waist-to-hip ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni3_whr <- ggplot(univar_whr[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled PFNA plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in waist-to-hip ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni4_whr <- ggplot(univar_whr[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in waist-to-hip ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni5_whr <- ggplot(univar_whr[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in waist-to-hip ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni6_whr <- ggplot(univar_whr[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in hip circumference (cm)")+
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in waist-to-hip ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
 
 uni_whr
@@ -556,7 +556,7 @@ interact_waist <- PredictorResponseBivarLevels(pred.resp.df = bivar_waist, Z = l
 interact_waist_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_waist, Z = lnmixture_a_z,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
-# HIP CIRCUMFERENCE
+# WAIST-TO-HIP-RATIO
 bivar_whr <- PredictorResponseBivar(fit = m_whr, min.plot.dist = 1, sel = sel_final, method = "approx")
 interact_whr <- PredictorResponseBivarLevels(pred.resp.df = bivar_whr, Z = lnmixture_a_z,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
@@ -606,7 +606,7 @@ p_interact_wt <- ggplot(interact_wt, aes(z1, est)) +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_wt
 
-# WAIST
+# WAIST CIRCUMFERENCE
 p_interact_waist <- ggplot(interact_waist, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
@@ -615,12 +615,12 @@ p_interact_waist <- ggplot(interact_waist, aes(z1, est)) +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_waist 
 
-# HIP
+# WAIST-TO-HIP RATIO
 p_interact_whr <- ggplot(interact_whr, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
   xlab ("Log2-transformed PFAS 1") +
-  ylab ("Difference in hip circumference (cm)") +
+  ylab ("Difference in waist-to-hip ratio") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_whr
 
@@ -680,7 +680,7 @@ singvar_waist <- SingVarRiskSummaries(fit = m_waist, qs.diff = c(0.25, 0.75),
 overall_interact_waist <- SingVarIntSummaries(fit = m_waist, qs.diff = c(0.25, 0.75),
                                        qs.fixed = c(0.25, 0.75),sel=sel_final)
 
-# HIP CIRCUMFERENCE
+# WAIST-TO-HIP-RATIO
 overall_whr <- OverallRiskSummaries(fit = m_whr, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
 singvar_whr <- SingVarRiskSummaries(fit = m_whr, qs.diff = c(0.25, 0.75),
@@ -808,11 +808,11 @@ p_overall_interact_waist <- ggplot(overall_interact_waist, aes(variable, est, ym
 p_overall_interact_waist
 
 
-### HIP CIRCUMFERENCE
+### WAIST-TO-HIP-RATIO
 p_overall_whr <- ggplot(overall_whr, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
                geom_pointrange() +
-               scale_y_continuous(name = "Change in hip circumference (cm)")+
+               scale_y_continuous(name = "Change in waist-to-hip ratio")+
                xlab("PFAS quantile") +
                theme_classic()+ theme(
                axis.text.x = element_text(size = 11),
@@ -827,14 +827,14 @@ p_singvar_whr <- ggplot(singvar_whr, aes(variable, est, ymin = est - 1.96*sd, ym
                                 col = q.fixed)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in hip circumference (cm)")
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in waist-to-hip ratio")
 p_singvar_whr
 
 # SINGLE VARIABLE INTERACTION TERMS
 p_overall_interact_whr <- ggplot(overall_interact_whr, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in hip circumference (cm)") +
+  ylab("Difference in waist-to-hip ratio") +
   xlab("PFAS")
 p_overall_interact_whr
 
