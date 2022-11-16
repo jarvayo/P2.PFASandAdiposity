@@ -264,17 +264,17 @@ modelsummary(unad.lnm.tatv, fmt = 2)
 
 # BMI
 ad.m.bmi <- list(
-  "PFOS" = glm(BMI ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(BMI ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(BMI ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(BMI ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(BMI ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(BMI ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(BMI ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(BMI ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(BMI ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(BMI ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(BMI ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(BMI ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.m.bmi, fmt = 2,
@@ -284,17 +284,17 @@ modelsummary(ad.m.bmi, fmt = 2,
              coef_omit = "Interc")
 
 ad.lnm.bmi <- list(
-  "PFOS" = glm(LNBMI ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(LNBMI ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(LNBMI ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(LNBMI ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(LNBMI ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(LNBMI ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(LNBMI ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(LNBMI ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(LNBMI ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(LNBMI ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(LNBMI ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(LNBMI ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.lnm.bmi, fmt = 2,
@@ -306,17 +306,17 @@ modelsummary(ad.lnm.bmi, fmt = 2,
 
 # WEIGHT
 ad.m.wt <- list(
-  "PFOS" = glm(Weight ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(Weight ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(Weight ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(Weight ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(Weight ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(Weight ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(Weight ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(Weight ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(Weight ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(Weight ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(Weight ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(Weight ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.m.wt, fmt = 2,
@@ -326,17 +326,17 @@ modelsummary(ad.m.wt, fmt = 2,
              coef_omit = "Interc")
 
 ad.lnm.wt <- list(
-  "PFOS" = glm(LNWT ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(LNWT ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(LNWT ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(LNWT ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(LNWT ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(LNWT ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(LNWT ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(LNWT ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(LNWT ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(LNWT ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(LNWT ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(LNWT ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.lnm.wt, fmt = 2,
@@ -348,17 +348,17 @@ modelsummary(ad.lnm.wt, fmt = 2,
 
 # WAIST CIRCUMFERENCE
 ad.m.waist <- list(
-  "PFOS" = glm(Waist ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(Waist ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(Waist ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(Waist ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(Waist ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(Waist ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(Waist ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(Waist ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(Waist ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(Waist ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(Waist ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(Waist ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.m.waist, fmt = 2,
@@ -368,17 +368,17 @@ modelsummary(ad.m.waist, fmt = 2,
              coef_omit = "Interc")
 
 ad.lnm.waist <- list(
-  "PFOS" = glm(LNWAIST ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(LNWAIST ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(LNWAIST ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(LNWAIST ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(LNWAIST ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(LNWAIST ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(LNWAIST ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(LNWAIST ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(LNWAIST ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(LNWAIST ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(LNWAIST ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(LNWAIST ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.lnm.waist, fmt = 2,
@@ -390,17 +390,17 @@ modelsummary(ad.lnm.waist, fmt = 2,
 
 # WAIST-TO-HIP RATIO
 ad.m.whr <- list(
-  "PFOS" = glm(WHR ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(WHR ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(WHR ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(WHR ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(WHR ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(WHR ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(WHR ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(WHR ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(WHR ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(WHR ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(WHR ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(WHR ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.m.whr, fmt = 2,
@@ -410,17 +410,17 @@ modelsummary(ad.m.whr, fmt = 2,
              coef_omit = "Interc")
 
 ad.lnm.whr <- list(
-  "PFOS" = glm(LNWHR ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(LNWHR ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(LNWHR ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(LNWHR ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(LNWHR ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(LNWHR ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(LNWHR ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(LNWHR ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(LNWHR ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(LNWHR ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(LNWHR ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(LNWHR ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.lnm.whr, fmt = 2,
@@ -432,17 +432,17 @@ modelsummary(ad.lnm.whr, fmt = 2,
 
 # MUAC
 ad.m.muac <- list(
-  "PFOS" = glm(MUAC ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(MUAC ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(MUAC ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(MUAC ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(MUAC ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(MUAC ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(MUAC ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(MUAC ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(MUAC ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(MUAC ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(MUAC ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(MUAC ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.m.muac, fmt = 2,
@@ -452,17 +452,17 @@ modelsummary(ad.m.muac, fmt = 2,
              coef_omit = "Interc")
 
 ad.lnm.muac <- list(
-  "PFOS" = glm(LNMUAC ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(LNMUAC ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(LNMUAC ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(LNMUAC ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(LNMUAC ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(LNMUAC ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(LNMUAC ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(LNMUAC ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(LNMUAC ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(LNMUAC ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(LNMUAC ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(LNMUAC ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.lnm.muac, fmt = 2,
@@ -474,17 +474,17 @@ modelsummary(ad.lnm.muac, fmt = 2,
 
 # BODY FAT %
 ad.m.bfat <- list(
-  "PFOS" = glm(FatPct ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(FatPct ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(FatPct ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(FatPct ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(FatPct ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(FatPct ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(FatPct ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(FatPct ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(FatPct ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(FatPct ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(FatPct ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(FatPct ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.m.bfat, fmt = 2,
@@ -494,17 +494,17 @@ modelsummary(ad.m.bfat, fmt = 2,
              coef_omit = "Interc")
 
 ad.lnm.bfat <- list(
-  "PFOS" = glm(LNBFAT ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(LNBFAT ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(LNBFAT ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(LNBFAT ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(LNBFAT ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(LNBFAT ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(LNBFAT ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(LNBFAT ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(LNBFAT ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(LNBFAT ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(LNBFAT ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(LNBFAT ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.lnm.bfat, fmt = 2,
@@ -516,17 +516,17 @@ modelsummary(ad.lnm.bfat, fmt = 2,
 
 # BODY FAT MASS
 ad.m.fat <- list(
-  "PFOS" = glm(FatMass ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(FatMass ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(FatMass ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(FatMass ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(FatMass ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(FatMass ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(FatMass ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(FatMass ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(FatMass ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(FatMass ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(FatMass ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(FatMass ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.m.fat, fmt = 2,
@@ -536,17 +536,17 @@ modelsummary(ad.m.fat, fmt = 2,
              coef_omit = "Interc")
 
 ad.lnm.fat <- list(
-  "PFOS" = glm(LNFAT ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOS" = glm(LNFAT ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFOA" = glm(LNFAT ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFOA" = glm(LNFAT ~ LN2PFOA + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFNA" = glm(LNFAT ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFNA" = glm(LNFAT ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke +  
                  parity + married, family = gaussian, data = PFAS_A),
-  "PFHxS" = glm(LNFAT ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke +  
+  "PFHxS" = glm(LNFAT ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke +  
                   parity + married, family = gaussian, data = PFAS_A),
-  "MeFOSSA" = glm(LNFAT ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "MeFOSSA" = glm(LNFAT ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A),
-  "EtFOSSA" = glm(LNFAT ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke +  
+  "EtFOSSA" = glm(LNFAT ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke +  
                     parity + married, family = gaussian, data = PFAS_A))
 
 modelsummary(ad.lnm.fat, fmt = 2,
@@ -573,17 +573,17 @@ modelplot(ad.m.fat, coef_omit = "Interc")
 
 # VAT AREA
 ad.lnm.vata <- list(
-  "PFOS" = glm(LNVAT_AREA ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOS" = glm(LNVAT_AREA ~ LN2PFOS + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFOA" = glm(LNVAT_AREA ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOA" = glm(LNVAT_AREA ~ LN2PFOA + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFNA" = glm(LNVAT_AREA ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFNA" = glm(LNVAT_AREA ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFHxS" = glm(LNVAT_AREA ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFHxS" = glm(LNVAT_AREA ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke + 
                   parity + married, family = gaussian, data = PFAS_D),
-  "MeFOSSA" = glm(LNVAT_AREA ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "MeFOSSA" = glm(LNVAT_AREA ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D),
-  "EtFOSSA" = glm(LNVAT_AREA ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "EtFOSSA" = glm(LNVAT_AREA ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D))
 
 modelsummary(ad.lnm.vata, fmt = 2,
@@ -595,17 +595,17 @@ modelsummary(ad.lnm.vata, fmt = 2,
 
 # SAAT AREA
 ad.lnm.sata <- list(
-  "PFOS" = glm(LNSAT_AREA ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOS" = glm(LNSAT_AREA ~ LN2PFOS + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFOA" = glm(LNSAT_AREA ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOA" = glm(LNSAT_AREA ~ LN2PFOA + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFNA" = glm(LNSAT_AREA ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFNA" = glm(LNSAT_AREA ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFHxS" = glm(LNSAT_AREA ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFHxS" = glm(LNSAT_AREA ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke + 
                   parity + married, family = gaussian, data = PFAS_D),
-  "MeFOSSA" = glm(LNSAT_AREA ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "MeFOSSA" = glm(LNSAT_AREA ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D),
-  "EtFOSSA" = glm(LNSAT_AREA ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "EtFOSSA" = glm(LNSAT_AREA ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D))
 
 modelsummary(ad.lnm.sata, fmt = 2,
@@ -617,17 +617,17 @@ modelsummary(ad.lnm.sata, fmt = 2,
 
 # TAAT AREA
 ad.lnm.tata <- list(
-  "PFOS" = glm(LNTAT_AREA ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOS" = glm(LNTAT_AREA ~ LN2PFOS + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFOA" = glm(LNTAT_AREA ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOA" = glm(LNTAT_AREA ~ LN2PFOA + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFNA" = glm(LNTAT_AREA ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFNA" = glm(LNTAT_AREA ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFHxS" = glm(LNTAT_AREA ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFHxS" = glm(LNTAT_AREA ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke + 
                   parity + married, family = gaussian, data = PFAS_D),
-  "MeFOSSA" = glm(LNTAT_AREA ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "MeFOSSA" = glm(LNTAT_AREA ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D),
-  "EtFOSSA" = glm(LNTAT_AREA ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "EtFOSSA" = glm(LNTAT_AREA ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D))
 
 modelsummary(ad.lnm.tata, fmt = 2,
@@ -639,17 +639,17 @@ modelsummary(ad.lnm.tata, fmt = 2,
 
 # VAT MASS
 ad.lnm.vatm <- list(
-  "PFOS" = glm(LNVAT_MASS ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOS" = glm(LNVAT_MASS ~ LN2PFOS + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFOA" = glm(LNVAT_MASS ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOA" = glm(LNVAT_MASS ~ LN2PFOA + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFNA" = glm(LNVAT_MASS ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFNA" = glm(LNVAT_MASS ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFHxS" = glm(LNVAT_MASS ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFHxS" = glm(LNVAT_MASS ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke + 
                   parity + married, family = gaussian, data = PFAS_D),
-  "MeFOSSA" = glm(LNVAT_MASS ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "MeFOSSA" = glm(LNVAT_MASS ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D),
-  "EtFOSSA" = glm(LNVAT_MASS ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "EtFOSSA" = glm(LNVAT_MASS ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D))
 
 modelsummary(ad.lnm.vatm, fmt = 2,
@@ -661,17 +661,17 @@ modelsummary(ad.lnm.vatm, fmt = 2,
 
 # SAAT MASS
 ad.lnm.satm <- list(
-  "PFOS" = glm(LNSAT_MASS ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOS" = glm(LNSAT_MASS ~ LN2PFOS + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFOA" = glm(LNSAT_MASS ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOA" = glm(LNSAT_MASS ~ LN2PFOA + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFNA" = glm(LNSAT_MASS ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFNA" = glm(LNSAT_MASS ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFHxS" = glm(LNSAT_MASS ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFHxS" = glm(LNSAT_MASS ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke + 
                   parity + married, family = gaussian, data = PFAS_D),
-  "MeFOSSA" = glm(LNSAT_MASS ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "MeFOSSA" = glm(LNSAT_MASS ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D),
-  "EtFOSSA" = glm(LNSAT_MASS ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "EtFOSSA" = glm(LNSAT_MASS ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D))
 
 modelsummary(ad.lnm.satm, fmt = 2,
@@ -683,17 +683,17 @@ modelsummary(ad.lnm.satm, fmt = 2,
 
 # TAAT MASS
 ad.lnm.tatm <- list(
-  "PFOS" = glm(LNTAT_MASS ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOS" = glm(LNTAT_MASS ~ LN2PFOS + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFOA" = glm(LNTAT_MASS ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOA" = glm(LNTAT_MASS ~ LN2PFOA + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFNA" = glm(LNTAT_MASS ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFNA" = glm(LNTAT_MASS ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFHxS" = glm(LNTAT_MASS ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFHxS" = glm(LNTAT_MASS ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke + 
                   parity + married, family = gaussian, data = PFAS_D),
-  "MeFOSSA" = glm(LNTAT_MASS ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "MeFOSSA" = glm(LNTAT_MASS ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D),
-  "EtFOSSA" = glm(LNTAT_MASS ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "EtFOSSA" = glm(LNTAT_MASS ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D))
 
 modelsummary(ad.lnm.tatm, fmt = 2,
@@ -705,17 +705,17 @@ modelsummary(ad.lnm.tatm, fmt = 2,
 
 # VAT VOLUME
 ad.lnm.vatv <- list(
-  "PFOS" = glm(LNVAT_VOLUME ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOS" = glm(LNVAT_VOLUME ~ LN2PFOS + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFOA" = glm(LNVAT_VOLUME ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOA" = glm(LNVAT_VOLUME ~ LN2PFOA + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFNA" = glm(LNVAT_VOLUME ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFNA" = glm(LNVAT_VOLUME ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFHxS" = glm(LNVAT_VOLUME ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFHxS" = glm(LNVAT_VOLUME ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke + 
                   parity + married, family = gaussian, data = PFAS_D),
-  "MeFOSSA" = glm(LNVAT_VOLUME ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "MeFOSSA" = glm(LNVAT_VOLUME ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D),
-  "EtFOSSA" = glm(LNVAT_VOLUME ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "EtFOSSA" = glm(LNVAT_VOLUME ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D))
 
 modelsummary(ad.lnm.vatv, fmt = 2,
@@ -727,17 +727,17 @@ modelsummary(ad.lnm.vatv, fmt = 2,
 
 # SAAT VOLUME
 ad.lnm.satv <- list(
-  "PFOS" = glm(LNSAT_VOLUME ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOS" = glm(LNSAT_VOLUME ~ LN2PFOS + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFOA" = glm(LNSAT_VOLUME ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOA" = glm(LNSAT_VOLUME ~ LN2PFOA + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFNA" = glm(LNSAT_VOLUME ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFNA" = glm(LNSAT_VOLUME ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFHxS" = glm(LNSAT_VOLUME ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFHxS" = glm(LNSAT_VOLUME ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke + 
                   parity + married, family = gaussian, data = PFAS_D),
-  "MeFOSSA" = glm(LNSAT_VOLUME ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "MeFOSSA" = glm(LNSAT_VOLUME ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D),
-  "EtFOSSA" = glm(LNSAT_VOLUME ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "EtFOSSA" = glm(LNSAT_VOLUME ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D))
 
 modelsummary(ad.lnm.satv, fmt = 2,
@@ -749,17 +749,17 @@ modelsummary(ad.lnm.satv, fmt = 2,
 
 # TAAT VOLUME
 ad.lnm.tatv <- list(
-  "PFOS" = glm(LNTAT_VOLUME ~ LN2PFOS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOS" = glm(LNTAT_VOLUME ~ LN2PFOS + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFOA" = glm(LNTAT_VOLUME ~ LN2PFOA + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFOA" = glm(LNTAT_VOLUME ~ LN2PFOA + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFNA" = glm(LNTAT_VOLUME ~ LN2PFNA2 + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFNA" = glm(LNTAT_VOLUME ~ LN2PFNA2 + age_enroll + race + bmi + edu + smoke + 
                  parity + married, family = gaussian, data = PFAS_D),
-  "PFHxS" = glm(LNTAT_VOLUME ~ LN2PFHxS + age_enroll + race + bmi_cat + edu + smoke + 
+  "PFHxS" = glm(LNTAT_VOLUME ~ LN2PFHxS + age_enroll + race + bmi + edu + smoke + 
                   parity + married, family = gaussian, data = PFAS_D),
-  "MeFOSSA" = glm(LNTAT_VOLUME ~ LN2ME_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "MeFOSSA" = glm(LNTAT_VOLUME ~ LN2ME_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D),
-  "EtFOSSA" = glm(LNTAT_VOLUME ~ LN2ET_PFOSA + age_enroll + race + bmi_cat + edu + smoke + 
+  "EtFOSSA" = glm(LNTAT_VOLUME ~ LN2ET_PFOSA + age_enroll + race + bmi + edu + smoke + 
                     parity + married, family = gaussian, data = PFAS_D))
 
 modelsummary(ad.lnm.tatv, fmt = 2,
