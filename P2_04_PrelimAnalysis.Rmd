@@ -31,7 +31,7 @@ unad.m.bmi <- list(
   "PFHxS" = glm(BMI ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(BMI ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(BMI ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.m.bmi, fmt = 2)
+modelsummary(unad.m.bmi, fmt = 2, title = "PFAS vs. BMI (Unadjusted)")
 
 unad.lnm.bmi <- list(
   "PFOS" = glm(LNBMI ~ LN2PFOS, family = gaussian, data = PFAS_A),
@@ -40,7 +40,7 @@ unad.lnm.bmi <- list(
   "PFHxS" = glm(LNBMI ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(LNBMI ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(LNBMI ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.lnm.bmi, fmt = 2)
+modelsummary(unad.lnm.bmi, fmt = 2, title = "PFAS vs. LN-BMI (Unadjusted)")
 
 
 # WEIGHT
@@ -51,7 +51,7 @@ unad.m.wt <- list(
   "PFHxS" = glm(Weight ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(Weight ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(Weight ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.m.wt, fmt = 2)
+modelsummary(unad.m.wt, fmt = 2, title = "PFAS vs. WEIGHT (Unadjusted)")
 
 unad.lnm.wt <- list(
   "PFOS" = glm(LNWT ~ LN2PFOS, family = gaussian, data = PFAS_A),
@@ -60,7 +60,7 @@ unad.lnm.wt <- list(
   "PFHxS" = glm(LNWT ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(LNWT ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(LNWT ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.lnm.wt, fmt = 2)
+modelsummary(unad.lnm.wt, fmt = 2, title = "PFAS vs. LN-WEIGHT (Unadjusted)")
 
 
 # WAIST CIRCUMFERENCE
@@ -71,7 +71,7 @@ unad.m.waist <- list(
   "PFHxS" = glm(Waist ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(Waist ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(Waist ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.m.waist, fmt = 2)
+modelsummary(unad.m.waist, fmt = 2, title = "PFAS vs. WAIST CIRCUMFERENCE (Unadjusted)")
 
 unad.lnm.waist <- list(
   "PFOS" = glm(LNWAIST ~ LN2PFOS, family = gaussian, data = PFAS_A),
@@ -80,7 +80,7 @@ unad.lnm.waist <- list(
   "PFHxS" = glm(LNWAIST ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(LNWAIST ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(LNWAIST ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.lnm.waist, fmt = 2)
+modelsummary(unad.lnm.waist, fmt = 2, title = "PFAS vs. LN-WAIST CIRCUMFERENCE (Unadjusted)")
 
 
 # WAIST-TO-HIP RATIO
@@ -91,7 +91,7 @@ unad.m.whr <- list(
   "PFHxS" = glm(WHR ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(WHR ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(WHR ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.m.whr, fmt = 2)
+modelsummary(unad.m.whr, fmt = 2, title = "PFAS vs. WHR (Unadjusted)")
 
 unad.lnm.whr <- list(
   "PFOS" = glm(LNWHR ~ LN2PFOS, family = gaussian, data = PFAS_A),
@@ -100,7 +100,7 @@ unad.lnm.whr <- list(
   "PFHxS" = glm(LNWHR ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(LNWHR ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(LNWHR ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.lnm.whr, fmt = 2)
+modelsummary(unad.lnm.whr, fmt = 2, title = "PFAS vs. BLN-WHR (Unadjusted)")
 
 
 # MUAC
@@ -111,7 +111,7 @@ unad.m.muac <- list(
   "PFHxS" = glm(MUAC ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(MUAC ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(MUAC ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.m.muac, fmt = 2)
+modelsummary(unad.m.muac, fmt = 2, title = "PFAS vs. MUAC (Unadjusted)")
 
 unad.lnm.muac <- list(
   "PFOS" = glm(LNMUAC ~ LN2PFOS, family = gaussian, data = PFAS_A),
@@ -120,7 +120,7 @@ unad.lnm.muac <- list(
   "PFHxS" = glm(LNMUAC ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(LNMUAC ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(LNMUAC ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.lnm.muac, fmt = 2)
+modelsummary(unad.lnm.muac, fmt = 2, title = "PFAS vs. LN-MUAC (Unadjusted)")
 
 
 # BODY FAT %
@@ -131,7 +131,7 @@ unad.m.bfat <- list(
   "PFHxS" = glm(FatPct ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(FatPct ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(FatPct ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.m.bfat, fmt = 2)
+modelsummary(unad.m.bfat, fmt = 2, title = "PFAS vs. BODY FAT % (Unadjusted)")
 
 
 # BODY FAT MASS
@@ -142,7 +142,7 @@ unad.m.fat <- list(
   "PFHxS" = glm(FatMass ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(FatMass ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(FatMass ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.m.fat, fmt = 2)
+modelsummary(unad.m.fat, fmt = 2, title = "PFAS vs. BODY FAT MASS (Unadjusted)")
 
 unad.lnm.fat <- list(
   "PFOS" = glm(LNFAT ~ LN2PFOS, family = gaussian, data = PFAS_A),
@@ -151,7 +151,7 @@ unad.lnm.fat <- list(
   "PFHxS" = glm(LNFAT ~ LN2PFHxS, family = gaussian, data = PFAS_A),
   "MeFOSSA" = glm(LNFAT ~ LN2ME_PFOSA, family = gaussian, data = PFAS_A),
   "EtFOSSA" = glm(LNFAT ~ LN2ET_PFOSA, family = gaussian, data = PFAS_A))
-modelsummary(unad.lnm.fat, fmt = 2)
+modelsummary(unad.lnm.fat, fmt = 2, title = "PFAS vs. LN-BODY FAT MASS (Unadjusted)")
 
 ```
 
@@ -166,7 +166,7 @@ unad.lnm.vata <- list(
   "PFHxS" = glm(LNVAT_AREA ~ LN2PFHxS, family = gaussian, data = PFAS_D),
   "MeFOSSA" = glm(LNVAT_AREA ~ LN2ME_PFOSA, family = gaussian, data = PFAS_D),
   "EtFOSSA" = glm(LNVAT_AREA ~ LN2ET_PFOSA, family = gaussian, data = PFAS_D))
-modelsummary(unad.lnm.vata, fmt = 2)
+modelsummary(unad.lnm.vata, fmt = 2, title = "PFAS vs. LN-VAT AREA (Unadjusted)")
 
 
 # SAAT AREA
@@ -177,7 +177,7 @@ unad.lnm.sata <- list(
   "PFHxS" = glm(LNSAT_AREA ~ LN2PFHxS, family = gaussian, data = PFAS_D),
   "MeFOSSA" = glm(LNSAT_AREA ~ LN2ME_PFOSA, family = gaussian, data = PFAS_D),
   "EtFOSSA" = glm(LNSAT_AREA ~ LN2ET_PFOSA, family = gaussian, data = PFAS_D))
-modelsummary(unad.lnm.sata, fmt = 2)
+modelsummary(unad.lnm.sata, fmt = 2, title = "PFAS vs. LN-SAAT AREA (Unadjusted)")
 
 
 # TAAT AREA
@@ -188,7 +188,7 @@ unad.lnm.tata <- list(
   "PFHxS" = glm(LNTAT_AREA ~ LN2PFHxS, family = gaussian, data = PFAS_D),
   "MeFOSSA" = glm(LNTAT_AREA ~ LN2ME_PFOSA, family = gaussian, data = PFAS_D),
   "EtFOSSA" = glm(LNTAT_AREA ~ LN2ET_PFOSA, family = gaussian, data = PFAS_D))
-modelsummary(unad.lnm.tata, fmt = 2)
+modelsummary(unad.lnm.tata, fmt = 2, title = "PFAS vs. LN-TAAT AREA (Unadjusted)")
 
 
 # VAT MASS
@@ -199,7 +199,7 @@ unad.lnm.vatm <- list(
   "PFHxS" = glm(LNVAT_MASS ~ LN2PFHxS, family = gaussian, data = PFAS_D),
   "MeFOSSA" = glm(LNVAT_MASS ~ LN2ME_PFOSA, family = gaussian, data = PFAS_D),
   "EtFOSSA" = glm(LNVAT_MASS ~ LN2ET_PFOSA, family = gaussian, data = PFAS_D))
-modelsummary(unad.lnm.vatm, fmt = 2)
+modelsummary(unad.lnm.vatm, fmt = 2, title = "PFAS vs. LN-VAT MASS (Unadjusted)")
 
 
 # SAAT MASS
@@ -210,7 +210,7 @@ unad.lnm.satm <- list(
   "PFHxS" = glm(LNSAT_MASS ~ LN2PFHxS, family = gaussian, data = PFAS_D),
   "MeFOSSA" = glm(LNSAT_MASS ~ LN2ME_PFOSA, family = gaussian, data = PFAS_D),
   "EtFOSSA" = glm(LNSAT_MASS ~ LN2ET_PFOSA, family = gaussian, data = PFAS_D))
-modelsummary(unad.lnm.satm, fmt = 2)
+modelsummary(unad.lnm.satm, fmt = 2, title = "PFAS vs. LN-SAAT MASS (Unadjusted)")
 
 
 # TAAT MASS
@@ -221,7 +221,7 @@ unad.lnm.tatm <- list(
   "PFHxS" = glm(LNTAT_MASS ~ LN2PFHxS, family = gaussian, data = PFAS_D),
   "MeFOSSA" = glm(LNTAT_MASS ~ LN2ME_PFOSA, family = gaussian, data = PFAS_D),
   "EtFOSSA" = glm(LNTAT_MASS ~ LN2ET_PFOSA, family = gaussian, data = PFAS_D))
-modelsummary(unad.lnm.tatm, fmt = 2)
+modelsummary(unad.lnm.tatm, fmt = 2, title = "PFAS vs. LN-TAAT MASS (Unadjusted)")
 
 
 # VAT VOLUME
@@ -232,7 +232,7 @@ unad.lnm.vatv <- list(
   "PFHxS" = glm(LNVAT_VOLUME ~ LN2PFHxS, family = gaussian, data = PFAS_D),
   "MeFOSSA" = glm(LNVAT_VOLUME ~ LN2ME_PFOSA, family = gaussian, data = PFAS_D),
   "EtFOSSA" = glm(LNVAT_VOLUME ~ LN2ET_PFOSA, family = gaussian, data = PFAS_D))
-modelsummary(unad.lnm.vatv, fmt = 2)
+modelsummary(unad.lnm.vatv, fmt = 2, title = "PFAS vs. LN-VAT VOLUME (Unadjusted)")
 
 
 # SAAT VOLUME
@@ -243,7 +243,7 @@ unad.lnm.satv <- list(
   "PFHxS" = glm(LNSAT_VOLUME ~ LN2PFHxS, family = gaussian, data = PFAS_D),
   "MeFOSSA" = glm(LNSAT_VOLUME ~ LN2ME_PFOSA, family = gaussian, data = PFAS_D),
   "EtFOSSA" = glm(LNSAT_VOLUME ~ LN2ET_PFOSA, family = gaussian, data = PFAS_D))
-modelsummary(unad.lnm.satv, fmt = 2)
+modelsummary(unad.lnm.satv, fmt = 2, title = "PFAS vs. LN-SAAT VOLUME (Unadjusted)")
 
 
 # TAAT VOLUME
@@ -254,7 +254,7 @@ unad.lnm.tatv <- list(
   "PFHxS" = glm(LNTAT_VOLUME ~ LN2PFHxS, family = gaussian, data = PFAS_D),
   "MeFOSSA" = glm(LNTAT_VOLUME ~ LN2ME_PFOSA, family = gaussian, data = PFAS_D),
   "EtFOSSA" = glm(LNTAT_VOLUME ~ LN2ET_PFOSA, family = gaussian, data = PFAS_D))
-modelsummary(unad.lnm.tatv, fmt = 2)
+modelsummary(unad.lnm.tatv, fmt = 2, title = "PFAS vs. LN-TAAT VOLUME (Unadjusted)")
 
 ```
 
@@ -281,7 +281,7 @@ modelsummary(ad.m.bmi, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. BMI (Adjusted)")
 
 ad.lnm.bmi <- list(
   "PFOS" = glm(LNBMI ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
@@ -301,7 +301,7 @@ modelsummary(ad.lnm.bmi, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-BMI (Adjusted)")
 
 
 # WEIGHT
@@ -323,7 +323,7 @@ modelsummary(ad.m.wt, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. WEIGHT (Adjusted)")
 
 ad.lnm.wt <- list(
   "PFOS" = glm(LNWT ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
@@ -343,7 +343,7 @@ modelsummary(ad.lnm.wt, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-WEIGHT (Adjusted)")
 
 
 # WAIST CIRCUMFERENCE
@@ -365,7 +365,7 @@ modelsummary(ad.m.waist, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. WAIST CIRCUMFERENCE (Adjusted)")
 
 ad.lnm.waist <- list(
   "PFOS" = glm(LNWAIST ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
@@ -385,7 +385,7 @@ modelsummary(ad.lnm.waist, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-WAIST CIRCUMFERENCE (Adjusted)")
 
 
 # WAIST-TO-HIP RATIO
@@ -407,7 +407,7 @@ modelsummary(ad.m.whr, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. WHR (Adjusted)")
 
 ad.lnm.whr <- list(
   "PFOS" = glm(LNWHR ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
@@ -427,7 +427,7 @@ modelsummary(ad.lnm.whr, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-WHR (Adjusted)")
 
 
 # MUAC
@@ -449,7 +449,7 @@ modelsummary(ad.m.muac, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. MUAC (Adjusted)")
 
 ad.lnm.muac <- list(
   "PFOS" = glm(LNMUAC ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
@@ -469,7 +469,7 @@ modelsummary(ad.lnm.muac, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-MUAC (Adjusted)")
 
 
 # BODY FAT %
@@ -491,7 +491,7 @@ modelsummary(ad.m.bfat, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. BODY FAT % (Adjusted)")
 
 ad.lnm.bfat <- list(
   "PFOS" = glm(LNBFAT ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
@@ -511,7 +511,7 @@ modelsummary(ad.lnm.bfat, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-BODY FAT % (Adjusted)")
 
 
 # BODY FAT MASS
@@ -533,7 +533,7 @@ modelsummary(ad.m.fat, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. BODY FAT MASS (Adjusted)")
 
 ad.lnm.fat <- list(
   "PFOS" = glm(LNFAT ~ LN2PFOS + age_enroll + race + bmi + edu + smoke +  
@@ -553,7 +553,7 @@ modelsummary(ad.lnm.fat, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-BODY FAT MASS (Adjusted)")
 
 ```
 
@@ -590,7 +590,7 @@ modelsummary(ad.lnm.vata, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-VAT AREA (Adjusted)")
 
 
 # SAAT AREA
@@ -612,7 +612,7 @@ modelsummary(ad.lnm.sata, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-SAAT AREA (Adjusted)")
 
 
 # TAAT AREA
@@ -634,7 +634,7 @@ modelsummary(ad.lnm.tata, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-TAAT AREA (Adjusted)")
 
 
 # VAT MASS
@@ -656,7 +656,7 @@ modelsummary(ad.lnm.vatm, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-VAT MASS (Adjusted)")
 
 
 # SAAT MASS
@@ -678,7 +678,7 @@ modelsummary(ad.lnm.satm, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-SAAT MASS (Adjusted)")
 
 
 # TAAT MASS
@@ -700,7 +700,7 @@ modelsummary(ad.lnm.tatm, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-TAAT MASS (Adjusted)")
 
 
 # VAT VOLUME
@@ -722,7 +722,7 @@ modelsummary(ad.lnm.vatv, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-VAT VOLUME (Adjusted)")
 
 
 # SAAT VOLUME
@@ -744,7 +744,7 @@ modelsummary(ad.lnm.satv, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-SAAT VOLUME (Adjusted)")
 
 
 # TAAT VOLUME
@@ -766,7 +766,7 @@ modelsummary(ad.lnm.tatv, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc")
+             coef_omit = "Interc", title = "PFAS vs. LN-TAAT VOLUME (Adjusted)")
 
 ```
 
