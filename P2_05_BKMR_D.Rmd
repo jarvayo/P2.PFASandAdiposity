@@ -1,6 +1,6 @@
-#####                                  #####
-##### RUN MIXTURES ANALYSIS WITH BKMR  #####
-#####                                  #####
+#####                                                 #####
+##### RUN MIXTURES ANALYSIS WITH BKMR IN DXA DATASET  #####
+#####                                                 #####
 
 ```{r}
 ##### LOAD PACKAGES
