@@ -1,6 +1,9 @@
 #####                                  #####
 ##### RUN MIXTURES ANALYSIS WITH BKMR  #####
 #####                                  #####
+#####                                                                       #####
+##### RUN MIXTURES ANALYSIS WITH BKMR IN ANTHRO + BIOIMPENDANCE DATA        #####
+#####                                                                       #####
 
 ```{r}
 ##### LOAD PACKAGES
