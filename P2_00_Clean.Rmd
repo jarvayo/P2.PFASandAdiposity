@@ -12,7 +12,7 @@ library("data.table")
 
 ```{r}
 ##### LOAD DATASET
-PFAS <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/ja_062922.sas7bdat")
+PFAS <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/ja_062922_2.sas7bdat")
 BMI <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/ja_071022.sas7bdat")
 PFAS <- merge(BMI, PFAS, by = "aid", all.y = T)
 PFAS$mom_weight_ma17 <- PFAS$mom_weight_ma17.x 
@@ -55,6 +55,10 @@ summary(PFAS$SAT_VOLUME_mdxa17)
 summary(PFAS$TAT_AREA_mdxa17)
 summary(PFAS$TAT_MASS_mdxa17)
 summary(PFAS$TAT_VOLUME_mdxa17) 
+summary(PFAS$TRUNK_FAT_mdxa17) # 1577 MISSING, TOTAL TRUNK FAT MASS (G)
+summary(PFAS$WBTOT_FAT_mdxa17) # 1577 MISSING, TOTAL FAT MASS (G)
+summary(PFAS$WBTOT_LEAN_mdxa17) # 1577 MISSING, TOTAL LEAN MASS (G)
+summary(PFAS$WBTOT_PFAT_mdxa17) # 1577 MISSING, TOTAL BODY FAT %
 summary(PFAS$WEIGHT_mdxa17)     # INDIVIDUALS ARE MISSING ALL OR NONE OF EACH DXA MEASURE (N = 1577)
 
 summary(PFAS$mom_weight_ma17) # 1424 MISSING
@@ -106,24 +110,25 @@ colnames(PFAS_X)<-gsub(".x","",colnames(PFAS_X))
 
 ```{r}
 ##### DROP UNNECESSARY VARIABLES
-ls(PFAS_2)
 PFAS_8 <- subset(PFAS_8, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, age_mom_enroll_d, 
                                     bmi_mom_prepreg_d, coll_grad, Et_PFOSA_AcOH, PFDeA, PFHxS, PFNA2, PFOA, 
                                     PFOS, PFOSA, Me_PFOSA_AcOH2, g_age_days_COLL_D_BLD1, gt70k, 
                                     income_hh_epq_epqa_d, married_cohab, mom_muac_ma17, mom_ffm_ma17, 
-                                    mom_age_days_comp_d_ma17, mom_bmi_MT,
-                                    mom_bodyfat_ma17, mom_fat_ma17, mom_hip_ma17, mom_waist_ma17,
-                                    mom_weight_ma17, nullip, parity_d, race2_mom_epi_epia_d, smokpreg_final_d))
+                                    mom_age_days_comp_d_ma17, mom_bmi_MT, mom_bodyfat_ma17, mom_fat_ma17, 
+                                    mom_hip_ma17, mom_waist_ma17, mom_weight_ma17, nullip, parity_d, 
+                                    race2_mom_epi_epia_d, smokpreg_final_d))
 
 PFAS_9 <- subset(PFAS_9, select = c(aid, age_days_comp_d_ma17, age_days_mdxa17, age_mom_enroll_d, 
                                     bmi_mom_prepreg_d, coll_grad, Et_PFOSA_AcOH, PFDeA, PFHxS, PFNA2, PFOA, 
-                                    PFOS, PFOSA, Me_PFOSA_AcOH2, g_age_days_COLL_D_BLD1, gt70k, 
-                                    income_hh_epq_epqa_d, married_cohab, mom_muac_ma17, mom_ffm_ma17,
-                                    mom_age_days_mdxa17, nullip, parity_d, race2_mom_epi_epia_d, SAT_AREA_mdxa17, 
-                                    SAT_MASS_mdxa17, SAT_VOLUME_mdxa17, smokpreg_final_d, TAT_AREA_mdxa17,
+                                    PFOS, PFOSA, Me_PFOSA_AcOH2, g_age_days_COLL_D_BLD1, gt70k, nullip,
+                                    income_hh_epq_epqa_d, married_cohab, parity_d, mom_ffm_ma17, 
+                                    smokpreg_final_d, race2_mom_epi_epia_d, mom_age_days_mdxa17, 
+                                    SAT_AREA_mdxa17, SAT_MASS_mdxa17, SAT_VOLUME_mdxa17, TAT_AREA_mdxa17,
                                     TAT_MASS_mdxa17, TAT_VOLUME_mdxa17, VAT_AREA_mdxa17, VAT_MASS_mdxa17,
-                                    VAT_VOLUME_mdxa17, WEIGHT_mdxa17))
+                                    VAT_VOLUME_mdxa17, WEIGHT_mdxa17, TRUNK_FAT_mdxa17, WBTOT_FAT_mdxa17,
+                                    WBTOT_LEAN_mdxa17, WBTOT_PFAT_mdxa17))
 
+ 
 PFAS_X <- subset(PFAS_X, select = c(aid, age_mom_enroll_d, bmi_mom_prepreg_d, coll_grad, gt70k, 
                                     married_cohab, nullip, pari_d, race2_mom_epi_epia_d, smokpreg_final_d))
 
