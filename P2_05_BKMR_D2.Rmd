@@ -181,37 +181,37 @@ univar_ad_totfatpct
 # TOTAL TRUNK FAT MASS
 uni_ad_trnkfat <- ggplot(univar_ad_trnkfat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
   geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in trunk fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni1_ad_trnkfat <- ggplot(univar_ad_trnkfat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOS plasma concentration") + ylab("Difference in trunk fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni2_ad_trnkfat <- ggplot(univar_ad_trnkfat[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOA plasma concentration") + ylab("Difference in trunk fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni3_ad_trnkfat <- ggplot(univar_ad_trnkfat[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFNA plasma concentration") + ylab("Difference in trunk fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni4_ad_trnkfat <- ggplot(univar_ad_trnkfat[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFHxS plasma concentration") + ylab("Difference in trunk fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni5_ad_trnkfat <- ggplot(univar_ad_trnkfat[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in trunk fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni6_ad_trnkfat <- ggplot(univar_ad_trnkfat[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in trunk fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni_ad_trnkfat
 uni1_ad_trnkfat
@@ -224,37 +224,37 @@ uni6_ad_trnkfat
 # TOTAL BODY FAT MASS
 uni_ad_totfat <- ggplot(univar_ad_totfat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
   geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni1_ad_totfat <- ggplot(univar_ad_totfat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOS plasma concentration") + ylab("Difference in body fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni2_ad_totfat <- ggplot(univar_ad_totfat[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOA plasma concentration") + ylab("Difference in body fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni3_ad_totfat <- ggplot(univar_ad_totfat[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFNA plasma concentration") + ylab("Difference in body fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni4_ad_totfat <- ggplot(univar_ad_totfat[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFHxS plasma concentration") + ylab("Difference in body fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni5_ad_totfat <- ggplot(univar_ad_totfat[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in body fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni6_ad_totfat <- ggplot(univar_ad_totfat[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in body fat mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni_ad_totfat
 uni1_ad_totfat
@@ -267,37 +267,37 @@ uni6_ad_totfat
 # TOTAL BODY LEAN MASS
 uni_ad_totlean <- ggplot(univar_ad_totlean, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
   geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body lean mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni1_ad_totlean <- ggplot(univar_ad_totlean[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOS plasma concentration") + ylab("Difference in body lean mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni2_ad_totlean <- ggplot(univar_ad_totlean[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOA plasma concentration") + ylab("Difference in body lean mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni3_ad_totlean <- ggplot(univar_ad_totlean[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFNA plasma concentration") + ylab("Difference in body lean mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni4_ad_totlean <- ggplot(univar_ad_totlean[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFHxS plasma concentration") + ylab("Difference in body lean mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni5_ad_totlean <- ggplot(univar_ad_totlean[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in body lean mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni6_ad_totlean <- ggplot(univar_ad_totlean[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in body lean mass (kg)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni_ad_totlean
 uni1_ad_totlean
@@ -310,37 +310,37 @@ uni6_ad_totlean
 # TOTAL BODY FAT PERCENT
 uni_ad_totfatpct <- ggplot(univar_ad_totfatpct, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
   geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body fat (%)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni1_ad_totfatpct <- ggplot(univar_ad_totfatpct[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOS plasma concentration") + ylab("Difference in body fat (%)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni2_ad_totfatpct <- ggplot(univar_ad_totfatpct[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFOA plasma concentration") + ylab("Difference in body fat (%)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni3_ad_totfatpct <- ggplot(univar_ad_totfatpct[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFNA plasma concentration") + ylab("Difference in body fat (%)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni4_ad_totfatpct <- ggplot(univar_ad_totfatpct[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled PFHxS plasma concentration") + ylab("Difference in body fat (%)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni5_ad_totfatpct <- ggplot(univar_ad_totfatpct[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in body fat (%)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni6_ad_totfatpct <- ggplot(univar_ad_totfatpct[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
   xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in body fat (%)")+
-  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni_ad_totfatpct
 uni1_ad_totfatpct
@@ -420,7 +420,7 @@ p_interact_ad_totfatpct <- ggplot(interact_ad_totfatpct, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
   facet_grid(variable2 ~ variable1) +
   xlab ("Log2-transformed PFAS 1") +
-  ylab ("Difference in VAT mass (kg/m^2)") +
+  ylab ("Difference in body fat (%)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
 p_interact_ad_totfatpct
 
@@ -467,22 +467,22 @@ overall_interact_ad_totfatpct <- SingVarIntSummaries(fit = m_totfatpct, qs.diff 
 ##### PLOT RISK ASSOCIATED WITH THE OVERALL MIXTURE
 ### TOTAL TRUNK FAT MASS
 p_overall_ad_trnkfat <- ggplot(overall_ad_trnkfat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_hline(yintercept = 00, linetype = "dashed", linewidth = 1, linewidth = 1, color = "red") +
                geom_pointrange() +
                scale_y_continuous(name = "Change in trunk fat mass (kg)")+
                xlab("PFAS quantile") +
                theme_classic()+ theme(
-               axis.text.x = element_text(size = 11),
-               axis.text.y = element_text(size = 11),
-               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
-               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+               axis.text.x = element_text(size = 20),
+               axis.text.y = element_text(size = 20),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 20),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 20))
 p_overall_ad_trnkfat
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
 p_singvar_ad_trnkfat <- ggplot(singvar_ad_trnkfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
-  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, linewidth = 1, color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in trunk fat mass (kg)")
 p_singvar_ad_trnkfat
@@ -491,29 +491,29 @@ p_singvar_ad_trnkfat
 p_overall_interact_ad_trnkfat <- ggplot(overall_interact_ad_trnkfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in trunk fat mass (kg)") +
   xlab("PFAS")
 p_overall_interact_ad_trnkfat
 
 
 ### TOTAL BODY FAT MASS
 p_overall_ad_totfat <- ggplot(overall_ad_totfat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_hline(yintercept = 00, linetype = "dashed", linewidth = 1, linewidth = 1, color = "red") +
                geom_pointrange() +
                scale_y_continuous(name = "Change in body fat mass (kg)")+
                xlab("PFAS quantile") +
                theme_classic()+ theme(
-               axis.text.x = element_text(size = 11),
-               axis.text.y = element_text(size = 11),
-               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
-               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+               axis.text.x = element_text(size = 20),
+               axis.text.y = element_text(size = 20),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 20),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 20))
 p_overall_ad_totfat
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
 p_singvar_ad_totfat <- ggplot(singvar_ad_totfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
-  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in body fat mass (kg)")
 p_singvar_ad_totfat
@@ -522,29 +522,29 @@ p_singvar_ad_totfat
 p_overall_interact_ad_totfat <- ggplot(overall_interact_ad_totfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in body fat mass (kg)") +
   xlab("PFAS")
 p_overall_interact_ad_totfat
 
 
 ### TOTAL BODY LEAN MASS
 p_overall_ad_totlean <- ggplot(overall_ad_totlean, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_hline(yintercept = 00, linetype = "dashed", linewidth = 1, color = "red") +
                geom_pointrange() +
                scale_y_continuous(name = "Change in body lean mass (kg)")+
                xlab("PFAS quantile") +
                theme_classic()+ theme(
-               axis.text.x = element_text(size = 11),
-               axis.text.y = element_text(size = 11),
-               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
-               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+               axis.text.x = element_text(size = 20),
+               axis.text.y = element_text(size = 20),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 20),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 20))
 p_overall_ad_totlean
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
 p_singvar_ad_totlean <- ggplot(singvar_ad_totlean, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
-  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in body lean mass (kg)")
 p_singvar_ad_totlean
@@ -553,29 +553,29 @@ p_singvar_ad_totlean
 p_overall_interact_ad_totlean <- ggplot(overall_interact_ad_totlean, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in body lean mass (kg)") +
   xlab("PFAS")
 p_overall_interact_ad_totlean
 
 
 ### TOTAL BODY FAT PERCENT
 p_overall_ad_totfatpct <- ggplot(overall_ad_totfatpct, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_hline(yintercept = 00, linetype = "dashed", linewidth = 1, color = "red") +
                geom_pointrange() +
                scale_y_continuous(name = "Change in body fat (%)")+
                xlab("PFAS quantile") +
                theme_classic()+ theme(
-               axis.text.x = element_text(size = 11),
-               axis.text.y = element_text(size = 11),
-               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
-               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+               axis.text.x = element_text(size = 20),
+               axis.text.y = element_text(size = 20),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 20),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 20))
 p_overall_ad_totfatpct
 
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
 p_singvar_ad_totfatpct <- ggplot(singvar_ad_totfatpct, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) +
-  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in body fat (%)")
 p_singvar_ad_totfatpct
@@ -584,7 +584,7 @@ p_singvar_ad_totfatpct
 p_overall_interact_ad_totfatpct <- ggplot(overall_interact_ad_totfatpct, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in body fat (%)") +
   xlab("PFAS")
 p_overall_interact_ad_totfatpct
 
