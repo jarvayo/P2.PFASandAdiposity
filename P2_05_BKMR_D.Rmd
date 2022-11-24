@@ -898,7 +898,7 @@ p_singvar_ad_vata
 p_overall_interact_ad_vata <- ggplot(overall_interact_ad_vata, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in VAT area (cm^2)") +
   xlab("PFAS")
 p_overall_interact_ad_vata
 
@@ -929,7 +929,7 @@ p_singvar_ad_saata
 p_overall_interact_ad_saata <- ggplot(overall_interact_ad_saata, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in SAAT area (cm^2)") +
   xlab("PFAS")
 p_overall_interact_ad_saata
 
@@ -960,7 +960,7 @@ p_singvar_ad_taata
 p_overall_interact_ad_taata <- ggplot(overall_interact_ad_taata, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in TAAT area (cm^2)") +
   xlab("PFAS")
 p_overall_interact_ad_taata
 
@@ -991,7 +991,7 @@ p_singvar_ad_vatm
 p_overall_interact_ad_vatm <- ggplot(overall_interact_ad_vatm, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in VAT mass (kg)") +
   xlab("PFAS")
 p_overall_interact_ad_vatm
 
@@ -1022,7 +1022,7 @@ p_singvar_ad_saatm
 p_overall_interact_ad_saatm <- ggplot(overall_interact_ad_saatm, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in SAAT mass (kg)") +
   xlab("PFAS")
 p_overall_interact_ad_saatm
 
@@ -1053,7 +1053,7 @@ p_singvar_ad_taatm
 p_overall_interact_ad_taatm <- ggplot(overall_interact_ad_taatm, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in TAAT mass (kg)") +
   xlab("PFAS")
 p_overall_interact_ad_taatm
 
@@ -1084,7 +1084,7 @@ p_singvar_ad_vatv
 p_overall_interact_ad_vatv <- ggplot(overall_interact_ad_vatv, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in VAT mass (cm^2)") +
   xlab("PFAS")
 p_overall_interact_ad_vatv
 
@@ -1115,7 +1115,7 @@ p_singvar_ad_saatv
 p_overall_interact_ad_saatv <- ggplot(overall_interact_ad_saatv, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in SAAT mass (cm^2)") +
   xlab("PFAS")
 p_overall_interact_ad_saatv
 
@@ -1146,7 +1146,7 @@ p_singvar_ad_taatv
 p_overall_interact_ad_taatv <- ggplot(overall_interact_ad_taatv, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) +
   geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
-  ylab("Difference in BMI (kg/m^2)") +
+  ylab("Difference in TAAT mass (cm^2)") +
   xlab("PFAS")
 p_overall_interact_ad_taatv
 
