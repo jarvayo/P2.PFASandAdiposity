@@ -481,19 +481,19 @@ p_overall_ad_trnkfat
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
 p_singvar_ad_trnkfat <- ggplot(singvar_ad_trnkfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
-                                col = q.fixed)) +
+                                col = q.fixed)) + theme(text = element_text(size = 20)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, linewidth = 1, color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in trunk fat mass (kg)")
 p_singvar_ad_trnkfat
 
 # SINGLE VARIABLE INTERACTION TERMS
-p_overall_interact_ad_trnkfat <- ggplot(overall_interact_ad_trnkfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-  geom_pointrange(position = position_dodge(width = 0.75)) +
-  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+p_overall_interact_ad_totfat <- ggplot(overall_interact_ad_trnkfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) + theme(text = element_text(size = 20)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 1, col = "red") + coord_flip() +
   ylab("Difference in trunk fat mass (kg)") +
   xlab("PFAS")
-p_overall_interact_ad_trnkfat
+p_overall_interact_ad_totfat
 
 
 ### TOTAL BODY FAT MASS
@@ -512,7 +512,7 @@ p_overall_ad_totfat
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
 p_singvar_ad_totfat <- ggplot(singvar_ad_totfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
-                                col = q.fixed)) +
+                                col = q.fixed)) + theme(text = element_text(size = 20)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in body fat mass (kg)")
@@ -520,8 +520,8 @@ p_singvar_ad_totfat
 
 # SINGLE VARIABLE INTERACTION TERMS
 p_overall_interact_ad_totfat <- ggplot(overall_interact_ad_totfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-  geom_pointrange(position = position_dodge(width = 0.75)) +
-  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  geom_pointrange(position = position_dodge(width = 0.75)) + theme(text = element_text(size = 20)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 1, col = "red") + coord_flip() +
   ylab("Difference in body fat mass (kg)") +
   xlab("PFAS")
 p_overall_interact_ad_totfat
@@ -543,7 +543,7 @@ p_overall_ad_totlean
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
 p_singvar_ad_totlean <- ggplot(singvar_ad_totlean, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
-                                col = q.fixed)) +
+                                col = q.fixed)) + theme(text = element_text(size = 20)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in body lean mass (kg)")
@@ -551,8 +551,8 @@ p_singvar_ad_totlean
 
 # SINGLE VARIABLE INTERACTION TERMS
 p_overall_interact_ad_totlean <- ggplot(overall_interact_ad_totlean, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-  geom_pointrange(position = position_dodge(width = 0.75)) +
-  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  geom_pointrange(position = position_dodge(width = 0.75)) + theme(text = element_text(size = 20)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 1, col = "red") + coord_flip() +
   ylab("Difference in body lean mass (kg)") +
   xlab("PFAS")
 p_overall_interact_ad_totlean
@@ -574,7 +574,7 @@ p_overall_ad_totfatpct
 # SINGLE VARIABLE EFFECT ESTIMATES
 # HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
 p_singvar_ad_totfatpct <- ggplot(singvar_ad_totfatpct, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
-                                col = q.fixed)) +
+                                col = q.fixed)) + theme(text = element_text(size = 20)) + 
   geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, color = "gray") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
   scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in body fat (%)")
@@ -582,8 +582,8 @@ p_singvar_ad_totfatpct
 
 # SINGLE VARIABLE INTERACTION TERMS
 p_overall_interact_ad_totfatpct <- ggplot(overall_interact_ad_totfatpct, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-  geom_pointrange(position = position_dodge(width = 0.75)) +
-  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  geom_pointrange(position = position_dodge(width = 0.75)) + theme(text = element_text(size = 20)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 1, col = "red") + coord_flip() +
   ylab("Difference in body fat (%)") +
   xlab("PFAS")
 p_overall_interact_ad_totfatpct
