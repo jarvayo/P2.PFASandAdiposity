@@ -180,7 +180,7 @@ univar_ad_totfatpct
 ##### PLOT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
 # TOTAL TRUNK FAT MASS
 uni_ad_trnkfat <- ggplot(univar_ad_trnkfat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in trunk fat mass (kg)")+
+  geom_smooth(stat = "identity", colour='darkblue') + xlab("Scaled PFAS plasma concentration") + ylab("Difference in trunk fat mass (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni1_ad_trnkfat <- ggplot(univar_ad_trnkfat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
@@ -223,7 +223,7 @@ uni6_ad_trnkfat
 
 # TOTAL BODY FAT MASS
 uni_ad_totfat <- ggplot(univar_ad_totfat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body fat mass (kg)")+
+  geom_smooth(stat = "identity", colour='darkblue') + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body fat mass (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni1_ad_totfat <- ggplot(univar_ad_totfat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
@@ -266,7 +266,7 @@ uni6_ad_totfat
 
 # TOTAL BODY LEAN MASS
 uni_ad_totlean <- ggplot(univar_ad_totlean, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body lean mass (kg)")+
+  geom_smooth(stat = "identity", colour='darkblue') + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body lean mass (kg)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni1_ad_totlean <- ggplot(univar_ad_totlean[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
@@ -309,7 +309,7 @@ uni6_ad_totlean
 
 # TOTAL BODY FAT PERCENT
 uni_ad_totfatpct <- ggplot(univar_ad_totfatpct, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body fat (%)")+
+  geom_smooth(stat = "identity", colour='darkblue') + xlab("Scaled PFAS plasma concentration") + ylab("Difference in body fat (%)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 20))
 
 uni1_ad_totfatpct <- ggplot(univar_ad_totfatpct[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
