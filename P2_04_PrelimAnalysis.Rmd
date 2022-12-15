@@ -1011,3 +1011,6 @@ modelplot(ad.m.bfat, coef_omit = "Interc")
 modelplot(ad.m.fat, coef_omit = "Interc")
 
 ```
+
+
+
