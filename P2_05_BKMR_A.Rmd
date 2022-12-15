@@ -590,7 +590,9 @@ interact_fat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_fat, Z = 
 # BMI
 p_interact_bmi <- ggplot(interact_bmi, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
-  facet_grid(variable2 ~ variable1) +
+  facet_grid(variable2 ~ variable1) + theme(
+               axis.title.x=element_text(angle=0, color='black', size=15),
+               axis.title.y=element_text(angle=90, color='black', size=15)) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in BMI (kg/m^2)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
@@ -599,7 +601,9 @@ p_interact_bmi
 # WEIGHT
 p_interact_wt <- ggplot(interact_wt, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
-  facet_grid(variable2 ~ variable1) +
+  facet_grid(variable2 ~ variable1) + theme(
+               axis.title.x=element_text(angle=0, color='black', size=15),
+               axis.title.y=element_text(angle=90, color='black', size=15)) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in weight (kg)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
@@ -608,7 +612,9 @@ p_interact_wt
 # WAIST CIRCUMFERENCE
 p_interact_waist <- ggplot(interact_waist, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
-  facet_grid(variable2 ~ variable1) +
+  facet_grid(variable2 ~ variable1) + theme(
+               axis.title.x=element_text(angle=0, color='black', size=15),
+               axis.title.y=element_text(angle=90, color='black', size=15)) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in waist circ. (cm)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
@@ -617,7 +623,9 @@ p_interact_waist
 # WAIST-TO-HIP RATIO
 p_interact_whr <- ggplot(interact_whr, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
-  facet_grid(variable2 ~ variable1) +
+  facet_grid(variable2 ~ variable1) + theme(
+               axis.title.x=element_text(angle=0, color='black', size=15),
+               axis.title.y=element_text(angle=90, color='black', size=15)) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in waist-to-hip ratio") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
@@ -626,7 +634,9 @@ p_interact_whr
 # MUAC
 p_interact_muac <- ggplot(interact_muac, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
-  facet_grid(variable2 ~ variable1) +
+  facet_grid(variable2 ~ variable1) + theme(
+               axis.title.x=element_text(angle=0, color='black', size=15),
+               axis.title.y=element_text(angle=90, color='black', size=15)) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in MUAC (cm)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
@@ -635,7 +645,9 @@ p_interact_muac
 # BODY FAT %
 p_interact_bfat <- ggplot(interact_bfat, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
-  facet_grid(variable2 ~ variable1) +
+  facet_grid(variable2 ~ variable1) + theme(
+               axis.title.x=element_text(angle=0, color='black', size=15),
+               axis.title.y=element_text(angle=90, color='black', size=15)) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in bofy fat (%)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
@@ -644,7 +656,9 @@ p_interact_bfat
 # BODY FAT MASS
 p_interact_fat <- ggplot(interact_fat, aes(z1, est)) +
   geom_smooth(aes(col = quantile), stat = "identity") + 
-  facet_grid(variable2 ~ variable1) +
+  facet_grid(variable2 ~ variable1) + theme(
+               axis.title.x=element_text(angle=0, color='black', size=15),
+               axis.title.y=element_text(angle=90, color='black', size=15)) +
   xlab ("Log2-transformed PFAS 1") +
   ylab ("Difference in body fat mass (kg)") +
   ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
@@ -931,4 +945,3 @@ p_overall_interact_fat <- ggplot(overall_interact_fat, aes(variable, est, ymin =
 p_overall_interact_fat
 
 ```
-
