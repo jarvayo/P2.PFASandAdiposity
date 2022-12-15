@@ -58,7 +58,7 @@ PFAS_A$race <- as.factor(PFAS_A$race)
 PFAS_A$married <- as.factor(PFAS_A$married)
 
 # CENTER AND SCALE CONTINUOUS VARIABLES
-PFAS_A$age_enroll <- scale(PFAS_A$age_enroll)
+#PFAS_A$age_enroll <- scale(PFAS_A$age_enroll)
 
 ```
 
@@ -89,7 +89,7 @@ FatPct <- PFAS_A$FatPct
 FatMass <- PFAS_A$LNFAT
 
 # CREAT THE COVARIATE MATRIX
-cov_a <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$race, PFAS_A$bmi, PFAS_A$edu, 
+cov_a <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$race, PFAS_A$bmi_cat, PFAS_A$edu, 
                        PFAS_A$smoke, PFAS_A$parity, PFAS_A$married))
 
 # SET THE SEED
@@ -108,9 +108,9 @@ m_bmi <- kmbayes(y = BMI, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "ga
 beep(sound=5, expr=NULL)
 
 # WEIGHT
-m_wt <- kmbayes(y = Weight, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
-                     verbose = FALSE, varsel = TRUE, knots = knots_a)
-beep(sound=5, expr=NULL)
+#m_wt <- kmbayes(y = Weight, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+#                     verbose = FALSE, varsel = TRUE, knots = knots_a)
+#beep(sound=5, expr=NULL)
 
 # WAIST CIRCUMFERENCE
 m_waist <- kmbayes(y = Waist, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
@@ -128,14 +128,14 @@ m_muac <- kmbayes(y = MUAC, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "
 beep(sound=5, expr=NULL)
 
 # BODY FAT %
-m_bfat <- kmbayes(y = FatPct, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
-                     verbose = FALSE, varsel = TRUE, knots = knots_a)
-beep(sound=5, expr=NULL)
+#m_bfat <- kmbayes(y = FatPct, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+#                     verbose = FALSE, varsel = TRUE, knots = knots_a)
+#beep(sound=5, expr=NULL)
 
 # BODY FAT MASS
-m_fat <- kmbayes(y = FatMass, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
-                     verbose = FALSE, varsel = TRUE, knots = knots_a)
-beep(sound=5, expr=NULL)
+#m_fat <- kmbayes(y = FatMass, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+#                     verbose = FALSE, varsel = TRUE, knots = knots_a)
+#beep(sound=5, expr=NULL)
 
 ```
 
@@ -440,7 +440,7 @@ uni3_muac
 uni4_muac
 uni5_muac
 uni6_muac
-
+uni_bmi
 
 # BODY FAT %
 uni_bfat <- ggplot(univar_bfat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
