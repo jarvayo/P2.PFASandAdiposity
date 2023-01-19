@@ -45,8 +45,10 @@ table(PFAS_A_NA$race2_mom_epi_epia_d)
 summary(PFAS_A_NA$age_mom_enroll_d)
 PFAS_A_NA$mom_age_comp_d_ma17 <- PFAS_A_NA$mom_age_days_comp_d_ma17/365
 summary(PFAS_A_NA$mom_age_comp_d_ma17)
-summary(PFAS_A_NA$bmi_mom_prepreg_d)     # 1 NA
-summary(PFAS_A_NA$parity_d)              
+summary(PFAS_A_NA$bmi_mom_prepreg_d) # 1 NA
+summary(PFAS_A_NA$parity_d) 
+summary(PFAS_A_NA$mom_firstperiod_12y) # 25 NA
+summary(PFAS_A_NA$mom_period_ystopped_age_qu17) # 332 NA
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
 PFAS_A_NA$race2_mom_epi_epia_d <- as.factor(PFAS_A_NA$race2_mom_epi_epia_d)
@@ -64,11 +66,11 @@ summary(PFAS_A_NA$smokpreg_final_d)      # 1 NAs
 summary(PFAS_A_NA$married_cohab)    # 2 NAs
 
 ##### TABLE OF MISSINGNESS
-table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + bmi_mom_prepreg_d + parity_d, 
-       data = PFAS_A_NA, overall="Total")
+table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + bmi_mom_prepreg_d + parity_d + 
+         mom_firstperiod_12y + mom_period_ystopped_age_qu17, data = PFAS_A_NA, overall="Total")
 
-table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + married_cohab,
-       data = PFAS_A_NA, overall="Total")
+table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + income_hh_epq_epqa_d +
+         married_cohab, data = PFAS_A_NA, overall="Total")
 
 ```
 
@@ -97,8 +99,10 @@ table(PFAS_D_NA$race2_mom_epi_epia_d)
 summary(PFAS_D_NA$age_mom_enroll_d)
 PFAS_D_NA$mom_age_mdxa17 <- PFAS_D_NA$mom_age_days_mdxa17/365
 summary(PFAS_D_NA$mom_age_mdxa17)
-summary(PFAS_D_NA$bmi_mom_prepreg_d)     # 1 NA
-summary(PFAS_D_NA$parity_d)              
+summary(PFAS_D_NA$bmi_mom_prepreg_d) # 1 NA
+summary(PFAS_D_NA$parity_d)      
+summary(PFAS_A_NA$mom_firstperiod_12y) # 25 NA
+summary(PFAS_A_NA$mom_period_ystopped_age_qu17) # 332 NA
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
 PFAS_D_NA$race2_mom_epi_epia_d <- as.factor(PFAS_D_NA$race2_mom_epi_epia_d)
@@ -116,11 +120,11 @@ summary(PFAS_D_NA$smokpreg_final_d)      # 1 NAs
 summary(PFAS_D_NA$married_cohab)         # 2 NAs
 
 ##### TABLE OF MISSINGNESS
-table1(~ age_mom_enroll_d + mom_age_mdxa17 + bmi_mom_prepreg_d + parity_d, 
-       data = PFAS_D_NA, overall="Total")
+table1(~ age_mom_enroll_d + mom_age_mdxa17 + bmi_mom_prepreg_d + parity_d +  
+       mom_firstperiod_12y + mom_period_ystopped_age_qu17, data = PFAS_D_NA, overall="Total")
 
-table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + married_cohab,
-       data = PFAS_D_NA, overall="Total")
+table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + income_hh_epq_epqa_d +
+         married_cohab, data = PFAS_D_NA, overall="Total")
 
 ```
 
@@ -130,12 +134,11 @@ table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + married_c
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_A_ARG <- aregImpute(~ income_hh_epq_epqa_d + married_cohab +
-                         gt70k + smokpreg_final_d + bmi_mom_prepreg_d + parity_d + 
-                         coll_grad + race2_mom_epi_epia_d + g_age_days_COLL_D_BLD1 + 
-                         mom_age_comp_d_ma17 + PFNA2 + PFHxS + 
-                         Me_PFOSA_AcOH2 + Et_PFOSA_AcOH + PFOA + PFOS, 
-                         nk = 0, data = PFAS_A_NA, n.impute = 5)
+PFAS_A_ARG <- aregImpute(~ mom_period_ystopped_age_qu17 + gt70k + mom_firstperiod_12y + 
+                           married_cohab + coll_grad + race2_mom_epi_epia_d + smokpreg_final_d + 
+                           bmi_mom_prepreg_d + parity_d + g_age_days_COLL_D_BLD1 + age_mom_enroll_d + PFOS + 
+                           PFOA + PFNA2 + PFHxS + Me_PFOSA_AcOH2 + Et_PFOSA_AcOH, 
+                           nk = 0, data = PFAS_A_NA, n.impute = 5)
 
 ##### EXTRACT IMPUTED VALUES AND FORM A DATASET
 PFAS_A_IMP <- as.data.frame(impute.transcan(PFAS_A_ARG, imputation=5, data=PFAS_A_NA, 
@@ -156,12 +159,11 @@ PFAS_A_COMP <- PFAS_A_COMP %>% select(-contains(".1"))
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_D_ARG <- aregImpute(~ income_hh_epq_epqa_d + married_cohab +
-                         gt70k + smokpreg_final_d + bmi_mom_prepreg_d + parity_d + 
-                         coll_grad + race2_mom_epi_epia_d + g_age_days_COLL_D_BLD1 + 
-                         mom_age_days_mdxa17 + PFNA2 + PFHxS + 
-                         Me_PFOSA_AcOH2 + Et_PFOSA_AcOH + PFOA + PFOS, 
-                         nk = 0, data = PFAS_D_NA, n.impute = 5)
+PFAS_D_ARG <- aregImpute(~ mom_period_ystopped_age_qu17 + gt70k + mom_firstperiod_12y + 
+                           married_cohab + coll_grad + race2_mom_epi_epia_d + smokpreg_final_d + 
+                           bmi_mom_prepreg_d + parity_d + g_age_days_COLL_D_BLD1 + age_mom_enroll_d + PFOS + 
+                           PFOA + PFNA2 + PFHxS + Me_PFOSA_AcOH2 + Et_PFOSA_AcOH, 
+                           nk = 0, data = PFAS_D_NA, n.impute = 5)
 
 ##### EXTRACT IMPUTED VALUES AND FORM A DATASET
 PFAS_D_IMP <- as.data.frame(impute.transcan(PFAS_D_ARG, imputation=5, data=PFAS_D_NA, 
@@ -176,24 +178,22 @@ PFAS_D_COMP <- PFAS_D_COMP %>% select(-contains(".1"))
 
 ```
 
-
 ```{r}
 ##### RE-CHECK VARIABLE DISTRIBUTION FOR DATASET WITH IMPUTED DATA 
-table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + bmi_mom_prepreg_d + parity_d, 
-       data = PFAS_A_COMP, overall="Total")
+table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + bmi_mom_prepreg_d + parity_d + 
+         mom_firstperiod_12y + mom_period_ystopped_age_qu17, data = PFAS_A_COMP, overall="Total")
 
-table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + married_cohab, 
+table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + married_cohab,
        data = PFAS_A_COMP, overall="Total")
 
 ##### RE-CHECK VARIABLE DISTRIBUTION FOR DATASET WITH IMPUTED DATA 
-table1(~ age_mom_enroll_d + mom_age_days_mdxa17 + bmi_mom_prepreg_d + parity_d, 
-       data = PFAS_D_COMP, overall="Total")
+table1(~ age_mom_enroll_d + bmi_mom_prepreg_d + parity_d + 
+         mom_firstperiod_12y + mom_period_ystopped_age_qu17, data = PFAS_D_COMP, overall="Total")
 
-table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + married_cohab, 
+table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + married_cohab,
        data = PFAS_D_COMP, overall="Total")
 
 ```
-
 
 ```{r}
 ##### SAVE DATASET
