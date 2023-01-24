@@ -1,6 +1,6 @@
-#####                                                                       #####
-##### RUN MIXTURES ANALYSIS WITH BKMR IN ANTHRO + BIOIMPENDANCE DATA        #####
-#####                                                                       #####
+#####                                                  #####
+##### RUN MIXTURES ANALYSIS WITH BKMR IN ANTHRO        #####
+#####                                                  #####
 
 ```{r}
 ##### LOAD PACKAGES
@@ -18,13 +18,13 @@ PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P
 ```
 
 ```{r}
-##### TRANSFORMVARIABLES TO NUMERIC FOR BKMR COVARIATE MATRIX
+##### TRANSFORM VARIABLES TO NUMERIC FOR BKMR COVARIATE MATRIX
 
 # RENAME
 PFAS_A$age_enroll <- PFAS_A$age_mom_enroll_d
 PFAS_A$race <- PFAS_A$race2_mom_epi_epia_d
 PFAS_A$edu <- PFAS_A$coll_grad
-PFAS_A$bmi <- PFAS_A$bmi_mom_prepreg_d
+PFAS_A$menar <- PFAS_A$mom_firstperiod_12y
 PFAS_A$smoke <- PFAS_A$smokpreg_final_d
 PFAS_A$parity <- PFAS_A$parity_d
 PFAS_A$married <- PFAS_A$married_cohab
@@ -85,11 +85,11 @@ Weight <- PFAS_A$Weight
 Waist <- PFAS_A$Waist
 WHR <- PFAS_A$WHR
 MUAC <- PFAS_A$MUAC
-FatPct <- PFAS_A$FatPct
-FatMass <- PFAS_A$LNFAT
+#FatPct <- PFAS_A$FatPct
+#FatMass <- PFAS_A$LNFAT
 
 # CREAT THE COVARIATE MATRIX
-cov_a <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$race, PFAS_A$bmi_cat, PFAS_A$edu, 
+cov_a <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$race, PFAS_A$menar, PFAS_A$edu, 
                        PFAS_A$smoke, PFAS_A$parity, PFAS_A$married))
 
 # SET THE SEED
@@ -107,11 +107,6 @@ m_bmi <- kmbayes(y = BMI, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "ga
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
 
-# WEIGHT
-#m_wt <- kmbayes(y = Weight, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
-#                     verbose = FALSE, varsel = TRUE, knots = knots_a)
-#beep(sound=5, expr=NULL)
-
 # WAIST CIRCUMFERENCE
 m_waist <- kmbayes(y = Waist, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
@@ -126,6 +121,11 @@ beep(sound=5, expr=NULL)
 m_muac <- kmbayes(y = MUAC, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
                      verbose = FALSE, varsel = TRUE, knots = knots_a)
 beep(sound=5, expr=NULL)
+
+# WEIGHT
+#m_wt <- kmbayes(y = Weight, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+#                     verbose = FALSE, varsel = TRUE, knots = knots_a)
+#beep(sound=5, expr=NULL)
 
 # BODY FAT %
 #m_bfat <- kmbayes(y = FatPct, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
