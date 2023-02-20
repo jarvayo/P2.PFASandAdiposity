@@ -36,32 +36,32 @@ PFAS_D$WBTOT_LEAN_mdxa17 <- PFAS_D$WBTOT_LEAN_mdxa17*0.001
 ##### TRANSFORM PFAS TO OBSERVE SHAPE OF DISTRIBUTION
 PFAS_A$LNPFOS <- log(PFAS_A$PFOS)
 PFAS_A$LNPFOA <- log(PFAS_A$PFOA)
-PFAS_A$LNPFNA2 <- log(PFAS_A$PFNA2)
+PFAS_A$LNPFNA <- log(PFAS_A$PFNA2)
 PFAS_A$LNPFHxS <- log(PFAS_A$PFHxS)
-PFAS_A$LNME_FOSAA <- log(PFAS_A$Me_PFOSA_AcOH2)
-PFAS_A$LNET_FOSAA <- log(PFAS_A$Et_PFOSA_AcOH)
+PFAS_A$LNMeFOSAA <- log(PFAS_A$Me_PFOSA_AcOH2)
+PFAS_A$LNEtFOSAA <- log(PFAS_A$Et_PFOSA_AcOH)
 
 PFAS_A$L2PFOS <- log(PFAS_A$PFOS, 2)
 PFAS_A$L2PFOA <- log(PFAS_A$PFOA, 2)
-PFAS_A$L2PFNA2 <- log(PFAS_A$PFNA2, 2)
+PFAS_A$L2PFNA <- log(PFAS_A$PFNA2, 2)
 PFAS_A$L2PFHxS <- log(PFAS_A$PFHxS, 2)
-PFAS_A$L2ME_FOSAA <- log(PFAS_A$Me_PFOSA_AcOH2, 2)
-PFAS_A$L2ET_FOSAA <- log(PFAS_A$Et_PFOSA_AcOH, 2)
+PFAS_A$L2MeFOSAA <- log(PFAS_A$Me_PFOSA_AcOH2, 2)
+PFAS_A$L2EtFOSAA <- log(PFAS_A$Et_PFOSA_AcOH, 2)
 
 
 PFAS_D$LNPFOS <- log(PFAS_D$PFOS)
 PFAS_D$LNPFOA <- log(PFAS_D$PFOA)
-PFAS_D$LNPFNA2 <- log(PFAS_D$PFNA2)
+PFAS_D$LNPFNA <- log(PFAS_D$PFNA2)
 PFAS_D$LNPFHxS <- log(PFAS_D$PFHxS)
-PFAS_D$LNME_FOSAA <- log(PFAS_D$Me_PFOSA_AcOH2)
-PFAS_D$LNET_FOSAA <- log(PFAS_D$Et_PFOSA_AcOH)
+PFAS_D$LNMeFOSAA <- log(PFAS_D$Me_PFOSA_AcOH2)
+PFAS_D$LNEtFOSAA <- log(PFAS_D$Et_PFOSA_AcOH)
 
 PFAS_D$L2PFOS <- log(PFAS_D$PFOS, 2)
 PFAS_D$L2PFOA <- log(PFAS_D$PFOA, 2)
-PFAS_D$L2PFNA2 <- log(PFAS_D$PFNA2, 2)
+PFAS_D$L2PFNA <- log(PFAS_D$PFNA2, 2)
 PFAS_D$L2PFHxS <- log(PFAS_D$PFHxS, 2)
-PFAS_D$L2ME_FOSAA <- log(PFAS_D$Me_PFOSA_AcOH2, 2)
-PFAS_D$L2ET_FOSAA <- log(PFAS_D$Et_PFOSA_AcOH, 2)
+PFAS_D$L2MeFOSAA <- log(PFAS_D$Me_PFOSA_AcOH2, 2)
+PFAS_D$L2EtFOSAA <- log(PFAS_D$Et_PFOSA_AcOH, 2)
 
 
 
@@ -103,18 +103,18 @@ hist(PFAS_A$Et_PFOSA_AcOH)
 # DESCRIBE LNPFAS DISTRIBUTION, ANTHRO DATASET
 hist(PFAS_A$LNPFOS)
 hist(PFAS_A$LNPFOA)
-hist(PFAS_A$LNPFNA2)
+hist(PFAS_A$LNPFNA)
 hist(PFAS_A$LNPFHxS)
-hist(PFAS_A$LNME_FOSAA)
-hist(PFAS_A$LNET_FOSAA)
+hist(PFAS_A$LNMeFOSAA)
+hist(PFAS_A$LNEtFOSAA)
 
 # DESCRIBE L2PFAS DISTRIBUTION, ANTHRO DATASET
 hist(PFAS_A$L2PFOS)
 hist(PFAS_A$L2PFOA)
-hist(PFAS_A$L2PFNA2)
+hist(PFAS_A$L2PFNA)
 hist(PFAS_A$L2PFHxS)
-hist(PFAS_A$L2ME_FOSAA)
-hist(PFAS_A$L2ET_FOSAA)
+hist(PFAS_A$L2MeFOSAA)
+hist(PFAS_A$L2EtFOSAA)
 
 
 ##### DESCRIBE PFAS DISTRIBUTION, DXA DATASET
@@ -128,18 +128,18 @@ hist(PFAS_D$Et_PFOSA_AcOH)
 # DESCRIBE LNPFAS DISTRIBUTION, DXA DATASET
 hist(PFAS_D$LNPFOS)
 hist(PFAS_D$LNPFOA)
-hist(PFAS_D$LNPFNA2)
+hist(PFAS_D$LNPFNA)
 hist(PFAS_D$LNPFHxS)
-hist(PFAS_D$LNME_FOSAA)
-hist(PFAS_D$LNET_FOSAA)
+hist(PFAS_D$LNMeFOSAA)
+hist(PFAS_D$LNEtFOSAA)
 
 # DESCRIBE L2PFAS DISTRIBUTION, DXA DATASET
 hist(PFAS_D$L2PFOS)
 hist(PFAS_D$L2PFOA)
-hist(PFAS_D$L2PFNA2)
+hist(PFAS_D$L2PFNA)
 hist(PFAS_D$L2PFHxS)
-hist(PFAS_D$L2ME_FOSAA)
-hist(PFAS_D$L2ET_FOSAA)
+hist(PFAS_D$L2MeFOSAA)
+hist(PFAS_D$L2EtFOSAA)
 
 ```
 
@@ -523,21 +523,21 @@ summary(PFAS_A$WHR)
 summary(PFAS_A$mom_muac_ma17)
 summary(PFAS_A$mom_fat_ma17)
 summary(PFAS_A$mom_bodyfat_ma17)
-#summary(PFAS_A$mom_ffm_ma17)
-#summary(PFAS_A$mom_weight_ma17)
+# summary(PFAS_A$mom_ffm_ma17)
+# summary(PFAS_A$mom_weight_ma17)
 
 # RENAME PFAS FOR THE PLOT
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_bmi_MT"] <- "BMI"
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_waist_ma17"] <- "Waist"
 colnames(PFAS_A)[colnames(PFAS_A) == "WHR"] <- "WHR"
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_muac_ma17"] <- "MUAC"
-colnames(PFAS_A)[colnames(PFAS_A) == "mom_fat_ma17"] <- "FatMass"
-colnames(PFAS_A)[colnames(PFAS_A) == "mom_bodyfat_ma17"] <- "FatPct"
-#colnames(PFAS_A)[colnames(PFAS_A) == "mom_ffm_ma17"] <- "FatFreeMass"
-#colnames(PFAS_A)[colnames(PFAS_A) == "mom_weight_ma17"] <- "Weight"
+# colnames(PFAS_A)[colnames(PFAS_A) == "mom_fat_ma17"] <- "FatMass"
+# colnames(PFAS_A)[colnames(PFAS_A) == "mom_bodyfat_ma17"] <- "FatPct"
+# colnames(PFAS_A)[colnames(PFAS_A) == "mom_ffm_ma17"] <- "FatFreeMass"
+# colnames(PFAS_A)[colnames(PFAS_A) == "mom_weight_ma17"] <- "Weight"
 
 ##### OUTCOMES CORRELATION MATRIX
-OUTCOMES_A_corr <- PFAS_A[ , c("BMI", "Waist", "WHR", "MUAC", "FatMass", "FatPct")]
+OUTCOMES_A_corr <- PFAS_A[ , c("BMI", "Waist", "WHR", "MUAC")]
 o_A_corr <- cor(OUTCOMES_A_corr)
 round(o_A_corr, 2)
 
