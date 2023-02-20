@@ -110,14 +110,14 @@ colnames(PFAS_X)<-gsub(".x","",colnames(PFAS_X))
 
 ```{r}
 ##### DROP UNNECESSARY VARIABLES
-PFAS_7 <- subset(PFAS_7, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH2, Et_PFOSA_AcOH, PFDeA, PFOSA,
+PFAS_7 <- subset(PFAS_7, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH2, Et_PFOSA_AcOH,
                                     g_age_days_COLL_D_BLD1, age_mom_enroll_d, age_days_comp_d_ma17, age_days_mdxa17, 
                                     mom_age_days_comp_d_ma17, bmi_mom_prepreg_d, race2_mom_epi_epia_d, coll_grad, 
                                     gt70k, income_hh_epq_epqa_d, nullip, parity_d, smokpreg_final_d, married_cohab, 
                                     mom_firstperiod_12y, mom_period_ystopped_age_qu17, mom_bmi_MT, mom_weight_ma17, 
                                     mom_waist_ma17, mom_hip_ma17, mom_muac_ma17, mom_bodyfat_ma17, mom_ffm_ma17, mom_fat_ma17))
 
-PFAS_8 <- subset(PFAS_8, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH2, Et_PFOSA_AcOH, PFDeA, PFOSA,
+PFAS_8 <- subset(PFAS_8, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH2, Et_PFOSA_AcOH,
                                     g_age_days_COLL_D_BLD1, age_mom_enroll_d, age_days_comp_d_ma17, age_days_mdxa17, 
                                     mom_age_days_mdxa17, bmi_mom_prepreg_d, race2_mom_epi_epia_d, coll_grad, 
                                     gt70k, income_hh_epq_epqa_d, nullip, parity_d, smokpreg_final_d, married_cohab, 
