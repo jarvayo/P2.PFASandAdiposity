@@ -192,13 +192,14 @@ beep(sound=5, expr=NULL)
 sel <- seq(0,25000,by = 50)
 
 ##### ACCESS CONVERGENCE WITH TRACEPLOTS
-TracePlot(fit = l2m_bmi, par = "Beta", sel = sel)
-TracePlot(fit = l2m_waist, par = "Beta", sel = sel)
-TracePlot(fit = l2m_whr, par = "Beta", sel = sel)
-TracePlot(fit = l2m_muac, par = "Beta", sel = sel)
-# TracePlot(fit = m_wt, par = "Beta", sel = sel)
-# TracePlot(fit = m_bfat, par = "Beta", sel = sel)
-# TracePlot(fit = m_fat, par = "Beta", sel = sel)
+TracePlot(fit = l2m_bmi, par = "beta", sel = sel)
+TracePlot(fit = l2m_waist, par = "beta", sel = sel)
+TracePlot(fit = l2m_whr, par = "beta", sel = sel)
+TracePlot(fit = l2m_muac, par = "beta", sel = sel)
+# TracePlot(fit = m_wt, par = "beta", sel = sel)
+# TracePlot(fit = m_bfat, par = "beta", sel = sel)
+# TracePlot(fit = m_fat, par = "beta", sel = sel)
+
 
 ##### VALUES TO KEEP AFTER BURNING/THIN (ACCORDING TO THE TRACEPLOT FUNCTION ABOVE)
 sel_final <- seq(1200, 25000, by = 1)
