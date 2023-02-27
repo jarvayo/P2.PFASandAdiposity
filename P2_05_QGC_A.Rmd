@@ -1,0 +1,320 @@
+#####                                                                    #####
+##### RUN MIXTURES ANALYSIS WITH QUANTILE G-COMPUTATION IN ANTHRO        #####
+#####                                                                    #####
+
+```{r}
+##### LOAD PACKAGES
+library('qgcomp')
+library("tidyverse")
+library("knitr")
+library("ggplot2")
+
+```
+
+```{r}
+##### LOAD DATASET
+PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_A.csv")
+PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_D.csv")
+
+```
+
+```{r}
+##### TRANSFORM VARIABLES TO NUMERIC FOR BKMR COVARIATE MATRIX
+
+# RENAME
+PFAS_A$age_enroll <- PFAS_A$age_mom_enroll_d
+PFAS_A$race <- PFAS_A$race2_mom_epi_epia_d
+PFAS_A$edu <- PFAS_A$coll_grad
+PFAS_A$income <- PFAS_A$gt70k
+PFAS_A$menar <- PFAS_A$mom_firstperiod_12y
+PFAS_A$smoke <- PFAS_A$smokpreg_final_d
+PFAS_A$parity <- PFAS_A$parity_d
+PFAS_A$married <- PFAS_A$married_cohab
+
+# REFACTOR AND RELABEL 
+PFAS_A$race <- ifelse(PFAS_A$race == "white", 0,
+                     ifelse(PFAS_A$race == "black", 1,
+                     ifelse(PFAS_A$race == "hispa", 2,
+                     ifelse(PFAS_A$race == "asian", 3,
+                     ifelse(PFAS_A$race == "other", 4, 4)))))
+PFAS_A$edu <- ifelse(PFAS_A$edu == 1, 1, 0)
+PFAS_A$bmi_cat <- ifelse(PFAS_A$bmi <18.5, 0,
+                         ifelse(PFAS_A$bmi >=18.5 & PFAS_A$bmi < 25.0, 1, 
+                         ifelse(PFAS_A$bmi >=25.0 & PFAS_A$bmi < 30.0, 2, 
+                         ifelse(PFAS_A$bmi >=30.0 & PFAS_A$bmi < 35.0, 3,
+                         ifelse(PFAS_A$bmi >=35.0, 4, 99)))))
+PFAS_A$smoke <- ifelse(PFAS_A$smoke == "former", 0,
+                         ifelse(PFAS_A$smoke == "smoke preg", 1,
+                         ifelse(PFAS_A$smoke == "xnever", 2, 2)))
+PFAS_A$income <- ifelse(PFAS_A$income == 1, 1, 0)
+PFAS_A$parity <- ifelse(PFAS_A$parity == 0, 0,
+                        ifelse(PFAS_A$parity == 1, 1,
+                        ifelse(PFAS_A$parity > 1, 2, 0)))
+PFAS_A$married <- ifelse(PFAS_A$married == 1, 1, 0)
+
+# SET CATEGORICAL VARIABLES AS FACTORS
+PFAS_A$edu <- as.factor(PFAS_A$edu)
+PFAS_A$income <- as.factor(PFAS_A$income)
+PFAS_A$bmi_cat <- as.factor(PFAS_A$bmi_cat)
+PFAS_A$smoke <- as.factor(PFAS_A$smoke)
+PFAS_A$parity <- as.factor(PFAS_A$parity)
+PFAS_A$race <- as.factor(PFAS_A$race)
+PFAS_A$married <- as.factor(PFAS_A$married)
+
+# CENTER AND SCALE CONTINUOUS VARIABLES
+# PFAS_A$age_enroll <- scale(PFAS_A$age_enroll)
+# PFAS_A$menar <- scale(PFAS_A$menar)
+
+
+
+# RENAME
+PFAS_D$age_enroll <- PFAS_D$age_mom_enroll_d
+PFAS_D$race <- PFAS_D$race2_mom_epi_epia_d
+PFAS_D$edu <- PFAS_D$coll_grad
+PFAS_D$income <- PFAS_D$gt70k
+PFAS_D$menar <- PFAS_D$mom_firstperiod_12y
+PFAS_D$smoke <- PFAS_D$smokpreg_final_d
+PFAS_D$parity <- PFAS_D$parity_d
+PFAS_D$married <- PFAS_D$married_cohab
+
+# REFACTOR AND RELABEL 
+PFAS_D$race <- ifelse(PFAS_D$race == "white", 0,
+                     ifelse(PFAS_D$race == "black", 1,
+                     ifelse(PFAS_D$race == "hispa", 2,
+                     ifelse(PFAS_D$race == "asian", 3,
+                     ifelse(PFAS_D$race == "other", 4, 4)))))
+PFAS_D$edu <- ifelse(PFAS_D$edu == 1, 1, 0)
+PFAS_D$bmi_cat <- ifelse(PFAS_D$bmi <18.5, 0,
+                         ifelse(PFAS_D$bmi >=18.5 & PFAS_D$bmi < 25.0, 1, 
+                         ifelse(PFAS_D$bmi >=25.0 & PFAS_D$bmi < 30.0, 2, 
+                         ifelse(PFAS_D$bmi >=30.0 & PFAS_D$bmi < 35.0, 3,
+                         ifelse(PFAS_D$bmi >=35.0, 4, 99)))))
+PFAS_D$smoke <- ifelse(PFAS_D$smoke == "former", 0,
+                         ifelse(PFAS_D$smoke == "smoke preg", 1,
+                         ifelse(PFAS_D$smoke == "xnever", 2, 2)))
+PFAS_D$income <- ifelse(PFAS_D$income == 1, 1, 0)
+PFAS_D$parity <- ifelse(PFAS_D$parity == 0, 0,
+                        ifelse(PFAS_D$parity == 1, 1,
+                        ifelse(PFAS_D$parity > 1, 2, 0)))
+PFAS_D$married <- ifelse(PFAS_D$married == 1, 1, 0)
+
+# SET CATEGORICAL VARIABLES AS FACTORS
+PFAS_D$edu <- as.factor(PFAS_D$edu)
+PFAS_D$income <- as.factor(PFAS_D$income)
+PFAS_D$bmi_cat <- as.factor(PFAS_D$bmi_cat)
+PFAS_D$smoke <- as.factor(PFAS_D$smoke)
+PFAS_D$parity <- as.factor(PFAS_D$parity)
+PFAS_D$race <- as.factor(PFAS_D$race)
+PFAS_D$married <- as.factor(PFAS_D$married)
+
+# CENTER AND SCALE CONTINUOUS VARIABLES
+# PFAS_D$age_enroll <- scale(PFAS_D$age_enroll)
+# PFAS_D$menar <- scale(PFAS_D$menar)
+
+
+```
+
+```{r}
+##### PREPARE VARIABLES FOR BKMR MODELS #####
+##### ANTHRO DATASET (N = 549)
+
+# SAVE THE NAMES OF THE PFAS IN THE MIXTURE
+l2mix <- c("L2PFOS", "L2PFOA", "L2PFNA", "L2PFHxS", "L2MeFOSAA", "L2EtFOSAA")
+
+# # SAVE THE NAMES OF THE COVARIATES
+# cov <- c("age_enroll", "race", "menar", "income", "smoke", "parity", "married")
+
+# SET THE OUTCOME
+BMI <- PFAS_A$LNBMI
+Waist <- PFAS_A$Waist
+WHR <- PFAS_A$WHR
+MUAC <- PFAS_A$MUAC
+
+TRNKFAT <- PFAS_D$LNTKNFAT
+TOTFAT <- PFAS_D$LNTOTFAT
+TOTFATPCT <- PFAS_D$TotFatPct
+
+```
+
+```{r}
+##### BUILD QGC MODELS #####
+# BMI
+l2qc_bmi1 <- qgcomp.noboot(BMI ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4)
+l2qc_bmi1
+
+l2qc_bmi2 <- qgcomp.boot(BMI ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4, B = 500, seed = 125)
+l2qc_bmi2
+
+
+# WAIST CIRCUMFERENCE
+l2qc_wc1 <- qgcomp.noboot(Waist ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4)
+l2qc_wc1
+
+l2qc_wc2 <- qgcomp.boot(Waist ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4, B = 500, seed = 125)
+l2qc_wc2
+
+
+# WAIST-TO-HIP-RATIO
+l2qc_whr1 <- qgcomp.noboot(WHR ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4)
+l2qc_whr1
+
+l2qc_whr2 <- qgcomp.boot(WHR ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4, B = 500, seed = 125)
+l2qc_whr2
+
+
+
+# MUAC
+l2qc_muac1 <- qgcomp.noboot(MUAC ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4)
+l2qc_muac1
+
+l2qc_muac2 <- qgcomp.boot(MUAC ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4, B = 500, seed = 125)
+l2qc_muac2
+
+```
+
+```{r}
+# ##### VIEW HOW EACH PFAS IS SCORED. THESE ARE QUANTIED EXPOSURES #####
+# head(l2qc_bmi1$qx)
+# head(l2qc_wc1$qx)
+# head(l2qc_whr1$qx)
+# head(l2qc_muac1$qx)
+
+```
+
+```{r}
+##### PLOT WEIGHTS FOR EACH OUTCOME
+# BMI
+plot(l2qc_bmi1)
+
+# WAIST CIRCUMFERENCE
+plot(l2qc_wc1)
+
+# WAIST-TO-HIP RATIO
+plot(l2qc_whr1)
+
+# MUAC
+plot(l2qc_muac1)
+
+```
+
+```{r}
+##### PLOT...
+# BMI
+plot(l2qc_bmi2) 
+plot(l2qc_bmi2, pointwiseref = 3, xlab = "PFAS quantile", ylab = "BMI (kg/m^2)")
+pointwisebound.boot(l2qc_bmi2, pointwiseref=3)
+
+# WAIST CIRCUMFERENCE
+plot(l2qc_wc2)
+plot(l2qc_wc2, pointwiseref = 3)
+pointwisebound.boot(l2qc_wc2, pointwiseref=3)
+
+# WAIST-TO-HIP RATIO
+plot(l2qc_whr2)
+plot(l2qc_whr2, pointwiseref = 3)
+pointwisebound.boot(l2qc_whr2, pointwiseref=3)
+
+# MUAC
+plot(l2qc_muac2)
+plot(l2qc_muac2, pointwiseref = 3)
+pointwisebound.boot(l2qc_muac2, pointwiseref=3)
+
+```
+
+
+```{r}
+##### BUILD QGC MODELS #####
+# TRUNK FAT MASS
+l2qc_trnkfat1 <- qgcomp.noboot(TRNKFAT ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_D, family=gaussian(), q=4)
+l2qc_trnkfat1
+
+l2qc_trnkfat2 <- qgcomp.boot(TRNKFAT ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_D, family=gaussian(), q=4, B = 500, seed = 125)
+l2qc_trnkfat2
+
+
+# TOTAL BODY FAT MASS
+l2qc_totfat1 <- qgcomp.noboot(TOTFAT ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_D, family=gaussian(), q=4)
+l2qc_totfat1
+
+l2qc_totfat2 <- qgcomp.boot(TOTFAT ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_D, family=gaussian(), q=4, B = 500, seed = 125)
+l2qc_totfat2
+
+
+# TOTAL BODY FAT PERCENT
+l2qc_totfatpct1 <- qgcomp.noboot(TOTFATPCT ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_D, family=gaussian(), q=4)
+l2qc_totfatpct1
+
+l2qc_totfatpct2 <- qgcomp.boot(TOTFATPCT ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_D, family=gaussian(), q=4, B = 500, seed = 125)
+l2qc_totfatpct2
+
+```
+
+```{r}
+# ##### VIEW HOW EACH PFAS IS SCORED. THESE ARE QUANTIED EXPOSURES #####
+# head(l2qc_trnkfat1$qx)
+# head(l2qc_totfat1$qx)
+# head(l2qc_totfatpct1$qx)
+
+```
+
+```{r}
+##### PLOT WEIGHTS FOR EACH OUTCOME
+# TRUNK FAT MASS
+plot(l2qc_trnkfat1)
+
+# TOTAL BODY FAT MASS
+plot(l2qc_totfat1)
+
+# TOTAL BODY FAT PERCENT
+plot(l2qc_totfatpct1)
+
+```
+
+```{r}
+
+##### PLOT...
+# TRUNK FAT MASS
+plot(l2qc_trnkfat2)
+plot(l2qc_trnkfat2, pointwiseref = 3)
+pointwisebound.boot(l2qc_trnkfat2, pointwiseref=3)
+
+# TOTAL BODY FAT MASS
+plot(l2qc_totfat2)
+plot(l2qc_totfat2, pointwiseref = 3)
+pointwisebound.boot(l2qc_totfat2, pointwiseref=3)
+
+# TOTAL BODY FAT PERCENT
+plot(l2qc_totfatpct2)
+plot(l2qc_totfatpct2, pointwiseref = 3)
+pointwisebound.boot(l2qc_totfatpct2, pointwiseref=3)
+
+```
+
