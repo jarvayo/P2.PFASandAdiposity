@@ -1,0 +1,1154 @@
+#####                                                 #####
+##### RUN MIXTURES ANALYSIS WITH BKMR IN DXA DATASET  #####
+#####                                                 #####
+
+```{r}
+##### LOAD PACKAGES
+library("bkmr")
+library("ggplot2")
+library("beepr")
+library("tidyverse")
+
+```
+
+```{r}
+##### LOAD DATASET
+PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_D.csv")
+
+```
+
+```{r}
+##### TRANSFORMVARIABLES TO NUMERIC FOR BKMR COVARIATE MATRIX
+
+# RENAME
+PFAS_D$age_enroll <- PFAS_D$age_mom_enroll_d
+PFAS_D$race <- PFAS_D$race2_mom_epi_epia_d
+PFAS_D$edu <- PFAS_D$coll_grad
+PFAS_D$bmi <- PFAS_D$bmi_mom_prepreg_d
+PFAS_D$smoke <- PFAS_D$smokpreg_final_d
+PFAS_D$parity <- PFAS_D$parity_d
+PFAS_D$married <- PFAS_D$married_cohab
+
+# REFACTOR AND RELABEL 
+PFAS_D$race <- ifelse(PFAS_D$race == "white", 0,
+                     ifelse(PFAS_D$race == "black", 1,
+                     ifelse(PFAS_D$race == "hispa", 2,
+                     ifelse(PFAS_D$race == "asian", 3,
+                     ifelse(PFAS_D$race == "other", 4, 4)))))
+PFAS_D$edu <- ifelse(PFAS_D$edu == 1, 1, 0)
+PFAS_D$bmi_cat <- ifelse(PFAS_D$bmi <18.5, 0,
+                         ifelse(PFAS_D$bmi >=18.5 & PFAS_D$bmi < 25.0, 1, 
+                         ifelse(PFAS_D$bmi >=25.0 & PFAS_D$bmi < 30.0, 2, 
+                         ifelse(PFAS_D$bmi >=30.0 & PFAS_D$bmi < 35.0, 3,
+                         ifelse(PFAS_D$bmi >=35.0, 4, 99)))))
+PFAS_D$smoke <- ifelse(PFAS_D$smoke == "former", 0,
+                         ifelse(PFAS_D$smoke == "smoke preg", 1,
+                         ifelse(PFAS_D$smoke == "xnever", 2, 2)))
+PFAS_D$parity <- ifelse(PFAS_D$parity == 0, 0,
+                        ifelse(PFAS_D$parity == 1, 1,
+                        ifelse(PFAS_D$parity > 1, 2, 0)))
+PFAS_D$married <- ifelse(PFAS_D$married == 1, 1, 0)
+
+# SET CATEGORICAL VARIABLES AS FACTORS
+PFAS_D$edu <- as.factor(PFAS_D$edu)
+PFAS_D$bmi_cat <- as.factor(PFAS_D$bmi_cat)
+PFAS_D$smoke <- as.factor(PFAS_D$smoke)
+PFAS_D$parity <- as.factor(PFAS_D$parity)
+PFAS_D$race <- as.factor(PFAS_D$race)
+PFAS_D$married <- as.factor(PFAS_D$married)
+
+# CENTER AND SCALE CONTINUOUS VARIABLES
+PFAS_D$age_enroll <- scale(PFAS_D$age_enroll)
+
+```
+
+
+```{r}
+##### PREPARE VARIABLES FOR BKMR MODELS #####
+##### ANTHRO + DXA DATASET (N = 429)
+
+# CREATE MIXTURE OF PFAS
+mixture_ad <- as.matrix(cbind(PFAS_D$PFOS, PFAS_D$PFOA, PFAS_D$PFNA, PFAS_D$PFHxS, 
+                              PFAS_D$MeFOSSA, PFAS_D$EtFOSSA))
+
+# RENAME VARIABLES IN MIXTURE
+colnames(mixture_ad) <- c("PFOS", "PFOA", "PFNA", "PFHxS", "MeFOSSA", "EtFOSSA")
+
+# LOG2-TRANSFORM MIXTURE
+lnmixture_ad <- apply(mixture_ad, 2, log)     
+
+# SCALE MIXTURE VARIABLES TO THE MEAN
+lnmixture_ad_z <- scale(lnmixture_ad)
+
+# SET THE OUTCOME
+VAT_A <- PFAS_D$LNVAT_AREA
+SAAT_A <- PFAS_D$LNSAT_AREA
+TAAT_A <- PFAS_D$LNTAT_AREA
+VAT_M <- PFAS_D$LNVAT_MASS
+SAAT_M <- PFAS_D$LNSAT_MASS
+TAAT_M <- PFAS_D$LNTAT_MASS
+VAT_V <- PFAS_D$LNVAT_VOLUME
+SAAT_V <- PFAS_D$LNSAT_VOLUME
+TAAT_V <- PFAS_D$LNTAT_VOLUME
+
+# CREATE THE COVARIATE MATRIX
+cov_ad <- as.matrix(cbind(PFAS_D$age_enroll, PFAS_D$race, PFAS_D$bmi, PFAS_D$edu, 
+                       PFAS_D$smoke, PFAS_D$parity, PFAS_D$married))
+
+# SET THE SEED
+set.seed(127)
+
+# CREATE KNOTS
+knots_ad <- fields::cover.design(lnmixture_ad_z, nd = 40)$design
+
+```
+
+```{r}
+##### BUILD BKMR MODELS
+# VAT AREA 
+m_vata <- kmbayes(y = VAT_A, Z = lnmixture_ad_z, X = cov_ad, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_ad)
+beep(sound=5, expr=NULL)
+
+# SAAAT AREA 
+m_saata <- kmbayes(y = SAAT_A, Z = lnmixture_ad_z, X = cov_ad, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_ad)
+beep(sound=5, expr=NULL)
+
+# TAAT AREA 
+m_taata <- kmbayes(y = TAAT_A, Z = lnmixture_ad_z, X = cov_ad, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_ad)
+beep(sound=5, expr=NULL)
+
+# VAT MASS 
+m_vatm <- kmbayes(y = VAT_M, Z = lnmixture_ad_z, X = cov_ad, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_ad)
+beep(sound=5, expr=NULL)
+
+# SAAAT MASS 
+m_saatm <- kmbayes(y = SAAT_M, Z = lnmixture_ad_z, X = cov_ad, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_ad)
+beep(sound=5, expr=NULL)
+
+# TAAT MASS 
+m_taatm <- kmbayes(y = TAAT_M, Z = lnmixture_ad_z, X = cov_ad, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_ad)
+beep(sound=5, expr=NULL)
+
+# VAT VOLUME 
+m_vatv <- kmbayes(y = VAT_V, Z = lnmixture_ad_z, X = cov_ad, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_ad)
+beep(sound=5, expr=NULL)
+
+# SAAAT VOLUME 
+m_saatv <- kmbayes(y = SAAT_V, Z = lnmixture_ad_z, X = cov_ad, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_ad)
+beep(sound=5, expr=NULL)
+
+# TAAT VOLUME 
+m_taatv <- kmbayes(y = TAAT_V, Z = lnmixture_ad_z, X = cov_ad, iter=25000, family = "gaussian", 
+                     verbose = FALSE, varsel = TRUE, knots = knots_ad)
+beep(sound=5, expr=NULL)
+
+```
+
+```{r}
+##### VALUES TO KEEP AFTER BURIN/THIN
+#
+sel <- seq(0,25000,by = 50)
+
+##### ACCESS CONVERGENCE WITH TRACEPLOTS
+TracePlot(fit = m_vata, par = "beta", sel = sel)
+TracePlot(fit = m_saata, par = "beta", sel = sel)
+TracePlot(fit = m_taata, par = "beta", sel = sel)
+TracePlot(fit = m_vatm, par = "beta", sel = sel)
+TracePlot(fit = m_saatm, par = "beta", sel = sel)
+TracePlot(fit = m_taatm, par = "beta", sel = sel)
+TracePlot(fit = m_vatv, par = "beta", sel = sel)
+TracePlot(fit = m_saatv, par = "beta", sel = sel)
+TracePlot(fit = m_taatv, par = "beta", sel = sel)
+
+##### VALUES TO KEEP AFTER BURNING/THIN (ACCORDING TO THE TRACEPLOT FUNCTION ABOVE)
+sel_final <- seq(1200, 25000, by = 1)
+
+```
+
+```{r}
+##### ESIMATE POSTERIOR INCLUSION PROBABILITIES
+# VAT AREA
+#summary(m_vata)
+ExtractPIPs(m_vata, sel = sel_final)
+
+# SAAT AREA
+#summary(m_saata)
+ExtractPIPs(m_saata, sel = sel_final)
+
+# TAAT AREA
+#summary(m_taata)
+ExtractPIPs(m_taata, sel = sel_final)
+
+# VAT MASS
+#summary(m_vatm)
+ExtractPIPs(m_vatm, sel = sel_final)
+
+# SAAT MASS
+#summary(m_saatm)
+ExtractPIPs(m_saatm, sel = sel_final)
+
+# TAAT MASS
+#summary(m_taatm)
+ExtractPIPs(m_taatm, sel = sel_final)
+
+# VAT VOLUME
+#summary(m_vatv)
+ExtractPIPs(m_vatv, sel = sel_final)
+
+# SAAT VOLUME
+#summary(m_saatv)
+ExtractPIPs(m_saatv, sel = sel_final)
+
+# TAAT VOLUME
+#summary(m_taatv)
+ExtractPIPs(m_taatv, sel = sel_final)
+
+```
+
+```{r}
+##### PREDICT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
+# VAT AREA
+univar_ad_vata <- PredictorResponseUnivar(fit = m_vata, sel = sel_final, method = "approx")
+univar_ad_vata
+
+# SAAT AREA
+univar_ad_saata <- PredictorResponseUnivar(fit = m_saata, sel = sel_final, method = "approx")
+univar_ad_saata
+
+# TAAT AREA
+univar_ad_taata <- PredictorResponseUnivar(fit = m_taata, sel = sel_final, method = "approx")
+univar_ad_taata
+
+# VAT MASS
+univar_ad_vatm <- PredictorResponseUnivar(fit = m_vatm, sel = sel_final, method = "approx")
+univar_ad_vatm
+
+# SAAT MASS
+univar_ad_saatm <- PredictorResponseUnivar(fit = m_saatm, sel = sel_final, method = "approx")
+univar_ad_saatm
+
+# TAAT MASS
+univar_ad_taatm <- PredictorResponseUnivar(fit = m_taatm, sel = sel_final, method = "approx")
+univar_ad_taatm
+
+# VAT VOLUME
+univar_ad_vatv <- PredictorResponseUnivar(fit = m_vata, sel = sel_final, method = "approx")
+univar_ad_vatv
+
+# SAAT VOLUME
+univar_ad_saatv <- PredictorResponseUnivar(fit = m_saatv, sel = sel_final, method = "approx")
+univar_ad_saatv
+
+# TAAT VOLUME
+univar_ad_taatv <- PredictorResponseUnivar(fit = m_taatv, sel = sel_final, method = "approx")
+univar_ad_taatv
+
+
+##### PLOT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
+# VAT AREA
+uni_ad_vata <- ggplot(univar_ad_vata, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in VAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni1_ad_vata <- ggplot(univar_ad_vata[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in VAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni2_ad_vata <- ggplot(univar_ad_vata[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in VAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni3_ad_vata <- ggplot(univar_ad_vata[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in VAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni4_ad_vata <- ggplot(univar_ad_vata[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in VAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni5_ad_vata <- ggplot(univar_ad_vata[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in VAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni6_ad_vata <- ggplot(univar_ad_vata[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in VAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni_ad_vata
+uni1_ad_vata
+uni2_ad_vata
+uni3_ad_vata
+uni4_ad_vata
+uni5_ad_vata
+uni6_ad_vata
+
+# SAAT AREA
+uni_ad_saata <- ggplot(univar_ad_saata, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in SAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni1_ad_saata <- ggplot(univar_ad_saata[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in SAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni2_ad_saata <- ggplot(univar_ad_saata[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in SAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni3_ad_saata <- ggplot(univar_ad_saata[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in SAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni4_ad_saata <- ggplot(univar_ad_saata[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in SAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni5_ad_saata <- ggplot(univar_ad_saata[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in SAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni6_ad_saata <- ggplot(univar_ad_saata[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in SAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni_ad_saata
+uni1_ad_saata
+uni2_ad_saata
+uni3_ad_saata
+uni4_ad_saata
+uni5_ad_saata
+uni6_ad_saata
+
+# TAAT AREA
+uni_ad_taata <- ggplot(univar_ad_taata, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in TAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni1_ad_taata <- ggplot(univar_ad_taata[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in TAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni2_ad_taata <- ggplot(univar_ad_taata[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in TAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni3_ad_taata <- ggplot(univar_ad_taata[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in TAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni4_ad_taata <- ggplot(univar_ad_taata[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in TAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni5_ad_taata <- ggplot(univar_ad_taata[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in TAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni6_ad_taata <- ggplot(univar_ad_taata[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in TAAT area (cm^2)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni_ad_taata
+uni1_ad_taata
+uni2_ad_taata
+uni3_ad_taata
+uni4_ad_taata
+uni5_ad_taata
+uni6_ad_taata
+
+# VAT MASS
+uni_ad_vatm <- ggplot(univar_ad_vatm, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in VAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni1_ad_vatm <- ggplot(univar_ad_vatm[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in VAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni2_ad_vatm <- ggplot(univar_ad_vatm[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in VAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni3_ad_vatm <- ggplot(univar_ad_vatm[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in VAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni4_ad_vatm <- ggplot(univar_ad_vatm[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in VAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni5_ad_vatm <- ggplot(univar_ad_vatm[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in VAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni6_ad_vatm <- ggplot(univar_ad_vatm[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in VAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni_ad_vatm
+uni1_ad_vatm
+uni2_ad_vatm
+uni3_ad_vatm
+uni4_ad_vatm
+uni5_ad_vatm
+uni6_ad_vatm
+
+# SAAT MASS
+uni_ad_saatm <- ggplot(univar_ad_saatm, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in SAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni1_ad_saatm <- ggplot(univar_ad_saatm[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in SAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni2_ad_saatm <- ggplot(univar_ad_saatm[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in SAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni3_ad_saatm <- ggplot(univar_ad_saatm[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in SAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni4_ad_saatm <- ggplot(univar_ad_saatm[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in SAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni5_ad_saatm <- ggplot(univar_ad_saatm[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in SAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni6_ad_saatm <- ggplot(univar_ad_saatm[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in SAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni_ad_saatm
+uni1_ad_saatm
+uni2_ad_saatm
+uni3_ad_saatm
+uni4_ad_saatm
+uni5_ad_saatm
+uni6_ad_saatm
+
+# TAAT MASS
+uni_ad_taatm <- ggplot(univar_ad_taatm, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in TAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni1_ad_taatm <- ggplot(univar_ad_taatm[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in TAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni2_ad_taatm <- ggplot(univar_ad_taatm[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in TAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni3_ad_taatm <- ggplot(univar_ad_taatm[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in TAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni4_ad_taatm <- ggplot(univar_ad_taatm[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in TAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni5_ad_taatm <- ggplot(univar_ad_taatm[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in TAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni6_ad_taatm <- ggplot(univar_ad_taatm[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in TAAT mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni_ad_taatm
+uni1_ad_taatm
+uni2_ad_taatm
+uni3_ad_taatm
+uni4_ad_taatm
+uni5_ad_taatm
+uni6_ad_taatm
+
+# VAT VOLUME
+uni_ad_vatv <- ggplot(univar_ad_vatv, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in VAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni1_ad_vatv <- ggplot(univar_ad_vatv[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in VAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni2_ad_vatv <- ggplot(univar_ad_vatv[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in VAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni3_ad_vatv <- ggplot(univar_ad_vatv[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in VAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni4_ad_vatv <- ggplot(univar_ad_vatv[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in VAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni5_ad_vatv <- ggplot(univar_ad_vatv[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in VAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni6_ad_vatv <- ggplot(univar_ad_vatv[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in VAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni_ad_vatv
+uni1_ad_vatv
+uni2_ad_vatv
+uni3_ad_vatv
+uni4_ad_vatv
+uni5_ad_vatv
+uni6_ad_vatv
+
+# SAAT VOLUME
+uni_ad_saatv <- ggplot(univar_ad_saatv, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in SAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni1_ad_saatv <- ggplot(univar_ad_saatv[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in SAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni2_ad_saatv <- ggplot(univar_ad_saatv[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in SAAT volume (cm^3)")
+
+uni3_ad_saatv <- ggplot(univar_ad_saatv[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in SAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni4_ad_saatv <- ggplot(univar_ad_saatv[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in SAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni5_ad_saatv <- ggplot(univar_ad_saatv[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in SAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni6_ad_saatv <- ggplot(univar_ad_saatv[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in SAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni_ad_saatv
+uni1_ad_saatv
+uni2_ad_saatv
+uni3_ad_saatv
+uni4_ad_saatv
+uni5_ad_saatv
+uni6_ad_saatv
+
+# TAAT VOLUME
+uni_ad_taatv <- ggplot(univar_ad_taatv, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity") + xlab("Scaled PFAS plasma concentration") + ylab("Difference in TAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni1_ad_taatv <- ggplot(univar_ad_taatv[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOS plasma concentration") + ylab("Difference in TAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni2_ad_taatv <- ggplot(univar_ad_taatv[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFOA plasma concentration") + ylab("Difference in TAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni3_ad_taatv <- ggplot(univar_ad_taatv[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFNA plasma concentration") + ylab("Difference in TAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni4_ad_taatv <- ggplot(univar_ad_taatv[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled PFHxS plasma concentration") + ylab("Difference in TAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni5_ad_taatv <- ggplot(univar_ad_taatv[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled MeFOSSA plasma concentration") + ylab("Difference in TAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni6_ad_taatv <- ggplot(univar_ad_taatv[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Scaled EtFOSSA plasma concentration") + ylab("Difference in TAAT volume (cm^3)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed')
+
+uni_ad_taatv
+uni1_ad_taatv
+uni2_ad_taatv
+uni3_ad_taatv
+uni4_ad_taatv
+uni5_ad_taatv
+uni6_ad_taatv
+
+```
+
+```{r}
+##### PREDICT BIVARIATE EXPOSURE-RESPONSE CURVE TO ASSESS POTENTIAL INTERACTIONS
+##### SUBESQUENTLY, PREDICT INTERACTIONS AMONG PFAS
+# VAT AREA
+bivar_ad_vata <- PredictorResponseBivar(fit = m_vata, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_ad_vata <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_vata, Z = lnmixture_ad_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_ad_vata_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_vata, Z = lnmixture_ad_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+# SAAT AREA
+bivar_ad_saata <- PredictorResponseBivar(fit = m_saata, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_ad_saata <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_saata, Z = lnmixture_ad_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_ad_saata_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_saata, Z = lnmixture_ad_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+# TAAT AREA
+bivar_ad_taata <- PredictorResponseBivar(fit = m_taata, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_ad_taata <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_taata, Z = lnmixture_ad_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_ad_taata_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_taata, Z = lnmixture_ad_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+# VAT MASS
+bivar_ad_vatm <- PredictorResponseBivar(fit = m_vatm, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_ad_vatm <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_vatm, Z = lnmixture_ad_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_ad_vatm_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_vatm, Z = lnmixture_ad_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+# SAAT MASS
+bivar_ad_saatm <- PredictorResponseBivar(fit = m_saatm, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_ad_saatm <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_saatm, Z = lnmixture_ad_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_ad_saatm_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_saatm, Z = lnmixture_ad_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+# TAAT MASS
+bivar_ad_taatm <- PredictorResponseBivar(fit = m_taatm, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_ad_taatm <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_taatm, Z = lnmixture_ad_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_ad_taatm_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_taatm, Z = lnmixture_ad_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+# VAT VOLUME
+bivar_ad_vatv <- PredictorResponseBivar(fit = m_vatv, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_ad_vatv <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_vatv, Z = lnmixture_ad_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_ad_vatv_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_vatv, Z = lnmixture_ad_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+# SAAT VOLUME
+bivar_ad_saatv <- PredictorResponseBivar(fit = m_saatv, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_ad_saatv <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_saatv, Z = lnmixture_ad_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_ad_saatv_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_saatv, Z = lnmixture_ad_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+# TAAT VOLUME
+bivar_ad_taatv <- PredictorResponseBivar(fit = m_taatv, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_ad_taatv <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_taatv, Z = lnmixture_ad_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_ad_taatv_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_ad_taatv, Z = lnmixture_ad_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+
+
+##### PLOT INTERACTIONS BETWEEN EXPOSURE AND RESPONSE
+##### NON-PARALLEL LINES WOULD INDICATE POTENTIAL INTERACTIONS
+# VAT AREA
+p_interact_ad_vata <- ggplot(interact_ad_vata, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) +
+  xlab ("Log2-transformed PFAS 1") +
+  ylab ("Difference in VAT area (cm^2)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_ad_vata
+
+# SAAT AREA
+p_interact_ad_saata <- ggplot(interact_ad_saata, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) +
+  xlab ("Log2-transformed PFAS 1") +
+  ylab ("Difference in SAAT area (cm^2)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_ad_saata
+
+# TAAT AREA
+p_interact_ad_taata <- ggplot(interact_ad_taata, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) +
+  xlab ("Log2-transformed PFAS 1") +
+  ylab ("Difference in TAAT area (cm^2)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_ad_taata
+
+# VAT MASS
+p_interact_ad_vatm <- ggplot(interact_ad_vatm, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) +
+  xlab ("Log2-transformed PFAS 1") +
+  ylab ("Difference in VAT mass (kg/m^2)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_ad_vatm
+
+# SAAT MASS
+p_interact_ad_saatm <- ggplot(interact_ad_saatm, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) +
+  xlab ("Log2-transformed PFAS 1") +
+  ylab ("Difference in SAAT mass (kg/m^2)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_ad_saatm
+
+# TAAT MASS
+p_interact_ad_taatm <- ggplot(interact_ad_taatm, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) +
+  xlab ("Log2-transformed PFAS 1") +
+  ylab ("Difference in TAAT mass (kg/m^2)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_ad_taatm
+
+# VAT VOLUME
+p_interact_ad_vatv <- ggplot(interact_ad_vatv, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) +
+  xlab ("Log2-transformed PFAS 1") +
+  ylab ("Difference in VAT volume (cm^3)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_ad_vatv
+
+# SAAT VOLUME
+p_interact_ad_saatv <- ggplot(interact_ad_saatv, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) +
+  xlab ("Log2-transformed PFAS 1") +
+  ylab ("Difference in SAAT volume (cm^3)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_ad_saatv
+
+# TAAT VOLUME
+p_interact_ad_taatv <- ggplot(interact_ad_taatv, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) +
+  xlab ("Log2-transformed PFAS 1") +
+  ylab ("Difference in TAAT volume (cm^3)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_ad_taatv
+
+```
+
+```{r}
+##### DETERMINE RISK ASSOCIATED WITH THE OVERALL MIXTURE
+##### SUBSEQUENTLY, ESTIMATE RISK FOR SINGLE PFAS AND INTERACTIONS AMONG PFAS
+# VAT AREA
+overall_ad_vata <- OverallRiskSummaries(fit = m_vata, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+singvar_ad_vata <- SingVarRiskSummaries(fit = m_vata, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+overall_interact_ad_vata <- SingVarIntSummaries(fit = m_vata, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+# SAAT AREA
+overall_ad_saata <- OverallRiskSummaries(fit = m_saata, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+singvar_ad_saata <- SingVarRiskSummaries(fit = m_saata, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+overall_interact_ad_saata <- SingVarIntSummaries(fit = m_saata, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+# TAAT AREA
+overall_ad_taata <- OverallRiskSummaries(fit = m_taata, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+singvar_ad_taata <- SingVarRiskSummaries(fit = m_taata, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+overall_interact_ad_taata <- SingVarIntSummaries(fit = m_taata, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+# VAT MASS
+overall_ad_vatm <- OverallRiskSummaries(fit = m_vatm, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+singvar_ad_vatm <- SingVarRiskSummaries(fit = m_vatm, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+overall_interact_ad_vatm <- SingVarIntSummaries(fit = m_vatm, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+# SAAT MASS
+overall_ad_saatm <- OverallRiskSummaries(fit = m_saatm, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+singvar_ad_saatm <- SingVarRiskSummaries(fit = m_saatm, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+overall_interact_ad_saatm <- SingVarIntSummaries(fit = m_saatm, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+# TAAT MASS
+overall_ad_taatm <- OverallRiskSummaries(fit = m_taatm, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+singvar_ad_taatm <- SingVarRiskSummaries(fit = m_taatm, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+overall_interact_ad_taatm <- SingVarIntSummaries(fit = m_taatm, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+# VAT VOLUME
+overall_ad_vatv <- OverallRiskSummaries(fit = m_vatv, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+singvar_ad_vatv <- SingVarRiskSummaries(fit = m_vatv, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+overall_interact_ad_vatv <- SingVarIntSummaries(fit = m_vatv, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+# SAAT VOLUME
+overall_ad_saatv <- OverallRiskSummaries(fit = m_saatv, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+singvar_ad_saatv <- SingVarRiskSummaries(fit = m_saatv, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+overall_interact_ad_saatv <- SingVarIntSummaries(fit = m_saatv, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+# TAAT VOLUME
+overall_ad_taatv <- OverallRiskSummaries(fit = m_taatv, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+singvar_ad_taatv <- SingVarRiskSummaries(fit = m_taatv, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+overall_interact_ad_taatv <- SingVarIntSummaries(fit = m_taatv, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+
+
+##### PLOT RISK ASSOCIATED WITH THE OVERALL MIXTURE
+### VAT AREA
+p_overall_ad_vata <- ggplot(overall_ad_vata, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in VAT area (cm^2)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 11),
+               axis.text.y = element_text(size = 11),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+p_overall_ad_vata
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+p_singvar_ad_vata <- ggplot(singvar_ad_vata, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in VAT area (cm^2)")
+p_singvar_ad_vata
+
+# SINGLE VARIABLE INTERACTION TERMS
+p_overall_interact_ad_vata <- ggplot(overall_interact_ad_vata, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in VAT area (cm^2)") +
+  xlab("PFAS")
+p_overall_interact_ad_vata
+
+
+### SAAT AREA
+p_overall_ad_saata <- ggplot(overall_ad_saata, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in SAAT area (cm^2)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 11),
+               axis.text.y = element_text(size = 11),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+p_overall_ad_saata
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+p_singvar_ad_saata <- ggplot(singvar_ad_saata, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in SAAT area (cm^2)")
+p_singvar_ad_saata
+
+# SINGLE VARIABLE INTERACTION TERMS
+p_overall_interact_ad_saata <- ggplot(overall_interact_ad_saata, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in SAAT area (cm^2)") +
+  xlab("PFAS")
+p_overall_interact_ad_saata
+
+
+### TAAT AREA
+p_overall_ad_taata <- ggplot(overall_ad_taata, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in TAAT area (cm^2)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 11),
+               axis.text.y = element_text(size = 11),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+p_overall_ad_taata
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+p_singvar_ad_taata <- ggplot(singvar_ad_taata, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in TAAT area (cm^2)")
+p_singvar_ad_taata
+
+# SINGLE VARIABLE INTERACTION TERMS
+p_overall_interact_ad_taata <- ggplot(overall_interact_ad_taata, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in TAAT area (cm^2)") +
+  xlab("PFAS")
+p_overall_interact_ad_taata
+
+
+### VAT MASS
+p_overall_ad_vatm <- ggplot(overall_ad_vatm, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in VAT mass (kg/m^2)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 11),
+               axis.text.y = element_text(size = 11),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+p_overall_ad_vatm
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+p_singvar_ad_vatm <- ggplot(singvar_ad_vatm, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in VAT mass (kg/m^2)")
+p_singvar_ad_vatm
+
+# SINGLE VARIABLE INTERACTION TERMS
+p_overall_interact_ad_vatm <- ggplot(overall_interact_ad_vatm, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in VAT mass (kg)") +
+  xlab("PFAS")
+p_overall_interact_ad_vatm
+
+
+### SAAT MASS
+p_overall_ad_saatm <- ggplot(overall_ad_saatm, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in SAAT mass (kg/m^2)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 11),
+               axis.text.y = element_text(size = 11),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+p_overall_ad_saatm
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+p_singvar_ad_saatm <- ggplot(singvar_ad_saatm, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in SAAT mass (kg/m^2)")
+p_singvar_ad_saatm
+
+# SINGLE VARIABLE INTERACTION TERMS
+p_overall_interact_ad_saatm <- ggplot(overall_interact_ad_saatm, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in SAAT mass (kg)") +
+  xlab("PFAS")
+p_overall_interact_ad_saatm
+
+
+### TAAT MASS
+p_overall_ad_taatm <- ggplot(overall_ad_taatm, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in TAAT mass (kg/m^2)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 11),
+               axis.text.y = element_text(size = 11),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+p_overall_ad_taatm
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+p_singvar_ad_taatm <- ggplot(singvar_ad_taatm, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in TAAT mass (kg/m^2)")
+p_singvar_ad_taatm
+
+# SINGLE VARIABLE INTERACTION TERMS
+p_overall_interact_ad_taatm <- ggplot(overall_interact_ad_taatm, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in TAAT mass (kg)") +
+  xlab("PFAS")
+p_overall_interact_ad_taatm
+
+
+### VAT VOLUME
+p_overall_ad_vatv <- ggplot(overall_ad_vatv, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in VAT volume (cm^3)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 11),
+               axis.text.y = element_text(size = 11),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+p_overall_ad_vatv
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+p_singvar_ad_vatv <- ggplot(singvar_ad_vatv, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in VAT volume (cm^3)")
+p_singvar_ad_vatv
+
+# SINGLE VARIABLE INTERACTION TERMS
+p_overall_interact_ad_vatv <- ggplot(overall_interact_ad_vatv, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in VAT mass (cm^2)") +
+  xlab("PFAS")
+p_overall_interact_ad_vatv
+
+
+### SAAT VOLUME
+p_overall_ad_saatv <- ggplot(overall_ad_saatv, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in SAAT volume (cm^3)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 11),
+               axis.text.y = element_text(size = 11),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+p_overall_ad_saatv
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+p_singvar_ad_saatv <- ggplot(singvar_ad_saatv, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in SAAT volume (cm^3)")
+p_singvar_ad_saatv
+
+# SINGLE VARIABLE INTERACTION TERMS
+p_overall_interact_ad_saatv <- ggplot(overall_interact_ad_saatv, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in SAAT mass (cm^2)") +
+  xlab("PFAS")
+p_overall_interact_ad_saatv
+
+
+### TAAT VOLUME
+p_overall_ad_taatv <- ggplot(overall_ad_taatv, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "dark blue") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Change in TAAT volume (cm^3)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 11),
+               axis.text.y = element_text(size = 11),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 11),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 11))
+p_overall_ad_taatv
+
+# SINGLE VARIABLE EFFECT ESTIMATES
+# HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+p_singvar_ad_taatv <- ggplot(singvar_ad_taatv, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "gray") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_x_discrete(name = "Scaled PFAS plasma concentration") + scale_y_continuous(name = "Change in TAAT volume (cm^3)")
+p_singvar_ad_taatv
+
+# SINGLE VARIABLE INTERACTION TERMS
+p_overall_interact_ad_taatv <- ggplot(overall_interact_ad_taatv, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +
+  geom_hline(yintercept = 0, lty = 2, col = "brown") + coord_flip() +
+  ylab("Difference in TAAT mass (cm^2)") +
+  xlab("PFAS")
+p_overall_interact_ad_taatv
+
+```
+
