@@ -1,5 +1,5 @@
 #####                                                       #####
-##### PRE-LIMINARY ANALYSIS: SENSITIVITY ANANLYSIS (IPTW)   #####
+##### PRE-LIMINARY ANALYSIS: SENSITIVITY ANANLYSIS (IPCW)   #####
 #####                                                       #####
 
 ```{r}
@@ -10,7 +10,6 @@ library("kableExtra")
 library("gt")
 library("shiny")
 library("olsrr")
-library("geepack")
 
 ```
 
@@ -20,15 +19,22 @@ PFAS_IPW1 <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Dat
 PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_A.csv")
 PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_D.csv")
 
+```
+
+```{r}
+##### PREPARE DATASET FOR WEIGHTED REGRESSION
+# CREATE DATASETS WITH JUST OUTCOMES
 PFAS_W1 <- merge(x = PFAS_IPW1, y = PFAS_A, by = "aid", all.x=TRUE)[,c("aid","LNBMI", "Waist", "WHR", "MUAC")]
 PFAS_W2 <- merge(x = PFAS_IPW1, y = PFAS_D, by = "aid", all.x=TRUE)[,c("aid","LNTKNFAT", "LNTOTFAT", "TotFatPct")]
 
+# CREATE INDICATOR VARIABLES TO TELL US WHO WAS CENSORED
 PFAS_IPW1$a.cens <- ifelse(is.na(PFAS_W1$LNBMI), 1, 0)
 PFAS_IPW1$d.cens <- ifelse(is.na(PFAS_W2$LNTKNFAT), 1, 0)
 
 table(PFAS_IPW1$a.cens)
 table(PFAS_IPW1$d.cens)
 
+# ADD OUTCOMES TO DATASETS
 PFAS_IPW1$LNBMI <- PFAS_W1$LNBMI
 PFAS_IPW1$Waist <- PFAS_W1$Waist
 PFAS_IPW1$WHR <- PFAS_W1$WHR
@@ -63,8 +69,8 @@ PFAS_IPW2$L2EtFOSAA <- log(PFAS_IPW2$Et_PFOSA_AcOH, 2)
 PFAS_IPW1$age_enroll <- PFAS_IPW1$age_mom_enroll_d
 PFAS_IPW1$race <- PFAS_IPW1$race2_mom_epi_epia_d
 PFAS_IPW1$edu <- PFAS_IPW1$coll_grad
-PFAS_IPW1$bmi <- PFAS_IPW1$bmi_mom_prepreg_d
 PFAS_IPW1$menar <- PFAS_IPW1$mom_firstperiod_12y
+PFAS_IPW1$bmi <- PFAS_IPW1$bmi_mom_prepreg_d
 PFAS_IPW1$smoke <- PFAS_IPW1$smokpreg_final_d
 PFAS_IPW1$income <- PFAS_IPW1$gt70k
 PFAS_IPW1$parity <- PFAS_IPW1$parity_d
@@ -73,8 +79,8 @@ PFAS_IPW1$married <- PFAS_IPW1$married_cohab
 PFAS_IPW2$age_enroll <- PFAS_IPW2$age_mom_enroll_d
 PFAS_IPW2$race <- PFAS_IPW2$race2_mom_epi_epia_d
 PFAS_IPW2$edu <- PFAS_IPW2$coll_grad
-PFAS_IPW2$bmi <- PFAS_IPW2$bmi_mom_prepreg_d
 PFAS_IPW2$menar <- PFAS_IPW2$mom_firstperiod_12y
+PFAS_IPW2$bmi <- PFAS_IPW2$bmi_mom_prepreg_d
 PFAS_IPW2$smoke <- PFAS_IPW2$smokpreg_final_d
 PFAS_IPW2$income <- PFAS_IPW2$gt70k
 PFAS_IPW2$parity <- PFAS_IPW2$parity_d
@@ -235,59 +241,59 @@ a_pn_EtFOSAA <- 1-predict(a_n_EtFOSAA, type = "response")
 
 ##### ESTIMATE THE DENOMINATOR OF CENSORING WEIGHTS FOR ANTHRO DATASET
 # PFOS
-a_d_PFOS <- glm(a.cens ~ L2PFOS + age_enroll + race + income + menar + smoke +  
+a_d_PFOS <- glm(a.cens ~ L2PFOS + age_enroll + race + income + bmi + edu + smoke +  
                  parity + married, family = binomial(), data = PFAS_IPW1)
 a_pd_PFOS <- 1-predict(a_d_PFOS, type = "response")
 
 # PFOA
-a_d_PFOA <- glm(a.cens ~ L2PFOA + age_enroll + race + income + menar + smoke +  
+a_d_PFOA <- glm(a.cens ~ L2PFOA + age_enroll + race + income + bmi + edu + smoke +  
                  parity + married, family = binomial(), data = PFAS_IPW1)
 a_pd_PFOA <- 1-predict(a_d_PFOA, type = "response")
 
 # PFNA
-a_d_PFNA <- glm(a.cens ~ L2PFNA + age_enroll + race + income + menar + smoke +  
+a_d_PFNA <- glm(a.cens ~ L2PFNA + age_enroll + race + income + bmi + edu + smoke +  
                  parity + married, family = binomial(), data = PFAS_IPW1)
 a_pd_PFNA <- 1-predict(a_d_PFNA, type = "response")
 
 # PFHxS
-a_d_PFHxS <- glm(a.cens ~ L2PFHxS + age_enroll + race + income + menar + smoke +  
+a_d_PFHxS <- glm(a.cens ~ L2PFHxS + age_enroll + race + income + bmi + edu + smoke +  
                  parity + married, family = binomial(), data = PFAS_IPW1)
 a_pd_PFHxS <- 1-predict(a_d_PFHxS, type = "response")
 
 # MeFOSAA
-a_d_MeFOSAA <- glm(a.cens ~ L2MeFOSAA + age_enroll + race + income + menar + smoke +  
+a_d_MeFOSAA <- glm(a.cens ~ L2MeFOSAA + age_enroll + race + income + bmi + edu + smoke +  
                  parity + married, family = binomial(), data = PFAS_IPW1)
 a_pd_MeFOSAA <- 1-predict(a_d_MeFOSAA, type = "response")
 
 # EtFOSAA
-a_d_EtFOSAA <- glm(a.cens ~ L2EtFOSAA + age_enroll + race + income + menar + smoke +  
+a_d_EtFOSAA <- glm(a.cens ~ L2EtFOSAA + age_enroll + race + income + bmi + edu + smoke +  
                  parity + married, family = binomial(), data = PFAS_IPW1)
 a_pd_EtFOSAA <- 1-predict(a_d_EtFOSAA, type = "response")
 
 
 ##### CREAT WEIGHTS FOR ANTHRO DATASET
 # PFOS
-PFAS_IPW1$PFOS_w <- 1 / a_pd_PFOS
+PFAS_IPW1$PFOS_w <- a_pn_PFOS / a_pd_PFOS
 summary(PFAS_IPW1$PFOS_w)
 
 # PFOA
-PFAS_IPW1$PFOA_w <- 1 / a_pd_PFOA
+PFAS_IPW1$PFOA_w <- a_pn_PFOA / a_pd_PFOA
 summary(PFAS_IPW1$PFOA_w)
 
 # PFNA
-PFAS_IPW1$PFNA_w <- 1 / a_pd_PFNA
+PFAS_IPW1$PFNA_w <- a_pn_PFNA / a_pd_PFNA
 summary(PFAS_IPW1$PFNA_w)
 
 # PFHxS
-PFAS_IPW1$PFHxS_w <- 1 / a_pd_PFHxS
+PFAS_IPW1$PFHxS_w <- a_pn_PFHxS / a_pd_PFHxS
 summary(PFAS_IPW1$PFHxS_w)
 
 # MeFOSAA
-PFAS_IPW1$MeFOSAA_w <- 1 / a_pd_MeFOSAA
+PFAS_IPW1$MeFOSAA_w <- a_pn_MeFOSAA / a_pd_MeFOSAA
 summary(PFAS_IPW1$MeFOSAA_w)
 
 # EtFOSAA
-PFAS_IPW1$EtFOSAA_w <- 1 / a_pd_EtFOSAA
+PFAS_IPW1$EtFOSAA_w <- a_pn_EtFOSAA / a_pd_EtFOSAA
 summary(PFAS_IPW1$EtFOSAA_w)
 
 ```
@@ -321,59 +327,59 @@ d_pn_EtFOSAA <- 1-predict(d_n_EtFOSAA, type = "response")
 
 ##### ESTIMATE THE DENOMINATOR OF CENSORING WEIGHTS FOR DXA DATASET
 # PFOS
-d_d_PFOS <- glm(d.cens ~ L2PFOS + age_enroll + race + income + menar + smoke +  
+d_d_PFOS <- glm(d.cens ~ L2PFOS + age_enroll + race + income + bmi + edu + smoke +  
                  parity + married, family = binomial(), data = PFAS_IPW2)
 d_pd_PFOS <- 1-predict(d_d_PFOS, type = "response")
 
 # PFOA
-d_d_PFOA <- glm(d.cens ~ L2PFOA + age_enroll + race + income + menar + smoke +  
+d_d_PFOA <- glm(d.cens ~ L2PFOA + age_enroll + race + income + bmi + edu + smoke +  
                  parity + married, family = binomial(), data = PFAS_IPW2)
 d_pd_PFOA <- 1-predict(d_d_PFOA, type = "response")
 
 # PFNA
-d_d_PFNA <- glm(d.cens ~ L2PFNA + age_enroll + race + income + menar + smoke +  
+d_d_PFNA <- glm(d.cens ~ L2PFNA + age_enroll + race + income + bmi + edu + smoke +  
                  parity + married, family = binomial(), data = PFAS_IPW2)
 d_pd_PFNA <- 1-predict(d_d_PFNA, type = "response")
 
 # PFHxS
-d_d_PFHxS <- glm(d.cens ~ L2PFHxS + age_enroll + race + income + menar + smoke +  
+d_d_PFHxS <- glm(d.cens ~ L2PFHxS + age_enroll + race + income + bmi + edu + smoke +  
                  parity + married, family = binomial(), data = PFAS_IPW2)
 d_pd_PFHxS <- 1-predict(d_d_PFHxS, type = "response")
 
 # MeFOSAA
-d_d_MeFOSAA <- glm(d.cens ~ L2MeFOSAA + age_enroll + race + income + menar + smoke +  
+d_d_MeFOSAA <- glm(d.cens ~ L2MeFOSAA + age_enroll + race + income + bmi + edu + smoke +  
                  parity + married, family = binomial(), data = PFAS_IPW2)
 d_pd_MeFOSAA <- 1-predict(d_d_MeFOSAA, type = "response")
 
 # EtFOSAA
-d_d_EtFOSAA <- glm(d.cens ~ L2EtFOSAA + age_enroll + race + income + menar + smoke +  
+d_d_EtFOSAA <- glm(d.cens ~ L2EtFOSAA + age_enroll + race + income + bmi + edu + smoke +  
                  parity + married, family = binomial(), data = PFAS_IPW2)
 d_pd_EtFOSAA <- 1-predict(d_d_EtFOSAA, type = "response")
 
 
 ##### CREAT WEIGHTS FOR DXA DATASET
 # PFOS
-PFAS_IPW2$PFOS_w <- 1 / d_pd_PFOS
+PFAS_IPW2$PFOS_w <- d_pn_PFOS / d_pd_PFOS
 summary(PFAS_IPW2$PFOS_w)
 
 # PFOA
-PFAS_IPW2$PFOA_w <- 1 / d_pd_PFOA
+PFAS_IPW2$PFOA_w <- d_pn_PFOA / d_pd_PFOA
 summary(PFAS_IPW2$PFOA_w)
 
 # PFNA
-PFAS_IPW2$PFNA_w <- 1 / d_pd_PFNA
+PFAS_IPW2$PFNA_w <- d_pn_PFNA / d_pd_PFNA
 summary(PFAS_IPW2$PFNA_w)
 
 # PFHxS
-PFAS_IPW2$PFHxS_w <- 1 / d_pd_PFHxS
+PFAS_IPW2$PFHxS_w <- d_pn_PFHxS / d_pd_PFHxS
 summary(PFAS_IPW2$PFHxS_w)
 
 # MeFOSAA
-PFAS_IPW2$MeFOSAA_w <- 1 / d_pd_MeFOSAA
+PFAS_IPW2$MeFOSAA_w <- d_pn_MeFOSAA / d_pd_MeFOSAA
 summary(PFAS_IPW2$MeFOSAA_w)
 
 # EtFOSAA
-PFAS_IPW2$EtFOSAA_w <- 1 / d_pd_EtFOSAA
+PFAS_IPW2$EtFOSAA_w <- d_pn_EtFOSAA / d_pd_EtFOSAA
 summary(PFAS_IPW2$EtFOSAA_w)
 
 ```
@@ -404,24 +410,24 @@ modelsummary(ad.l2m.lnbmi, fmt = 2,
 
 
 wad.l2m.lnbmi <- list(
-  "PFOS" = geeglm(LNBMI ~ L2PFOS + age_enroll + race + income + menar + smoke +  
-                 parity + married, family = gaussian, data = PFAS_IPW1, weights = PFOS_w, id = aid, corstr="independence"),
-  "PFOA" = geeglm(LNBMI ~ L2PFOA + age_enroll + race + income + menar + smoke +  
-                 parity + married, family = gaussian, data = PFAS_IPW1, weights = PFOA_w, id = aid, corstr="independence"),
-  "PFNA" = geeglm(LNBMI ~ L2PFNA + age_enroll + race + income + menar + smoke +  
-                 parity + married, family = gaussian, data = PFAS_IPW1, weights = PFNA_w, id = aid, corstr="independence"),
-  "PFHxS" = geeglm(LNBMI ~ L2PFHxS + age_enroll + race + income + menar + smoke +  
-                  parity + married, family = gaussian, data = PFAS_IPW1, weights = PFHxS_w, id = aid, corstr="independence"),
-  "MeFOSSA" = geeglm(LNBMI ~ L2MeFOSAA + age_enroll + race + income + menar + smoke +  
-                    parity + married, family = gaussian, data = PFAS_IPW1, weights = MeFOSAA_w, id = aid, corstr="independence"),
-  "EtFOSSA" = geeglm(LNBMI ~ L2EtFOSAA + age_enroll + race + income + menar + smoke +  
-                    parity + married, family = gaussian, data = PFAS_IPW1, weights = EtFOSAA_w, id = aid, corstr="independence"))
+  "PFOS" = glm(LNBMI ~ L2PFOS + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_IPW1, weights = PFOS_w),
+  "PFOA" = glm(LNBMI ~ L2PFOA + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_IPW1, weights = PFOA_w),
+  "PFNA" = glm(LNBMI ~ L2PFNA + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_IPW1, weights = PFNA_w),
+  "PFHxS" = glm(LNBMI ~ L2PFHxS + age_enroll + race + income + menar + smoke +  
+                  parity + married, family = gaussian, data = PFAS_IPW1, weights = PFHxS_w),
+  "MeFOSSA" = glm(LNBMI ~ L2MeFOSAA + age_enroll + race + income + menar + smoke +  
+                    parity + married, family = gaussian, data = PFAS_IPW1, weights = MeFOSAA_w),
+  "EtFOSSA" = glm(LNBMI ~ L2EtFOSAA + age_enroll + race + income + menar + smoke +  
+                    parity + married, family = gaussian, data = PFAS_IPW1, weights = EtFOSAA_w))
 
 modelsummary(wad.l2m.lnbmi, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc", title = "LOG2-PFAS vs. LN-BMI (IPT Weighted)")
+             coef_omit = "Interc", title = "LOG2-PFAS vs. LN-BMI (IPC Weighted)")
 
 
 
@@ -465,7 +471,7 @@ modelsummary(wad.l2m.waist, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc", title = "LOG2-PFAS vs. WAIST CIRCUMFERENCE (IPT Weighted)")
+             coef_omit = "Interc", title = "LOG2-PFAS vs. WAIST CIRCUMFERENCE (IPC Weighted)")
 
 
 
@@ -509,7 +515,7 @@ modelsummary(wad.l2m.whr, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc", title = "LOG2-PFAS vs. WHR (IPT Weighted)")
+             coef_omit = "Interc", title = "LOG2-PFAS vs. WHR (IPC Weighted)")
 
 
 
@@ -553,7 +559,7 @@ modelsummary(wad.l2m.muac, fmt = 2,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]"),
-             coef_omit = "Interc", title = "LOG2-PFAS vs. MUAC (IPT Weighted)")
+             coef_omit = "Interc", title = "LOG2-PFAS vs. MUAC (IPC Weighted)")
 
 ```
 
@@ -596,7 +602,7 @@ wad.l2m.lntrnkfat <- list(
 
 modelsummary(wad.l2m.lntrnkfat, fmt = 2, estimate = "{estimate}{stars}", 
              statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]"), 
-             coef_omit = "Interc", title = "LOG2-PFAS vs. LN-TRUNK FAT MASS (IPT Weighted)")
+             coef_omit = "Interc", title = "LOG2-PFAS vs. LN-TRUNK FAT MASS (IPC Weighted)")
 
 
 
@@ -636,7 +642,7 @@ wad.l2m.lntotfat <- list(
 
 modelsummary(wad.l2m.lntotfat, fmt = 2, estimate = "{estimate}{stars}", 
              statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]"), 
-             coef_omit = "Interc", title = "LOG2-PFAS vs. LN-TOTAL BODY FAT MASS (IPT Weighted)")
+             coef_omit = "Interc", title = "LOG2-PFAS vs. LN-TOTAL BODY FAT MASS (IPC Weighted)")
 
 
 
@@ -677,297 +683,6 @@ ad.l2m.totpfat <- list(
 
 modelsummary(ad.l2m.totpfat, fmt = 2, estimate = "{estimate}{stars}", 
              statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]"), 
-             coef_omit = "Interc", title = "LOG2-PFAS vs. TOTAL BODY FAT % (IPT Weighted)")
+             coef_omit = "Interc", title = "LOG2-PFAS vs. TOTAL BODY FAT % (IPC Weighted)")
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r}
-##### BUILD STABILIZED INVERSE PROBABILITY OF CONTINUOUS TREATMENT WEIGHTS, ANTHRO DATASET #####
-##### NUMERATOR
-# https://www.andrewheiss.com/blog/2020/12/01/ipw-binary-continuous/#continuous-treatments
-# The numerator is the probability distribution of just the treatment variable.
-# We'll use a normal distribution for it (hence dnorm()). We need to feed
-# dnorm() the grant amount for each person, the predicted value from a simple
-# grant ~ 1 model, and the sd of the residuals from that model
-
-# PFOS
-PFOS_num_m <- lm(L2PFOS ~ 1, data = PFAS_A)
-PFOSnum <- dnorm(PFAS_A$L2PFOS,
-             predict(PFOS_num_m),
-             sd(PFOS_num_m$residuals))
-
-# PFOA
-PFOA_num_m <- lm(L2PFOA ~ 1, data = PFAS_A)
-PFOAnum <- dnorm(PFAS_A$L2PFOA,
-             predict(PFOA_num_m),
-             sd(PFOA_num_m$residuals))
-
-# PFNA
-PFNA_num_m <- lm(L2PFNA ~ 1, data = PFAS_A)
-PFNAnum <- dnorm(PFAS_A$L2PFNA,
-             predict(PFNA_num_m),
-             sd(PFNA_num_m$residuals))
-
-# PFHxS
-PFHxS_num_m <- lm(L2PFHxS ~ 1, data = PFAS_A)
-PFHxSnum <- dnorm(PFAS_A$L2PFHxS,
-             predict(PFHxS_num_m),
-             sd(PFHxS_num_m$residuals))
-
-# MeFOSAA
-MeFOSAA_num_m <- lm(L2MeFOSAA ~ 1, data = PFAS_A)
-MeFOSAAnum <- dnorm(PFAS_A$L2MeFOSAA,
-             predict(MeFOSAA_num_m),
-             sd(MeFOSAA_num_m$residuals))
-
-# EtFOSAA
-EtFOSAA_num_m <- lm(L2EtFOSAA ~ 1, data = PFAS_A)
-EtFOSAAnum <- dnorm(PFAS_A$L2EtFOSAA,
-             predict(EtFOSAA_num_m),
-             sd(EtFOSAA_num_m$residuals))
-
-
-##### DENOMINATOR
-# The denominator is the probability distribution of the treatment variable
-# explained by the confounders. We'll again use a normal distribution for it.
-# We'll feed dnorm() the grant amount, the predicted value from a model that
-# includes the confounders, and the sd of the residuals from that model
-
-# PFOS
-PFOS_den_m <- lm(L2PFOS ~ age_enroll + race + income + menar + smoke +  
-                 parity + married, data = PFAS_A)
-PFOSden <- dnorm(PFAS_A$L2PFOS,
-             predict(PFOS_den_m),
-             sd(PFOS_den_m$residuals))
-
-# PFOA
-PFOA_den_m <- lm(L2PFOA ~ age_enroll + race + income + menar + smoke +  
-                 parity + married, data = PFAS_A)
-PFOAden <- dnorm(PFAS_A$L2PFOA,
-             predict(PFOA_den_m),
-             sd(PFOA_den_m$residuals))
-
-# PFNA
-PFNA_den_m <- lm(L2PFNA ~ age_enroll + race + income + menar + smoke +  
-                 parity + married, data = PFAS_A)
-PFNAden <- dnorm(PFAS_A$L2PFNA,
-             predict(PFNA_den_m),
-             sd(PFNA_den_m$residuals))
-
-# PFHxS
-PFHxS_den_m <- lm(L2PFHxS ~ age_enroll + race + income + menar + smoke +  
-                 parity + married, data = PFAS_A)
-PFHxSden <- dnorm(PFAS_A$L2PFHxS,
-             predict(PFHxS_den_m),
-             sd(PFHxS_den_m$residuals))
-
-# MeFOSAA
-MeFOSAA_den_m <- lm(L2MeFOSAA ~ age_enroll + race + income + menar + smoke +  
-                 parity + married, data = PFAS_A)
-MeFOSAAden <- dnorm(PFAS_A$L2MeFOSAA,
-             predict(MeFOSAA_den_m),
-             sd(MeFOSAA_den_m$residuals))
-
-# EtFOSAA
-EtFOSAA_den_m <- lm(L2EtFOSAA ~ age_enroll + race + income + menar + smoke +  
-                 parity + married, data = PFAS_A)
-EtFOSAAden <- dnorm(PFAS_A$L2EtFOSAA,
-             predict(EtFOSAA_den_m),
-             sd(EtFOSAA_den_m$residuals))
-
-
-##### BUILD THE WEIGHT
-# Finally, we make actual IPW weights by building the fraction
-
-# PFOS
-PFAS_A <- PFAS_A %>% 
-  mutate(PFOS_w = PFOSnum / PFOSden)
-summary(PFAS_A$PFOS_w)
-
-# PFOA
-PFAS_A <- PFAS_A %>% 
-  mutate(PFOA_w = PFOAnum / PFOAden)
-summary(PFAS_A$PFOA_w)
-
-# PFNA
-PFAS_A <- PFAS_A %>% 
-  mutate(PFNA_w = PFNAnum / PFNAden)
-summary(PFAS_A$PFNA_w)
-
-# PFHxS
-PFAS_A <- PFAS_A %>% 
-  mutate(PFHxS_w = PFHxSnum / PFHxSden)
-summary(PFAS_A$PFHxS_w)
-
-# MeFOSAA
-PFAS_A <- PFAS_A %>% 
-  mutate(MeFOSAA_w = MeFOSAAnum / MeFOSAAden)
-summary(PFAS_A$MeFOSAA_w)
-
-# EtFOSAA
-PFAS_A <- PFAS_A %>% 
-  mutate(EtFOSAA_w = EtFOSAAnum / EtFOSAAden)
-summary(PFAS_A$EtFOSAA_w)
-
-
-##### REMOVE INDIVIDUALS WITH ABNORMALLY HIGH WEIGHTS
-PFAS_A_W <- subset(PFAS_A, PFAS_A$PFOS_w < 6) # N = 0
-PFAS_A_W <- subset(PFAS_A_W, PFAS_A_W$PFOA_w < 6) # N = 1
-PFAS_A_W <- subset(PFAS_A_W, PFAS_A_W$PFNA_w < 6) # N = 1
-PFAS_A_W <- subset(PFAS_A_W, PFAS_A_W$PFHxS_w < 6) # N = 3
-PFAS_A_W <- subset(PFAS_A_W, PFAS_A_W$MeFOSAA_w < 6) # N = 0 
-PFAS_A_W <- subset(PFAS_A_W, PFAS_A_W$EtFOSAA_w < 6) # N = 0
-
-```
-
-```{r}
-##### BUILD STABILIZED INVERSE PROBABILITY OF CONTINUOUS TREATMENT WEIGHTS, ANTHRO + DXA DATASET #####
-##### NUMERATOR
-# https://www.andrewheiss.com/blog/2020/12/01/ipw-binary-continuous/#continuous-treatments
-# The numerator is the probability distribution of just the treatment variable.
-# We'll use a normal distribution for it (hence dnorm()). We need to feed
-# dnorm() the grant amount for each person, the predicted value from a simple
-# grant ~ 1 model, and the sd of the residuals from that model
-
-# PFOS
-PFOS_num_m <- lm(L2PFOS ~ 1, data = PFAS_D)
-PFOSnum <- dnorm(PFAS_D$L2PFOS,
-             predict(PFOS_num_m),
-             sd(PFOS_num_m$residuals))
-
-# PFOA
-PFOA_num_m <- lm(L2PFOA ~ 1, data = PFAS_D)
-PFOAnum <- dnorm(PFAS_D$L2PFOA,
-             predict(PFOA_num_m),
-             sd(PFOA_num_m$residuals))
-
-# PFNA
-PFNA_num_m <- lm(L2PFNA ~ 1, data = PFAS_D)
-PFNAnum <- dnorm(PFAS_D$L2PFNA,
-             predict(PFNA_num_m),
-             sd(PFNA_num_m$residuals))
-
-# PFHxS
-PFHxS_num_m <- lm(L2PFHxS ~ 1, data = PFAS_D)
-PFHxSnum <- dnorm(PFAS_D$L2PFHxS,
-             predict(PFHxS_num_m),
-             sd(PFHxS_num_m$residuals))
-
-# MeFOSAA
-MeFOSAA_num_m <- lm(L2MeFOSAA ~ 1, data = PFAS_D)
-MeFOSAAnum <- dnorm(PFAS_D$L2MeFOSAA,
-             predict(MeFOSAA_num_m),
-             sd(MeFOSAA_num_m$residuals))
-
-# EtFOSAA
-EtFOSAA_num_m <- lm(L2EtFOSAA ~ 1, data = PFAS_D)
-EtFOSAAnum <- dnorm(PFAS_D$L2EtFOSAA,
-             predict(EtFOSAA_num_m),
-             sd(EtFOSAA_num_m$residuals))
-
-
-##### DENOMINATOR
-# The denominator is the probability distribution of the treatment variable
-# explained by the confounders. We'll again use a normal distribution for it.
-# We'll feed dnorm() the grant amount, the predicted value from a model that
-# includes the confounders, and the sd of the residuals from that model
-
-# PFOS
-PFOS_den_m <- lm(L2PFOS ~ age_enroll + race + income + menar + smoke +  
-                 parity + married, data = PFAS_D)
-PFOSden <- dnorm(PFAS_D$L2PFOS,
-             predict(PFOS_den_m),
-             sd(PFOS_den_m$residuals))
-
-# PFOA
-PFOA_den_m <- lm(L2PFOA ~ age_enroll + race + income + menar + smoke +  
-                 parity + married, data = PFAS_D)
-PFOAden <- dnorm(PFAS_D$L2PFOA,
-             predict(PFOA_den_m),
-             sd(PFOA_den_m$residuals))
-
-# PFNA
-PFNA_den_m <- lm(L2PFNA ~ age_enroll + race + income + menar + smoke +  
-                 parity + married, data = PFAS_D)
-PFNAden <- dnorm(PFAS_D$L2PFNA,
-             predict(PFNA_den_m),
-             sd(PFNA_den_m$residuals))
-
-# PFHxS
-PFHxS_den_m <- lm(L2PFHxS ~ age_enroll + race + income + menar + smoke +  
-                 parity + married, data = PFAS_D)
-PFHxSden <- dnorm(PFAS_D$L2PFHxS,
-             predict(PFHxS_den_m),
-             sd(PFHxS_den_m$residuals))
-
-# MeFOSAA
-MeFOSAA_den_m <- lm(L2MeFOSAA ~ age_enroll + race + income + menar + smoke +  
-                 parity + married, data = PFAS_D)
-MeFOSAAden <- dnorm(PFAS_D$L2MeFOSAA,
-             predict(MeFOSAA_den_m),
-             sd(MeFOSAA_den_m$residuals))
-
-# EtFOSAA
-EtFOSAA_den_m <- lm(L2EtFOSAA ~ age_enroll + race + income + menar + smoke +  
-                 parity + married, data = PFAS_D)
-EtFOSAAden <- dnorm(PFAS_D$L2EtFOSAA,
-             predict(EtFOSAA_den_m),
-             sd(EtFOSAA_den_m$residuals))
-
-
-##### BUILD THE WEIGHT
-# Finally, we make actual IPW weights by building the fraction
-
-# PFOS
-PFAS_D <- PFAS_D %>% 
-  mutate(PFOS_w = PFOSnum / PFOSden)
-summary(PFAS_D$PFOS_w)
-
-# PFOA
-PFAS_D <- PFAS_D %>% 
-  mutate(PFOA_w = PFOAnum / PFOAden)
-summary(PFAS_D$PFOA_w)
-
-# PFNA
-PFAS_D <- PFAS_D %>% 
-  mutate(PFNA_w = PFNAnum / PFNAden)
-summary(PFAS_D$PFNA_w)
-
-# PFHxS
-PFAS_D <- PFAS_D %>% 
-  mutate(PFHxS_w = PFHxSnum / PFHxSden)
-summary(PFAS_D$PFHxS_w)
-
-# MeFOSAA
-PFAS_D <- PFAS_D %>% 
-  mutate(MeFOSAA_w = MeFOSAAnum / MeFOSAAden)
-summary(PFAS_D$MeFOSAA_w)
-
-# EtFOSAA
-PFAS_D <- PFAS_D %>% 
-  mutate(EtFOSAA_w = EtFOSAAnum / EtFOSAAden)
-summary(PFAS_D$EtFOSAA_w)
-
-
-##### REMOVE INDIVIDUALS WITH ABNORMALLY HIGH WEIGHTS
-PFAS_D_W <- subset(PFAS_D, PFAS_D$PFOS_w < 6) # N = 1
-PFAS_D_W <- subset(PFAS_D_W, PFAS_D_W$PFOA_w < 6) # N = 2
-PFAS_D_W <- subset(PFAS_D_W, PFAS_D_W$PFNA_w < 6) # N = 0
-PFAS_D_W <- subset(PFAS_D_W, PFAS_D_W$PFHxS_w < 6) # N = 2
-PFAS_D_W <- subset(PFAS_D_W, PFAS_D_W$MeFOSAA_w < 6) # N = 0 
-PFAS_D_W <- subset(PFAS_D_W, PFAS_D_W$EtFOSAA_w < 6) # N = 0
-
-```
-
