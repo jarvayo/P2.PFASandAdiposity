@@ -107,10 +107,10 @@ cov_a <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$race, PFAS_A$menar, PFAS_A$in
 set.seed(123)
 
 # CREATE KNOTS
-knots_alnz <- fields::cover.design(lnmixture_a_z, nd = 50)$design
-knots_aln <- fields::cover.design(lnmixture_a, nd = 50)$design
+# knots_alnz <- fields::cover.design(lnmixture_a_z, nd = 50)$design
+# knots_aln <- fields::cover.design(lnmixture_a, nd = 50)$design
 knots_al2 <- fields::cover.design(l2mixture_a, nd = 50)$design
-knots_al2z <- fields::cover.design(l2mixture_a_z, nd = 50)$design
+# knots_al2z <- fields::cover.design(l2mixture_a_z, nd = 50)$design
 
 ```
 
@@ -172,14 +172,6 @@ beep(sound=5, expr=NULL)
 
 ```{r}
 ##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
-# save(l2m_bmi, l2m_waist, l2m_whr, l2m_muac,
-#     file="C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_A_LNZ.Rdata")
-# load("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_A_LNZ.Rdata")
-
-# save(lnm_bmi, lnm_waist, lnm_whr, lnm_muac,
-#      file="C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_A_LN.Rdata")
-# load("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_A_LN.Rdata")
-
 # save(l2m_bmi, l2m_waist, l2m_whr, l2m_muac,
 #     file="C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_A_L2.Rdata")
 # load("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_A_L2.Rdata")
