@@ -109,7 +109,7 @@ colnames(PFAS_X)<-gsub(".x","",colnames(PFAS_X))
 ```{r}
 ##### DROP UNNECESSARY VARIABLES
 PFAS_2 <- subset(PFAS_2, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH2, Et_PFOSA_AcOH,
-                                    age_mom_enroll_d, bmi_mom_prepreg_d, race2_mom_epi_epia_d, coll_grad, 
+                                    age_mom_enroll_d, mom_firstperiod_12y, bmi_mom_prepreg_d, race2_mom_epi_epia_d, coll_grad, 
                                     gt70k, income_hh_epq_epqa_d, nullip, parity_d, smokpreg_final_d, married_cohab))
 
 PFAS_5 <- subset(PFAS_5, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH2, Et_PFOSA_AcOH,
