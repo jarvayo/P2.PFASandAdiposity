@@ -232,9 +232,9 @@ table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d +
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_IPW_ARG <- aregImpute(~ gt70k + married_cohab + coll_grad + race2_mom_epi_epia_d + smokpreg_final_d + 
-                           bmi_mom_prepreg_d + parity_d + age_mom_enroll_d + PFOS + 
-                           PFOA + PFNA2 + PFHxS + Me_PFOSA_AcOH2 + Et_PFOSA_AcOH, 
+PFAS_IPW_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + married_cohab + coll_grad + race2_mom_epi_epia_d + 
+                             smokpreg_final_d + bmi_mom_prepreg_d + parity_d + age_mom_enroll_d + PFOS +
+                             PFOA + PFNA2 + PFHxS + Me_PFOSA_AcOH2 + Et_PFOSA_AcOH, 
                            nk = 0, data = PFAS_IPW_NA, n.impute = 5)
 
 ##### EXTRACT IMPUTED VALUES AND FORM A DATASET
