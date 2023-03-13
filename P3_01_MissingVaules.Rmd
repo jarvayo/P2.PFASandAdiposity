@@ -15,9 +15,9 @@ library("tidyverse")
 
 ```{r}
 ##### LOAD DATASET
-PFAS_IPW_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_IPW_C.sas7bdat")
-PFAS_A_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_A_C.sas7bdat")
-PFAS_D_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_D_C.sas7bdat")
+PFAS_IPW_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_IPW_C.sas7bdat")
+PFAS_A_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A_C.sas7bdat")
+PFAS_D_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D_C.sas7bdat")
 
 ```
 
@@ -46,7 +46,7 @@ table(PFAS_IPW_NA$race2_mom_epi_epia_d)
 
 ##### CHECK MISSINGNESS OF CONTINUOUS DEMOGRAPHIC VARIABLES
 summary(PFAS_IPW_NA$age_mom_enroll_d)
-summary(PFAS_IPW_NA$bmi_mom_prepreg_d) # 13 NA
+summary(PFAS_IPW_NA$bmi_mom_prepreg_d) 
 summary(PFAS_IPW_NA$parity_d) 
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
@@ -57,12 +57,12 @@ PFAS_IPW_NA$gt70k <- as.factor(PFAS_IPW_NA$gt70k)
 PFAS_IPW_NA$smokpreg_final_d <- as.factor(PFAS_IPW_NA$smokpreg_final_d)
 PFAS_IPW_NA$married_cohab <- as.factor(PFAS_IPW_NA$married_cohab)
 
-summary(PFAS_IPW_NA$race2_mom_epi_epia_d)  # 18 NAs
-summary(PFAS_IPW_NA$coll_grad)             # 18 NAs
-summary(PFAS_IPW_NA$income_hh_epq_epqa_d)  # 182 NAs
-summary(PFAS_IPW_NA$gt70k)                 # 182 NAs
-summary(PFAS_IPW_NA$smokpreg_final_d)      # 15 NAs
-summary(PFAS_IPW_NA$married_cohab)         # 19 NAs
+summary(PFAS_IPW_NA$race2_mom_epi_epia_d)  
+summary(PFAS_IPW_NA$coll_grad)             
+summary(PFAS_IPW_NA$income_hh_epq_epqa_d) 
+summary(PFAS_IPW_NA$gt70k)                 
+summary(PFAS_IPW_NA$smokpreg_final_d)      
+summary(PFAS_IPW_NA$married_cohab)   
 
 ```
 
@@ -114,10 +114,10 @@ summary(PFAS_A_NA$mom_age_comp_d_ma17)
 summary(PFAS_A_NA$age_days_comp_d_ma17)
 PFAS_A_NA$age_days_comp_d_ma17 <- PFAS_A_NA$age_days_comp_d_ma17/365
 summary(PFAS_A_NA$age_days_comp_d_ma17)
-summary(PFAS_A_NA$bmi_mom_prepreg_d)            # 1 NA
+summary(PFAS_A_NA$bmi_mom_prepreg_d)            
 summary(PFAS_A_NA$parity_d) 
-summary(PFAS_A_NA$mom_firstperiod_12y)          # 25 NA
-summary(PFAS_A_NA$mom_period_ystopped_age_qu17) # 332 NA
+summary(PFAS_A_NA$mom_firstperiod_12y)          
+summary(PFAS_A_NA$mom_period_ystopped_age_qu17)
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
 PFAS_A_NA$bmi_cat <- as.factor(PFAS_A_NA$bmi_cat)
@@ -129,20 +129,20 @@ PFAS_A_NA$smokpreg_final_d <- as.factor(PFAS_A_NA$smokpreg_final_d)
 PFAS_A_NA$married_cohab <- as.factor(PFAS_A_NA$married_cohab)
 PFAS_A_NA$parity_cat <- as.factor(PFAS_A_NA$parity_cat)
 
-summary(PFAS_A_NA$bmi_cat)              # 1 NA
-summary(PFAS_A_NA$race2_mom_epi_epia_d) # 2 NAs
-summary(PFAS_A_NA$coll_grad)            # 2 NAs
-summary(PFAS_A_NA$income_hh_epq_epqa_d) # 45 NAs
-summary(PFAS_A_NA$gt70k)                # 45 NAs
-summary(PFAS_A_NA$smokpreg_final_d)     # 1 NAs
-summary(PFAS_A_NA$married_cohab)        # 2 NAs
-summary(PFAS_A_NA$parity_cat)           # 2 NAs
+summary(PFAS_A_NA$bmi_cat)              
+summary(PFAS_A_NA$race2_mom_epi_epia_d) 
+summary(PFAS_A_NA$coll_grad)      
+summary(PFAS_A_NA$income_hh_epq_epqa_d) 
+summary(PFAS_A_NA$gt70k)              
+summary(PFAS_A_NA$smokpreg_final_d) 
+summary(PFAS_A_NA$married_cohab)  
+summary(PFAS_A_NA$parity_cat)   
 
 ##### TABLE OF MISSINGNESS
 table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + age_days_comp_d_ma17 + bmi_mom_prepreg_d + 
-         parity_d + mom_firstperiod_12y + mom_period_ystopped_age_qu17, data = PFAS_A_NA, overall="Total")
+         mom_firstperiod_12y + mom_period_ystopped_age_qu17, data = PFAS_A_NA, overall="Total")
 
-table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + income_hh_epq_epqa_d +
+table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k  + income_hh_epq_epqa_d +
          parity_cat + married_cohab, data = PFAS_A_NA, overall="Total")
 
 ```
@@ -195,10 +195,10 @@ summary(PFAS_D_NA$age_days_mdxa17)
 PFAS_D_NA$age_days_mdxa17 <- PFAS_D_NA$age_days_mdxa17/365
 summary(PFAS_D_NA$age_days_mdxa17)
 summary(PFAS_D_NA$mom_age_mdxa17)
-summary(PFAS_D_NA$bmi_mom_prepreg_d) # 1 NA
+summary(PFAS_D_NA$bmi_mom_prepreg_d) 
 summary(PFAS_D_NA$parity_d)      
-summary(PFAS_D_NA$mom_firstperiod_12y) # 25 NA
-summary(PFAS_D_NA$mom_period_ystopped_age_qu17) # 332 NA
+summary(PFAS_D_NA$mom_firstperiod_12y) 
+summary(PFAS_D_NA$mom_period_ystopped_age_qu17) 
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
 PFAS_D_NA$race2_mom_epi_epia_d <- as.factor(PFAS_D_NA$race2_mom_epi_epia_d)
@@ -209,19 +209,19 @@ PFAS_D_NA$smokpreg_final_d <- as.factor(PFAS_D_NA$smokpreg_final_d)
 PFAS_D_NA$married_cohab <- as.factor(PFAS_D_NA$married_cohab)
 PFAS_D_NA$parity_cat <- as.factor(PFAS_D_NA$parity_cat)
 
-summary(PFAS_D_NA$race2_mom_epi_epia_d)  # 2 NAs
-summary(PFAS_D_NA$coll_grad)             # 2 NAs
-summary(PFAS_D_NA$income_hh_epq_epqa_d)  # 45 NAs
-summary(PFAS_D_NA$gt70k)                 # 45 NAs
-summary(PFAS_D_NA$smokpreg_final_d)      # 1 NAs
-summary(PFAS_D_NA$married_cohab)         # 2 NAs
-summary(PFAS_D_NA$parity_cat)         # 2 NAs
+summary(PFAS_D_NA$race2_mom_epi_epia_d)
+summary(PFAS_D_NA$coll_grad)          
+summary(PFAS_D_NA$income_hh_epq_epqa_d)  
+summary(PFAS_D_NA$gt70k)               
+summary(PFAS_D_NA$smokpreg_final_d)     
+summary(PFAS_D_NA$married_cohab)        
+summary(PFAS_D_NA$parity_cat)         
 
 ##### TABLE OF MISSINGNESS
 table1(~ age_mom_enroll_d + mom_age_mdxa17 + age_days_mdxa17 + bmi_mom_prepreg_d + parity_d +  
        mom_firstperiod_12y + mom_period_ystopped_age_qu17, data = PFAS_D_NA, overall="Total")
 
-table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d + income_hh_epq_epqa_d +
+table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k  + income_hh_epq_epqa_d +
          parity_cat + married_cohab, data = PFAS_D_NA, overall="Total")
 
 ```
@@ -232,10 +232,10 @@ table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d +
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_IPW_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + married_cohab + coll_grad + race2_mom_epi_epia_d + 
-                             smokpreg_final_d + bmi_mom_prepreg_d + parity_d + age_mom_enroll_d + PFOS +
-                             PFOA + PFNA2 + PFHxS + Me_PFOSA_AcOH2 + Et_PFOSA_AcOH, 
-                           nk = 0, data = PFAS_IPW_NA, n.impute = 5)
+PFAS_IPW_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + mom_period_ystopped_age_qu17 + married_cohab + 
+                             coll_grad + race2_mom_epi_epia_d + smokpreg_final_d + bmi_mom_prepreg_d + 
+                             parity_d + age_mom_enroll_d + PFOS + PFOA + PFNA2 + PFHxS + Me_PFOSA_AcOH2 + 
+                             Et_PFOSA_AcOH, nk = 0, data = PFAS_IPW_NA, n.impute = 5)
 
 ##### EXTRACT IMPUTED VALUES AND FORM A DATASET
 PFAS_IPW_IMP <- as.data.frame(impute.transcan(PFAS_IPW_ARG, imputation=5, data=PFAS_IPW_NA, 
@@ -256,10 +256,10 @@ PFAS_IPW_COMP <- PFAS_IPW_COMP %>% select(-contains(".1"))
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_A_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + married_cohab + coll_grad + race2_mom_epi_epia_d + 
-                           smokpreg_final_d + bmi_mom_prepreg_d + parity_d + g_age_days_COLL_D_BLD1 + 
-                           age_mom_enroll_d + PFOS + PFOA + PFNA2 + PFHxS + Me_PFOSA_AcOH2 + Et_PFOSA_AcOH, 
-                           nk = 0, data = PFAS_A_NA, n.impute = 5)
+PFAS_A_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + mom_period_ystopped_age_qu17 + married_cohab + 
+                           coll_grad + race2_mom_epi_epia_d + smokpreg_final_d + bmi_mom_prepreg_d + 
+                           parity_d + g_age_days_COLL_D_BLD1 + age_mom_enroll_d + PFOS + PFOA + PFNA2 + 
+                           PFHxS + Me_PFOSA_AcOH2 + Et_PFOSA_AcOH, nk = 0, data = PFAS_A_NA, n.impute = 5)
 
 ##### EXTRACT IMPUTED VALUES AND FORM A DATASET
 PFAS_A_IMP <- as.data.frame(impute.transcan(PFAS_A_ARG, imputation=5, data=PFAS_A_NA, 
@@ -280,10 +280,10 @@ PFAS_A_COMP <- PFAS_A_COMP %>% select(-contains(".1"))
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_D_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + married_cohab + coll_grad + race2_mom_epi_epia_d + 
-                           smokpreg_final_d + bmi_mom_prepreg_d + parity_d + g_age_days_COLL_D_BLD1 + 
-                           age_mom_enroll_d + PFOS + PFOA + PFNA2 + PFHxS + Me_PFOSA_AcOH2 + Et_PFOSA_AcOH, 
-                           nk = 0, data = PFAS_D_NA, n.impute = 5)
+PFAS_D_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + mom_period_ystopped_age_qu17 + married_cohab + 
+                           coll_grad + race2_mom_epi_epia_d + smokpreg_final_d + bmi_mom_prepreg_d + 
+                           parity_d + g_age_days_COLL_D_BLD1 + age_mom_enroll_d + PFOS + PFOA + PFNA2 + 
+                           PFHxS + Me_PFOSA_AcOH2 + Et_PFOSA_AcOH, nk = 0, data = PFAS_D_NA, n.impute = 5)
 
 ##### EXTRACT IMPUTED VALUES AND FORM A DATASET
 PFAS_D_IMP <- as.data.frame(impute.transcan(PFAS_D_ARG, imputation=5, data=PFAS_D_NA, 
@@ -300,34 +300,34 @@ PFAS_D_COMP <- PFAS_D_COMP %>% select(-contains(".1"))
 
 ```{r}
 ##### RE-CHECK VARIABLE DISTRIBUTION FOR DATASET WITH IMPUTED DATA 
-table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + age_days_comp_d_ma17 + bmi_mom_prepreg_d + 
-         parity_d + mom_firstperiod_12y, data = PFAS_A_COMP, overall="Total")
+table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + age_days_comp_d_ma17 + 
+         mom_firstperiod_12y + bmi_mom_prepreg_d, data = PFAS_A_COMP, overall="Total")
 
-table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d +
-         married_cohab, data = PFAS_A_COMP, overall="Total")
+table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k +
+         parity_cat + married_cohab, data = PFAS_A_COMP, overall="Total")
 
 
 ##### RE-CHECK VARIABLE DISTRIBUTION FOR DATASET WITH IMPUTED DATA 
-table1(~ age_mom_enroll_d + mom_age_mdxa17 + age_days_mdxa17 + bmi_mom_prepreg_d + parity_d + 
-         mom_firstperiod_12y, data = PFAS_D_COMP, overall="Total")
+table1(~ age_mom_enroll_d + mom_age_mdxa17 + age_days_mdxa17 + 
+         mom_firstperiod_12y + bmi_mom_prepreg_d, data = PFAS_D_COMP, overall="Total")
 
-table1(~ race2_mom_epi_epia_d + coll_grad + gt70k + smokpreg_final_d +
-         married_cohab, data = PFAS_D_COMP, overall="Total")
+table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k +
+         parity_cat + married_cohab, data = PFAS_D_COMP, overall="Total")
 
 ```
 
 ```{r}
 ##### SAVE DATASET
-write.csv(PFAS_IPW_COMP, file = "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_IPW_COMP.csv", row.names = T)
-write_sas(PFAS_IPW_COMP, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_IPW_COMP.sas7bdat")
+write.csv(PFAS_IPW_COMP, file = "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_IPW_COMP.csv", row.names = T)
+write_sas(PFAS_IPW_COMP, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_IPW_COMP.sas7bdat")
 # THE "C_COMP" AT THE END OF THE SAVED FILE NAMES INDICATE THAT THESE DATASETS ARE CLEAN AND HAVE NO MISSING DATA
 
-write.csv(PFAS_A_COMP, file = "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_A_COMP.csv", row.names = T)
-write_sas(PFAS_A_COMP, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_A_COMP.sas7bdat")
+write.csv(PFAS_A_COMP, file = "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A_COMP.csv", row.names = T)
+write_sas(PFAS_A_COMP, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A_COMP.sas7bdat")
 # THE "C_COMP" AT THE END OF THE SAVED FILE NAMES INDICATE THAT THESE DATASETS ARE CLEAN AND HAVE NO MISSING DATA
 
-write.csv(PFAS_D_COMP, file = "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_D_COMP.csv", row.names = T)
-write_sas(PFAS_D_COMP, "C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_D_COMP.sas7bdat")
+write.csv(PFAS_D_COMP, file = "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D_COMP.csv", row.names = T)
+write_sas(PFAS_D_COMP, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D_COMP.sas7bdat")
 # THE "C_COMP" AT THE END OF THE SAVED FILE NAMES INDICATE THAT THESE DATASETS ARE CLEAN AND HAVE NO MISSING DATA
 
 ```
