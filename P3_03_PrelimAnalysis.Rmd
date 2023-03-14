@@ -24,24 +24,24 @@ PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Dat
 ##### PREPARE VARIABLES FOR LINEAR REGRESSION
 
 # SET CATEGORICAL VARIABLES AS FACTORS
-PFAS_A$edu <- as.factor(PFAS_A$edu)
-PFAS_A$income <- as.factor(PFAS_A$income)
-PFAS_A$smoke <- as.factor(PFAS_A$smoke)
-PFAS_A$parity <- as.factor(PFAS_A$parity)
 PFAS_A$race <- as.factor(PFAS_A$race)
+PFAS_A$income <- as.factor(PFAS_A$income)
+PFAS_A$parity <- as.factor(PFAS_A$parity)
+PFAS_A$smoke <- as.factor(PFAS_A$smoke)
 PFAS_A$married <- as.factor(PFAS_A$married)
+PFAS_A$edu <- as.factor(PFAS_A$edu)
 
-PFAS_D$edu <- as.factor(PFAS_D$edu)
-PFAS_D$income <- as.factor(PFAS_D$income)
-PFAS_D$smoke <- as.factor(PFAS_D$smoke)
-PFAS_D$parity <- as.factor(PFAS_D$parity)
 PFAS_D$race <- as.factor(PFAS_D$race)
+PFAS_D$income <- as.factor(PFAS_D$income)
+PFAS_D$parity <- as.factor(PFAS_D$parity)
+PFAS_D$smoke <- as.factor(PFAS_D$smoke)
 PFAS_D$married <- as.factor(PFAS_D$married)
+PFAS_D$edu <- as.factor(PFAS_D$edu)
 
 ```
 
 ```{r}
-##### RUN UNADJUSTED LINEAR REGRESSION MODELS, ANTHRO DATASET (N = 553)
+##### RUN UNADJUSTED LINEAR REGRESSION MODELS, ANTHRO DATASET (N = 545)
 
 # BMI
 #unad.lnm.bmi <- list(
@@ -213,7 +213,7 @@ modelsummary(unad.l2m.muac, fmt = 2, title = "LOG2-PFAS vs. MUAC (Unadjusted)")
 ```
 
 ```{r}
-##### RUN UNADJUSTED LINEAR REGRESSION MODELS, ANTHRO + DXA DATASET (N = 433)
+##### RUN UNADJUSTED LINEAR REGRESSION MODELS, ANTHRO + DXA DATASET (N = 432)
 
 # TRUNK FAT MASS
 #unad.lnm.trnkfat <- list(
@@ -423,7 +423,7 @@ modelsummary(unad.l2m.totpfat, fmt = 2, title = "LOG2-PFAS vs. TOTAL BODY FAT % 
 
 
 ```{r}
-##### RUN ADJUSTED LINEAR REGRESSION MODELS, ANTHRO DATASET (N = 553)
+##### RUN ADJUSTED LINEAR REGRESSION MODELS, ANTHRO DATASET (N = 545)
 
 # BMI
 #ad.lnm.bmi <- list(
@@ -810,7 +810,7 @@ modelplot(ad.lnm.muac, coef_omit = "Interc")
 ```
 
 ```{r}
-##### RUN ADJUSTED LINEAR REGRESSION MODELS, ANTHRO + DXA DATASET (N = 433)
+##### RUN ADJUSTED LINEAR REGRESSION MODELS, ANTHRO + DXA DATASET (N = 432)
 
 # TRUNK FAT MASS
 # ad.lnm.trnkfat <- list(
