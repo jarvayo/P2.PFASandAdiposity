@@ -19,6 +19,10 @@ PFAS_IPW_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAd
 PFAS_A_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A_C.sas7bdat")
 PFAS_D_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D_C.sas7bdat")
 
+##### CREATE WAIST-TO-HIP RATIO
+PFAS_IPW_NA$WHR <- PFAS_IPW_NA$mom_waist_ma17 / PFAS_IPW_NA$mom_hip_ma17
+PFAS_D_NA$WHR <- PFAS_D_NA$mom_waist_ma17 / PFAS_D_NA$mom_hip_ma17
+
 ```
 
 ```{r}
@@ -27,6 +31,28 @@ PFAS_D_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdip
 ##### REPLACE MISSING VALUES AND BLANK SPACES WITH "NA"
 PFAS_IPW_NA <- PFAS_IPW_NA %>% mutate_all(~ifelse(is.nan(.), NA, .))
 PFAS_IPW_NA[PFAS_IPW_NA == ""] <- NA
+
+##### CREATE A CATEGORICAL VARIABLE FOR MENOPAUSE
+PFAS_IPW_NA$meno_cat <- ifelse(PFAS_IPW_NA$mom_period_stopped_qu17 == 2, 0,
+                        ifelse(PFAS_IPW_NA$mom_period_stopped_qu17 == 1, 1, NA))
+
+##### CREATE A CATEGORICAL VARIABLE FOR BMI
+PFAS_IPW_NA$bmi_cat <- ifelse(PFAS_IPW_NA$bmi_mom_prepreg_d <18.5, 0,
+                         ifelse(PFAS_IPW_NA$bmi_mom_prepreg_d >=18.5 & PFAS_IPW_NA$bmi_mom_prepreg_d < 25.0, 1, 
+                         ifelse(PFAS_IPW_NA$bmi_mom_prepreg_d >=25.0 & PFAS_IPW_NA$bmi_mom_prepreg_d < 30.0, 2, 
+                         ifelse(PFAS_IPW_NA$bmi_mom_prepreg_d >=30.0 & PFAS_IPW_NA$bmi_mom_prepreg_d < 35.0, 3,
+                         ifelse(PFAS_IPW_NA$bmi_mom_prepreg_d >=35.0, 4, NA)))))
+
+PFAS_IPW_NA$bmi_cat <- factor(PFAS_IPW_NA$bmi_cat,
+                       levels = c(0, 1, 2, 3, 4),
+                       labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
+                                  "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
+                                  "Extremely obese (>= 35)"))
+
+##### FOR THE RACE VARIABLE, DUE TO SMALL NUMBERS OF OBSERVATIONS PER CATEGORY,
+##### COMBINED THE CATEGORIES "OTHER" AND ">1 RACE"
+PFAS_IPW_NA$race2_mom_epi_epia_d <- ifelse(PFAS_IPW_NA$race2_mom_epi_epia_d == "more than 1 race", 
+                                       "other", PFAS_IPW_NA$race2_mom_epi_epia_d)
 
 ##### FOR THE INCOME VARIABLE, REPLACE "IDK" ANSWERS WITH "NA"
 PFAS_IPW_NA$income_hh_epq_epqa_d <- ifelse(PFAS_IPW_NA$income_hh_epq_epqa_d == 9, NA, 
@@ -37,32 +63,39 @@ PFAS_IPW_NA$income_hh_epq_epqa_d <- ifelse(PFAS_IPW_NA$income_hh_epq_epqa_d == 9
 PFAS_IPW_NA$income_hh_epq_epqa_d <- ifelse(PFAS_IPW_NA$income_hh_epq_epqa_d == 1 | PFAS_IPW_NA$income_hh_epq_epqa_d == 2, 3, 
                                        PFAS_IPW_NA$income_hh_epq_epqa_d)
 
-##### FOR THE RACE VARIABLE, DUE TO SMALL NUMBERS OF OBSERVATIONS PER CATEGORY,
-##### COMBINED THE CATEGORIES "OTHER" AND ">1 RACE"
-PFAS_IPW_NA$race2_mom_epi_epia_d <- ifelse(PFAS_IPW_NA$race2_mom_epi_epia_d == "more than 1 race", 
-                                       "other", PFAS_IPW_NA$race2_mom_epi_epia_d)
+##### CREATE A CATEGORICAL VARIABLE FOR PARITY
+PFAS_IPW_NA$parity_cat <- ifelse(PFAS_IPW_NA$parity_d == 0, 0,
+                        ifelse(PFAS_IPW_NA$parity_d == 1, 1,
+                        ifelse(PFAS_IPW_NA$parity_d > 1, 2, 0)))
 
-table(PFAS_IPW_NA$race2_mom_epi_epia_d)
 
 ##### CHECK MISSINGNESS OF CONTINUOUS DEMOGRAPHIC VARIABLES
 summary(PFAS_IPW_NA$age_mom_enroll_d)
-summary(PFAS_IPW_NA$bmi_mom_prepreg_d) 
+summary(PFAS_IPW_NA$bmi_mom_prepreg_d)            
 summary(PFAS_IPW_NA$parity_d) 
+summary(PFAS_IPW_NA$mom_firstperiod_12y)          
+summary(PFAS_IPW_NA$mom_period_ystopped_age_qu17)
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
+PFAS_IPW_NA$meno_cat <- as.factor(PFAS_IPW_NA$meno_cat)
+PFAS_IPW_NA$bmi_cat <- as.factor(PFAS_IPW_NA$bmi_cat)
 PFAS_IPW_NA$race2_mom_epi_epia_d <- as.factor(PFAS_IPW_NA$race2_mom_epi_epia_d)
 PFAS_IPW_NA$coll_grad <- as.factor(PFAS_IPW_NA$coll_grad)
 PFAS_IPW_NA$income_hh_epq_epqa_d <- as.factor(PFAS_IPW_NA$income_hh_epq_epqa_d)
 PFAS_IPW_NA$gt70k <- as.factor(PFAS_IPW_NA$gt70k)
 PFAS_IPW_NA$smokpreg_final_d <- as.factor(PFAS_IPW_NA$smokpreg_final_d)
 PFAS_IPW_NA$married_cohab <- as.factor(PFAS_IPW_NA$married_cohab)
+PFAS_IPW_NA$parity_cat <- as.factor(PFAS_IPW_NA$parity_cat)
 
-summary(PFAS_IPW_NA$race2_mom_epi_epia_d)  
-summary(PFAS_IPW_NA$coll_grad)             
+summary(PFAS_IPW_NA$meno_cat)
+summary(PFAS_IPW_NA$bmi_cat)              
+summary(PFAS_IPW_NA$race2_mom_epi_epia_d) 
+summary(PFAS_IPW_NA$coll_grad)      
 summary(PFAS_IPW_NA$income_hh_epq_epqa_d) 
-summary(PFAS_IPW_NA$gt70k)                 
-summary(PFAS_IPW_NA$smokpreg_final_d)      
-summary(PFAS_IPW_NA$married_cohab)   
+summary(PFAS_IPW_NA$gt70k)              
+summary(PFAS_IPW_NA$smokpreg_final_d) 
+summary(PFAS_IPW_NA$married_cohab)  
+summary(PFAS_IPW_NA$parity_cat)    
 
 ```
 
@@ -73,6 +106,28 @@ summary(PFAS_IPW_NA$married_cohab)
 PFAS_A_NA <- PFAS_A_NA %>% mutate_all(~ifelse(is.nan(.), NA, .))
 PFAS_A_NA[PFAS_A_NA == ""] <- NA
 
+##### CREATE A CATEGORICAL VARIABLE FOR MENOPAUSE
+PFAS_A_NA$meno_cat <- ifelse(PFAS_A_NA$mom_period_stopped_qu17 == 2, 0,
+                        ifelse(PFAS_A_NA$mom_period_stopped_qu17 == 1, 1, NA))
+
+##### CREATE A CATEGORICAL VARIABLE FOR BMI
+PFAS_A_NA$bmi_cat <- ifelse(PFAS_A_NA$bmi_mom_prepreg_d <18.5, 0,
+                         ifelse(PFAS_A_NA$bmi_mom_prepreg_d >=18.5 & PFAS_A_NA$bmi_mom_prepreg_d < 25.0, 1, 
+                         ifelse(PFAS_A_NA$bmi_mom_prepreg_d >=25.0 & PFAS_A_NA$bmi_mom_prepreg_d < 30.0, 2, 
+                         ifelse(PFAS_A_NA$bmi_mom_prepreg_d >=30.0 & PFAS_A_NA$bmi_mom_prepreg_d < 35.0, 3,
+                         ifelse(PFAS_A_NA$bmi_mom_prepreg_d >=35.0, 4, NA)))))
+
+PFAS_A_NA$bmi_cat <- factor(PFAS_A_NA$bmi_cat,
+                       levels = c(0, 1, 2, 3, 4),
+                       labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
+                                  "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
+                                  "Extremely obese (>= 35)"))
+
+##### FOR THE RACE VARIABLE, DUE TO SMALL NUMBERS OF OBSERVATIONS PER CATEGORY,
+##### COMBINED THE CATEGORIES "OTHER" AND ">1 RACE"
+PFAS_A_NA$race2_mom_epi_epia_d <- ifelse(PFAS_A_NA$race2_mom_epi_epia_d == "more than 1 race", 
+                                       "other", PFAS_A_NA$race2_mom_epi_epia_d)
+
 ##### FOR THE INCOME VARIABLE, REPLACE "IDK" ANSWERS WITH "NA"
 PFAS_A_NA$income_hh_epq_epqa_d <- ifelse(PFAS_A_NA$income_hh_epq_epqa_d == 9, NA, 
                                        PFAS_A_NA$income_hh_epq_epqa_d)
@@ -82,30 +137,11 @@ PFAS_A_NA$income_hh_epq_epqa_d <- ifelse(PFAS_A_NA$income_hh_epq_epqa_d == 9, NA
 PFAS_A_NA$income_hh_epq_epqa_d <- ifelse(PFAS_A_NA$income_hh_epq_epqa_d == 1 | PFAS_A_NA$income_hh_epq_epqa_d == 2, 3, 
                                        PFAS_A_NA$income_hh_epq_epqa_d)
 
-##### FOR THE RACE VARIABLE, DUE TO SMALL NUMBERS OF OBSERVATIONS PER CATEGORY,
-##### COMBINED THE CATEGORIES "OTHER" AND ">1 RACE"
-PFAS_A_NA$race2_mom_epi_epia_d <- ifelse(PFAS_A_NA$race2_mom_epi_epia_d == "more than 1 race", 
-                                       "other", PFAS_A_NA$race2_mom_epi_epia_d)
-
-table(PFAS_A_NA$race2_mom_epi_epia_d)
-
-##### CREATE A CATEGORICAL VARIABLE FOR BMI
-PFAS_A_NA$bmi_cat <- ifelse(PFAS_A_NA$bmi_mom_prepreg_d <18.5, 0,
-                         ifelse(PFAS_A_NA$bmi_mom_prepreg_d >=18.5 & PFAS_A_NA$bmi_mom_prepreg_d < 25.0, 1, 
-                         ifelse(PFAS_A_NA$bmi_mom_prepreg_d >=25.0 & PFAS_A_NA$bmi_mom_prepreg_d < 30.0, 2, 
-                         ifelse(PFAS_A_NA$bmi_mom_prepreg_d >=30.0 & PFAS_A_NA$bmi_mom_prepreg_d < 35.0, 3,
-                         ifelse(PFAS_A_NA$bmi_mom_prepreg_d >=35.0, 4, 99)))))
-
-PFAS_A_NA$bmi_cat <- factor(PFAS_A_NA$bmi_cat,
-                       levels = c(0, 1, 2, 3, 4),
-                       labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
-                                  "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
-                                  "Extremely obese (>= 35)"))
-
 ##### CREATE A CATEGORICAL VARIABLE FOR PARITY
-PFAS_A_NA$parity_cat <- ifelse(PFAS_A_NA$parity == 0, 0,
-                        ifelse(PFAS_A_NA$parity == 1, 1,
-                        ifelse(PFAS_A_NA$parity > 1, 2, 0)))
+PFAS_A_NA$parity_cat <- ifelse(PFAS_A_NA$parity_d == 0, 0,
+                        ifelse(PFAS_A_NA$parity_d == 1, 1,
+                        ifelse(PFAS_A_NA$parity_d > 1, 2, 0)))
+
 
 ##### CHECK MISSINGNESS OF CONTINUOUS DEMOGRAPHIC VARIABLES
 summary(PFAS_A_NA$age_mom_enroll_d)
@@ -120,6 +156,7 @@ summary(PFAS_A_NA$mom_firstperiod_12y)
 summary(PFAS_A_NA$mom_period_ystopped_age_qu17)
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
+PFAS_A_NA$meno_cat <- as.factor(PFAS_A_NA$meno_cat)
 PFAS_A_NA$bmi_cat <- as.factor(PFAS_A_NA$bmi_cat)
 PFAS_A_NA$race2_mom_epi_epia_d <- as.factor(PFAS_A_NA$race2_mom_epi_epia_d)
 PFAS_A_NA$coll_grad <- as.factor(PFAS_A_NA$coll_grad)
@@ -129,6 +166,7 @@ PFAS_A_NA$smokpreg_final_d <- as.factor(PFAS_A_NA$smokpreg_final_d)
 PFAS_A_NA$married_cohab <- as.factor(PFAS_A_NA$married_cohab)
 PFAS_A_NA$parity_cat <- as.factor(PFAS_A_NA$parity_cat)
 
+summary(PFAS_A_NA$meno_cat)
 summary(PFAS_A_NA$bmi_cat)              
 summary(PFAS_A_NA$race2_mom_epi_epia_d) 
 summary(PFAS_A_NA$coll_grad)      
@@ -139,11 +177,12 @@ summary(PFAS_A_NA$married_cohab)
 summary(PFAS_A_NA$parity_cat)   
 
 ##### TABLE OF MISSINGNESS
-table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + age_days_comp_d_ma17 + bmi_mom_prepreg_d + 
-         mom_firstperiod_12y + mom_period_ystopped_age_qu17, data = PFAS_A_NA, overall="Total")
+table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + age_days_comp_d_ma17 + mom_firstperiod_12y +
+         bmi_mom_prepreg_d + meno_cat + mom_period_ystopped_age_qu17, data = PFAS_A_NA, overall="Total")
 
-table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k  + income_hh_epq_epqa_d +
-         parity_cat + married_cohab, data = PFAS_A_NA, overall="Total")
+table1(~ mom_period_stopped_qu17 + bmi_cat + race2_mom_epi_epia_d + coll_grad + 
+         smokpreg_final_d + gt70k  + income_hh_epq_epqa_d + parity_cat + married_cohab, 
+         data = PFAS_A_NA, overall="Total")
 
 ```
 
@@ -154,6 +193,28 @@ table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k  
 PFAS_D_NA <- PFAS_D_NA %>% mutate_all(~ifelse(is.nan(.), NA, .))
 PFAS_D_NA[PFAS_D_NA == ""] <- NA
 
+##### CREATE A CATEGORICAL VARIABLE FOR MENOPAUSE
+PFAS_D_NA$meno_cat <- ifelse(PFAS_D_NA$mom_period_stopped_qu17 == 2, 0,
+                        ifelse(PFAS_D_NA$mom_period_stopped_qu17 == 1, 1, NA))
+
+##### CREATE A CATEGORICAL VARIABLE FOR BMI
+PFAS_D_NA$bmi_cat <- ifelse(PFAS_D_NA$bmi_mom_prepreg_d <18.5, 0,
+                         ifelse(PFAS_D_NA$bmi_mom_prepreg_d >=18.5 & PFAS_D_NA$bmi_mom_prepreg_d < 25.0, 1, 
+                         ifelse(PFAS_D_NA$bmi_mom_prepreg_d >=25.0 & PFAS_D_NA$bmi_mom_prepreg_d < 30.0, 2, 
+                         ifelse(PFAS_D_NA$bmi_mom_prepreg_d >=30.0 & PFAS_D_NA$bmi_mom_prepreg_d < 35.0, 3,
+                         ifelse(PFAS_D_NA$bmi_mom_prepreg_d >=35.0, 4, NA)))))
+
+PFAS_D_NA$bmi_cat <- factor(PFAS_D_NA$bmi_cat,
+                       levels = c(0, 1, 2, 3, 4),
+                       labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
+                                  "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
+                                  "Extremely obese (>= 35)"))
+
+##### FOR THE RACE VARIABLE, DUE TO SMALL NUMBERS OF OBSERVATIONS PER CATEGORY,
+##### COMBINED THE CATEGORIES "OTHER" AND ">1 RACE"
+PFAS_D_NA$race2_mom_epi_epia_d <- ifelse(PFAS_D_NA$race2_mom_epi_epia_d == "more than 1 race", 
+                                       "other", PFAS_D_NA$race2_mom_epi_epia_d)
+
 ##### FOR THE INCOME VARIABLE, REPLACE "IDK" ANSWERS WITH "NA"
 PFAS_D_NA$income_hh_epq_epqa_d <- ifelse(PFAS_D_NA$income_hh_epq_epqa_d == 9, NA, 
                                        PFAS_D_NA$income_hh_epq_epqa_d)
@@ -163,30 +224,11 @@ PFAS_D_NA$income_hh_epq_epqa_d <- ifelse(PFAS_D_NA$income_hh_epq_epqa_d == 9, NA
 PFAS_D_NA$income_hh_epq_epqa_d <- ifelse(PFAS_D_NA$income_hh_epq_epqa_d == 1 | PFAS_D_NA$income_hh_epq_epqa_d == 2, 3, 
                                        PFAS_D_NA$income_hh_epq_epqa_d)
 
-##### FOR THE RACE VARIABLE, DUE TO SMALL NUMBERS OF OBSERVATIONS PER CATEGORY,
-##### COMBINED THE CATEGORIES "OTHER" AND ">1 RACE"
-PFAS_D_NA$race2_mom_epi_epia_d <- ifelse(PFAS_D_NA$race2_mom_epi_epia_d == "more than 1 race", 
-                                       "other", PFAS_D_NA$race2_mom_epi_epia_d)
-
-table(PFAS_D_NA$race2_mom_epi_epia_d)
-
-##### CREATE A CATEGORICAL VARIABLE FOR BMI
-PFAS_D_NA$bmi_cat <- ifelse(PFAS_D_NA$bmi_mom_prepreg_d <18.5, 0,
-                         ifelse(PFAS_D_NA$bmi_mom_prepreg_d >=18.5 & PFAS_D_NA$bmi_mom_prepreg_d < 25.0, 1, 
-                         ifelse(PFAS_D_NA$bmi_mom_prepreg_d >=25.0 & PFAS_D_NA$bmi_mom_prepreg_d < 30.0, 2, 
-                         ifelse(PFAS_D_NA$bmi_mom_prepreg_d >=30.0 & PFAS_D_NA$bmi_mom_prepreg_d < 35.0, 3,
-                         ifelse(PFAS_D_NA$bmi_mom_prepreg_d >=35.0, 4, 99)))))
-
-PFAS_D_NA$bmi_cat <- factor(PFAS_D_NA$bmi_cat,
-                       levels = c(0, 1, 2, 3, 4),
-                       labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
-                                  "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
-                                  "Extremely obese (>= 35)"))
-
 ##### CREATE A CATEGORICAL VARIABLE FOR PARITY
-PFAS_D_NA$parity_cat <- ifelse(PFAS_D_NA$parity == 0, 0,
-                        ifelse(PFAS_D_NA$parity == 1, 1,
-                        ifelse(PFAS_D_NA$parity > 1, 2, 0)))
+PFAS_D_NA$parity_cat <- ifelse(PFAS_D_NA$parity_d == 0, 0,
+                        ifelse(PFAS_D_NA$parity_d == 1, 1,
+                        ifelse(PFAS_D_NA$parity_d > 1, 2, 0)))
+
 
 ##### CHECK MISSINGNESS OF CONTINUOUS DEMOGRAPHIC VARIABLES
 summary(PFAS_D_NA$age_mom_enroll_d)
@@ -198,9 +240,10 @@ summary(PFAS_D_NA$mom_age_mdxa17)
 summary(PFAS_D_NA$bmi_mom_prepreg_d) 
 summary(PFAS_D_NA$parity_d)      
 summary(PFAS_D_NA$mom_firstperiod_12y) 
-summary(PFAS_D_NA$mom_period_ystopped_age_qu17) 
+summary(PFAS_D_NA$mom_period_ystopped_age_qu17)
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
+PFAS_D_NA$meno_cat <- as.factor(PFAS_D_NA$meno_cat)
 PFAS_D_NA$race2_mom_epi_epia_d <- as.factor(PFAS_D_NA$race2_mom_epi_epia_d)
 PFAS_D_NA$coll_grad <- as.factor(PFAS_D_NA$coll_grad)
 PFAS_D_NA$income_hh_epq_epqa_d <- as.factor(PFAS_D_NA$income_hh_epq_epqa_d)
@@ -209,6 +252,7 @@ PFAS_D_NA$smokpreg_final_d <- as.factor(PFAS_D_NA$smokpreg_final_d)
 PFAS_D_NA$married_cohab <- as.factor(PFAS_D_NA$married_cohab)
 PFAS_D_NA$parity_cat <- as.factor(PFAS_D_NA$parity_cat)
 
+summary(PFAS_D_NA$meno_cat)
 summary(PFAS_D_NA$race2_mom_epi_epia_d)
 summary(PFAS_D_NA$coll_grad)          
 summary(PFAS_D_NA$income_hh_epq_epqa_d)  
@@ -218,11 +262,12 @@ summary(PFAS_D_NA$married_cohab)
 summary(PFAS_D_NA$parity_cat)         
 
 ##### TABLE OF MISSINGNESS
-table1(~ age_mom_enroll_d + mom_age_mdxa17 + age_days_mdxa17 + bmi_mom_prepreg_d + parity_d +  
-       mom_firstperiod_12y + mom_period_ystopped_age_qu17, data = PFAS_D_NA, overall="Total")
+table1(~ age_mom_enroll_d + mom_age_mdxa17 + age_days_mdxa17 + mom_firstperiod_12y +
+         bmi_mom_prepreg_d + meno_cat + mom_period_ystopped_age_qu17, 
+         data = PFAS_D_NA, overall="Total")
 
-table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k  + income_hh_epq_epqa_d +
-         parity_cat + married_cohab, data = PFAS_D_NA, overall="Total")
+table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k  + 
+         income_hh_epq_epqa_d + parity_cat + married_cohab, data = PFAS_D_NA, overall="Total")
 
 ```
 
@@ -232,9 +277,10 @@ table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k  
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_IPW_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + mom_period_ystopped_age_qu17 + married_cohab + 
-                             coll_grad + race2_mom_epi_epia_d + smokpreg_final_d + bmi_mom_prepreg_d + 
-                             parity_d + age_mom_enroll_d + PFOS + PFOA + PFNA2 + PFHxS + Me_PFOSA_AcOH2 + 
+PFAS_IPW_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + mom_period_stopped_qu17 +
+                             mom_period_ystopped_age_qu17 + married_cohab + coll_grad + 
+                             race2_mom_epi_epia_d + smokpreg_final_d + bmi_mom_prepreg_d + parity_d + 
+                             age_mom_enroll_d + PFOS + PFOA + PFNA2 + PFHxS + Me_PFOSA_AcOH2 + 
                              Et_PFOSA_AcOH, nk = 0, data = PFAS_IPW_NA, n.impute = 5)
 
 ##### EXTRACT IMPUTED VALUES AND FORM A DATASET
@@ -244,9 +290,27 @@ PFAS_IPW_IMP <- as.data.frame(impute.transcan(PFAS_IPW_ARG, imputation=5, data=P
 ##### MERGE ORIGNIAL DATASET WITH IMPUTED DATASET
 PFAS_IPW_BIND <- cbind(PFAS_IPW_NA ,PFAS_IPW_IMP)
 
+##### CREATE INDICATOR FOR MISSINGNESS IN OUTCOME MEASURES
+PFAS_IPW_BIND$mom_bmi_MT <- ifelse(is.na(PFAS_IPW_BIND$mom_bmi_MT), 9999, PFAS_IPW_BIND$mom_bmi_MT)
+PFAS_IPW_BIND$mom_waist_ma17 <- ifelse(is.na(PFAS_IPW_BIND$mom_waist_ma17), 9999, PFAS_IPW_BIND$mom_waist_ma17)
+PFAS_IPW_BIND$WHR <- ifelse(is.na(PFAS_IPW_BIND$WHR), 9999, PFAS_IPW_BIND$WHR)
+PFAS_IPW_BIND$mom_muac_ma17 <- ifelse(is.na(PFAS_IPW_BIND$mom_muac_ma17), 9999, PFAS_IPW_BIND$mom_muac_ma17)
+PFAS_IPW_BIND$TRUNK_FAT_mdxa17 <- ifelse(is.na(PFAS_IPW_BIND$TRUNK_FAT_mdxa17), 9999, PFAS_IPW_BIND$TRUNK_FAT_mdxa17)
+PFAS_IPW_BIND$WBTOT_FAT_mdxa17 <- ifelse(is.na(PFAS_IPW_BIND$WBTOT_FAT_mdxa17), 9999, PFAS_IPW_BIND$WBTOT_FAT_mdxa17)
+PFAS_IPW_BIND$WBTOT_PFAT_mdxa17 <- ifelse(is.na(PFAS_IPW_BIND$WBTOT_PFAT_mdxa17), 9999, PFAS_IPW_BIND$WBTOT_PFAT_mdxa17)
+
 ##### DROP VARIABLES WITH MISSING (NON-IMPUTED) DATA
 PFAS_IPW_COMP <- PFAS_IPW_BIND[ , colSums(is.na(PFAS_IPW_BIND)) == 0]
 PFAS_IPW_COMP <- PFAS_IPW_COMP %>% select(-contains(".1"))
+
+##### USE INDICATOR FOR MISSING OUTCOME MEASURE TO RE-ENTER "NA"
+PFAS_IPW_COMP$mom_bmi_MT <- ifelse(PFAS_IPW_COMP$mom_bmi_MT == 9999, NA, PFAS_IPW_COMP$mom_bmi_MT)
+PFAS_IPW_COMP$mom_waist_ma17 <- ifelse(PFAS_IPW_COMP$mom_waist_ma17 == 9999, NA, PFAS_IPW_COMP$mom_waist_ma17)
+PFAS_IPW_COMP$WHR <- ifelse(PFAS_IPW_COMP$WHR == 9999, NA, PFAS_IPW_COMP$WHR)
+PFAS_IPW_COMP$mom_muac_ma17 <- ifelse(PFAS_IPW_COMP$mom_muac_ma17 == 9999, NA, PFAS_IPW_COMP$mom_muac_ma17)
+PFAS_IPW_COMP$TRUNK_FAT_mdxa17 <- ifelse(PFAS_IPW_COMP$TRUNK_FAT_mdxa17 == 9999, NA, PFAS_IPW_COMP$TRUNK_FAT_mdxa17)
+PFAS_IPW_COMP$WBTOT_FAT_mdxa17 <- ifelse(PFAS_IPW_COMP$WBTOT_FAT_mdxa17 == 9999, NA, PFAS_IPW_COMP$WBTOT_FAT_mdxa17)
+PFAS_IPW_COMP$WBTOT_PFAT_mdxa17 <- ifelse(PFAS_IPW_COMP$WBTOT_PFAT_mdxa17 == 9999, NA, PFAS_IPW_COMP$WBTOT_PFAT_mdxa17)
 
 ```
 
@@ -256,9 +320,10 @@ PFAS_IPW_COMP <- PFAS_IPW_COMP %>% select(-contains(".1"))
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_A_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + mom_period_ystopped_age_qu17 + married_cohab + 
-                           coll_grad + race2_mom_epi_epia_d + smokpreg_final_d + bmi_mom_prepreg_d + 
-                           parity_d + g_age_days_COLL_D_BLD1 + age_mom_enroll_d + PFOS + PFOA + PFNA2 + 
+PFAS_A_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + mom_period_stopped_qu17 +
+                           mom_period_ystopped_age_qu17 + married_cohab + coll_grad + 
+                           race2_mom_epi_epia_d + smokpreg_final_d + bmi_mom_prepreg_d + parity_d + 
+                           g_age_days_COLL_D_BLD1 + age_mom_enroll_d + PFOS + PFOA + PFNA2 + 
                            PFHxS + Me_PFOSA_AcOH2 + Et_PFOSA_AcOH, nk = 0, data = PFAS_A_NA, n.impute = 5)
 
 ##### EXTRACT IMPUTED VALUES AND FORM A DATASET
@@ -268,9 +333,19 @@ PFAS_A_IMP <- as.data.frame(impute.transcan(PFAS_A_ARG, imputation=5, data=PFAS_
 ##### MERGE ORIGNIAL DATASET WITH IMPUTED DATASET
 PFAS_A_BIND <- cbind(PFAS_A_NA ,PFAS_A_IMP)
 
+##### CREATE INDICATOR FOR MISSINGNESS IN DXA MEASURES
+PFAS_A_BIND$TRUNK_FAT_mdxa17 <- ifelse(is.na(PFAS_A_BIND$TRUNK_FAT_mdxa17), 9999, PFAS_A_BIND$TRUNK_FAT_mdxa17)
+PFAS_A_BIND$WBTOT_FAT_mdxa17 <- ifelse(is.na(PFAS_A_BIND$WBTOT_FAT_mdxa17), 9999, PFAS_A_BIND$WBTOT_FAT_mdxa17)
+PFAS_A_BIND$WBTOT_PFAT_mdxa17 <- ifelse(is.na(PFAS_A_BIND$WBTOT_PFAT_mdxa17), 9999, PFAS_A_BIND$WBTOT_PFAT_mdxa17)
+
 ##### DROP VARIABLES WITH MISSING (NON-IMPUTED) DATA
 PFAS_A_COMP <- PFAS_A_BIND[ , colSums(is.na(PFAS_A_BIND)) == 0]
 PFAS_A_COMP <- PFAS_A_COMP %>% select(-contains(".1"))
+
+##### USE INDICATOR FOR MISSING DXA MEASURE TO RE-ENTER "NA"
+PFAS_A_COMP$TRUNK_FAT_mdxa17 <- ifelse(PFAS_A_COMP$TRUNK_FAT_mdxa17 == 9999, NA, PFAS_A_COMP$TRUNK_FAT_mdxa17)
+PFAS_A_COMP$WBTOT_FAT_mdxa17 <- ifelse(PFAS_A_COMP$WBTOT_FAT_mdxa17 == 9999, NA, PFAS_A_COMP$WBTOT_FAT_mdxa17)
+PFAS_A_COMP$WBTOT_PFAT_mdxa17 <- ifelse(PFAS_A_COMP$WBTOT_PFAT_mdxa17 == 9999, NA, PFAS_A_COMP$WBTOT_PFAT_mdxa17)
 
 ```
 
@@ -280,9 +355,10 @@ PFAS_A_COMP <- PFAS_A_COMP %>% select(-contains(".1"))
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_D_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + mom_period_ystopped_age_qu17 + married_cohab + 
-                           coll_grad + race2_mom_epi_epia_d + smokpreg_final_d + bmi_mom_prepreg_d + 
-                           parity_d + g_age_days_COLL_D_BLD1 + age_mom_enroll_d + PFOS + PFOA + PFNA2 + 
+PFAS_D_ARG <- aregImpute(~ gt70k + mom_firstperiod_12y + mom_period_stopped_qu17 + 
+                           mom_period_ystopped_age_qu17 + married_cohab + coll_grad + 
+                           race2_mom_epi_epia_d + smokpreg_final_d + bmi_mom_prepreg_d + parity_d + 
+                           g_age_days_COLL_D_BLD1 + age_mom_enroll_d + PFOS + PFOA + PFNA2 + 
                            PFHxS + Me_PFOSA_AcOH2 + Et_PFOSA_AcOH, nk = 0, data = PFAS_D_NA, n.impute = 5)
 
 ##### EXTRACT IMPUTED VALUES AND FORM A DATASET
@@ -292,9 +368,21 @@ PFAS_D_IMP <- as.data.frame(impute.transcan(PFAS_D_ARG, imputation=5, data=PFAS_
 ##### MERGE ORIGNIAL DATASET WITH IMPUTED DATASET
 PFAS_D_BIND <- cbind(PFAS_D_NA ,PFAS_D_IMP)
 
+##### CREATE INDICATOR FOR MISSINGNESS IN OUTCOME MEASURES
+PFAS_D_BIND$mom_bmi_MT <- ifelse(is.na(PFAS_D_BIND$mom_bmi_MT), 9999, PFAS_D_BIND$mom_bmi_MT)
+PFAS_D_BIND$mom_waist_ma17 <- ifelse(is.na(PFAS_D_BIND$mom_waist_ma17), 9999, PFAS_D_BIND$mom_waist_ma17)
+PFAS_D_BIND$WHR <- ifelse(is.na(PFAS_D_BIND$WHR), 9999, PFAS_D_BIND$WHR)
+PFAS_D_BIND$mom_muac_ma17 <- ifelse(is.na(PFAS_D_BIND$mom_muac_ma17), 9999, PFAS_D_BIND$mom_muac_ma17)
+
 ##### DROP VARIABLES WITH MISSING (NON-IMPUTED) DATA
 PFAS_D_COMP <- PFAS_D_BIND[ , colSums(is.na(PFAS_D_BIND)) == 0]
 PFAS_D_COMP <- PFAS_D_COMP %>% select(-contains(".1"))
+
+##### USE INDICATOR FOR MISSING OUTCOME MEASURE TO RE-ENTER "NA"
+PFAS_D_COMP$mom_bmi_MT <- ifelse(PFAS_D_COMP$mom_bmi_MT == 9999, NA, PFAS_D_COMP$mom_bmi_MT)
+PFAS_D_COMP$mom_waist_ma17 <- ifelse(PFAS_D_COMP$mom_waist_ma17 == 9999, NA, PFAS_D_COMP$mom_waist_ma17)
+PFAS_D_COMP$WHR <- ifelse(PFAS_D_COMP$WHR == 9999, NA, PFAS_D_COMP$WHR)
+PFAS_D_COMP$mom_muac_ma17 <- ifelse(PFAS_D_COMP$mom_muac_ma17 == 9999, NA, PFAS_D_COMP$mom_muac_ma17)
 
 ```
 
