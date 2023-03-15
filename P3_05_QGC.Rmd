@@ -13,8 +13,8 @@ library("ggplot2")
 
 ```{r}
 ##### LOAD DATASET
-PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_A.csv")
-PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_D.csv")
+PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A.csv")
+PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D.csv")
 
 ```
 
@@ -23,42 +23,40 @@ PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P
 
 # RENAME
 PFAS_A$age_enroll <- PFAS_A$age_mom_enroll_d
-PFAS_A$race <- PFAS_A$race2_mom_epi_epia_d
-PFAS_A$edu <- PFAS_A$coll_grad
-PFAS_A$income <- PFAS_A$gt70k
 PFAS_A$menar <- PFAS_A$mom_firstperiod_12y
-PFAS_A$smoke <- PFAS_A$smokpreg_final_d
+PFAS_A$bmi <- PFAS_A$bmi_mom_prepreg_d
+PFAS_A$race <- PFAS_A$race2_mom_epi_epia_d
+PFAS_A$income <- PFAS_A$gt70k
 PFAS_A$parity <- PFAS_A$parity_d
+PFAS_A$smoke <- PFAS_A$smokpreg_final_d
 PFAS_A$married <- PFAS_A$married_cohab
 
 # REFACTOR AND RELABEL 
-PFAS_A$race <- ifelse(PFAS_A$race == "white", 0,
-                     ifelse(PFAS_A$race == "black", 1,
-                     ifelse(PFAS_A$race == "hispa", 2,
-                     ifelse(PFAS_A$race == "asian", 3,
-                     ifelse(PFAS_A$race == "other", 4, 4)))))
-PFAS_A$edu <- ifelse(PFAS_A$edu == 1, 1, 0)
 PFAS_A$bmi_cat <- ifelse(PFAS_A$bmi <18.5, 0,
                          ifelse(PFAS_A$bmi >=18.5 & PFAS_A$bmi < 25.0, 1, 
                          ifelse(PFAS_A$bmi >=25.0 & PFAS_A$bmi < 30.0, 2, 
                          ifelse(PFAS_A$bmi >=30.0 & PFAS_A$bmi < 35.0, 3,
                          ifelse(PFAS_A$bmi >=35.0, 4, 99)))))
-PFAS_A$smoke <- ifelse(PFAS_A$smoke == "former", 0,
-                         ifelse(PFAS_A$smoke == "smoke preg", 1,
-                         ifelse(PFAS_A$smoke == "xnever", 2, 2)))
+PFAS_A$race <- ifelse(PFAS_A$race == "white", 0,
+                     ifelse(PFAS_A$race == "black", 1,
+                     ifelse(PFAS_A$race == "hispa", 2,
+                     ifelse(PFAS_A$race == "asian", 3,
+                     ifelse(PFAS_A$race == "other", 4, 4)))))
 PFAS_A$income <- ifelse(PFAS_A$income == 1, 1, 0)
 PFAS_A$parity <- ifelse(PFAS_A$parity == 0, 0,
                         ifelse(PFAS_A$parity == 1, 1,
                         ifelse(PFAS_A$parity > 1, 2, 0)))
+PFAS_A$smoke <- ifelse(PFAS_A$smoke == "former", 0,
+                         ifelse(PFAS_A$smoke == "smoke preg", 1,
+                         ifelse(PFAS_A$smoke == "xnever", 2, 2)))
 PFAS_A$married <- ifelse(PFAS_A$married == 1, 1, 0)
 
 # SET CATEGORICAL VARIABLES AS FACTORS
-PFAS_A$edu <- as.factor(PFAS_A$edu)
-PFAS_A$income <- as.factor(PFAS_A$income)
 PFAS_A$bmi_cat <- as.factor(PFAS_A$bmi_cat)
-PFAS_A$smoke <- as.factor(PFAS_A$smoke)
-PFAS_A$parity <- as.factor(PFAS_A$parity)
 PFAS_A$race <- as.factor(PFAS_A$race)
+PFAS_A$income <- as.factor(PFAS_A$income)
+PFAS_A$parity <- as.factor(PFAS_A$parity)
+PFAS_A$smoke <- as.factor(PFAS_A$smoke)
 PFAS_A$married <- as.factor(PFAS_A$married)
 
 # CENTER AND SCALE CONTINUOUS VARIABLES
@@ -69,43 +67,41 @@ PFAS_A$married <- as.factor(PFAS_A$married)
 
 # RENAME
 PFAS_D$age_enroll <- PFAS_D$age_mom_enroll_d
-PFAS_D$race <- PFAS_D$race2_mom_epi_epia_d
-PFAS_D$edu <- PFAS_D$coll_grad
-PFAS_D$income <- PFAS_D$gt70k
 PFAS_D$menar <- PFAS_D$mom_firstperiod_12y
-PFAS_D$smoke <- PFAS_D$smokpreg_final_d
+PFAS_D$bmi <- PFAS_D$bmi_mom_prepreg_d
+PFAS_D$race <- PFAS_D$race2_mom_epi_epia_d
+PFAS_D$income <- PFAS_D$gt70k
 PFAS_D$parity <- PFAS_D$parity_d
+PFAS_D$smoke <- PFAS_D$smokpreg_final_d
 PFAS_D$married <- PFAS_D$married_cohab
 
 # REFACTOR AND RELABEL 
-PFAS_D$race <- ifelse(PFAS_D$race == "white", 0,
-                     ifelse(PFAS_D$race == "black", 1,
-                     ifelse(PFAS_D$race == "hispa", 2,
-                     ifelse(PFAS_D$race == "asian", 3,
-                     ifelse(PFAS_D$race == "other", 4, 4)))))
-PFAS_D$edu <- ifelse(PFAS_D$edu == 1, 1, 0)
 PFAS_D$bmi_cat <- ifelse(PFAS_D$bmi <18.5, 0,
                          ifelse(PFAS_D$bmi >=18.5 & PFAS_D$bmi < 25.0, 1, 
                          ifelse(PFAS_D$bmi >=25.0 & PFAS_D$bmi < 30.0, 2, 
                          ifelse(PFAS_D$bmi >=30.0 & PFAS_D$bmi < 35.0, 3,
                          ifelse(PFAS_D$bmi >=35.0, 4, 99)))))
-PFAS_D$smoke <- ifelse(PFAS_D$smoke == "former", 0,
-                         ifelse(PFAS_D$smoke == "smoke preg", 1,
-                         ifelse(PFAS_D$smoke == "xnever", 2, 2)))
+PFAS_D$race <- ifelse(PFAS_D$race == "white", 0,
+                     ifelse(PFAS_D$race == "black", 1,
+                     ifelse(PFAS_D$race == "hispa", 2,
+                     ifelse(PFAS_D$race == "asian", 3,
+                     ifelse(PFAS_D$race == "other", 4, 4)))))
 PFAS_D$income <- ifelse(PFAS_D$income == 1, 1, 0)
 PFAS_D$parity <- ifelse(PFAS_D$parity == 0, 0,
                         ifelse(PFAS_D$parity == 1, 1,
                         ifelse(PFAS_D$parity > 1, 2, 0)))
+PFAS_D$smoke <- ifelse(PFAS_D$smoke == "former", 0,
+                         ifelse(PFAS_D$smoke == "smoke preg", 1,
+                         ifelse(PFAS_D$smoke == "xnever", 2, 2)))
 PFAS_D$married <- ifelse(PFAS_D$married == 1, 1, 0)
 
 # SET CATEGORICAL VARIABLES AS FACTORS
-PFAS_D$edu <- as.factor(PFAS_D$edu)
-PFAS_D$income <- as.factor(PFAS_D$income)
-PFAS_D$bmi_cat <- as.factor(PFAS_D$bmi_cat)
-PFAS_D$smoke <- as.factor(PFAS_D$smoke)
-PFAS_D$parity <- as.factor(PFAS_D$parity)
 PFAS_D$race <- as.factor(PFAS_D$race)
+PFAS_D$income <- as.factor(PFAS_D$income)
+PFAS_D$parity <- as.factor(PFAS_D$parity)
+PFAS_D$smoke <- as.factor(PFAS_D$smoke)
 PFAS_D$married <- as.factor(PFAS_D$married)
+PFAS_D$edu <- as.factor(PFAS_D$edu)
 
 # CENTER AND SCALE CONTINUOUS VARIABLES
 # PFAS_D$age_enroll <- scale(PFAS_D$age_enroll)
