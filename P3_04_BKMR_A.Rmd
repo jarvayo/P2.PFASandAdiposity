@@ -13,10 +13,10 @@ library("tidyverse")
 
 ```{r}
 ##### LOAD DATASET
-PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_A.csv")
+PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A.csv")
 
 ##### LOAD WORKSPACE
-load("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_A_L2.Rdata")
+load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_A_L2.Rdata")
 
 ```
 
@@ -25,43 +25,44 @@ load("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_A_L2.R
 
 # RENAME
 PFAS_A$age_enroll <- PFAS_A$age_mom_enroll_d
-PFAS_A$race <- PFAS_A$race2_mom_epi_epia_d
-PFAS_A$edu <- PFAS_A$coll_grad
-PFAS_A$income <- PFAS_A$gt70k
 PFAS_A$menar <- PFAS_A$mom_firstperiod_12y
-PFAS_A$smoke <- PFAS_A$smokpreg_final_d
+PFAS_A$bmi <- PFAS_A$bmi_mom_prepreg_d
+PFAS_A$race <- PFAS_A$race2_mom_epi_epia_d
+PFAS_A$income <- PFAS_A$gt70k
 PFAS_A$parity <- PFAS_A$parity_d
+PFAS_A$smoke <- PFAS_A$smokpreg_final_d
 PFAS_A$married <- PFAS_A$married_cohab
+PFAS_A$edu <- PFAS_A$coll_grad
 
 # REFACTOR AND RELABEL 
-PFAS_A$race <- ifelse(PFAS_A$race == "white", 0,
-                     ifelse(PFAS_A$race == "black", 1,
-                     ifelse(PFAS_A$race == "hispa", 2,
-                     ifelse(PFAS_A$race == "asian", 3,
-                     ifelse(PFAS_A$race == "other", 4, 4)))))
-PFAS_A$edu <- ifelse(PFAS_A$edu == 1, 1, 0)
-PFAS_A$income <- ifelse(PFAS_A$income == 1, 1, 0)
 PFAS_A$bmi_cat <- ifelse(PFAS_A$bmi <18.5, 0,
                          ifelse(PFAS_A$bmi >=18.5 & PFAS_A$bmi < 25.0, 1, 
                          ifelse(PFAS_A$bmi >=25.0 & PFAS_A$bmi < 30.0, 2, 
                          ifelse(PFAS_A$bmi >=30.0 & PFAS_A$bmi < 35.0, 3,
                          ifelse(PFAS_A$bmi >=35.0, 4, 99)))))
-PFAS_A$smoke <- ifelse(PFAS_A$smoke == "former", 0,
-                         ifelse(PFAS_A$smoke == "smoke preg", 1,
-                         ifelse(PFAS_A$smoke == "xnever", 2, 2)))
+PFAS_A$race <- ifelse(PFAS_A$race == "white", 0,
+                     ifelse(PFAS_A$race == "black", 1,
+                     ifelse(PFAS_A$race == "hispa", 2,
+                     ifelse(PFAS_A$race == "asian", 3,
+                     ifelse(PFAS_A$race == "other", 4, 4)))))
+PFAS_A$income <- ifelse(PFAS_A$income == 1, 1, 0)
 PFAS_A$parity <- ifelse(PFAS_A$parity == 0, 0,
                         ifelse(PFAS_A$parity == 1, 1,
                         ifelse(PFAS_A$parity > 1, 2, 0)))
+PFAS_A$smoke <- ifelse(PFAS_A$smoke == "former", 0,
+                         ifelse(PFAS_A$smoke == "smoke preg", 1,
+                         ifelse(PFAS_A$smoke == "xnever", 2, 2)))
 PFAS_A$married <- ifelse(PFAS_A$married == 1, 1, 0)
+PFAS_A$edu <- ifelse(PFAS_A$edu == 1, 1, 0)
 
 # SET CATEGORICAL VARIABLES AS FACTORS
-PFAS_A$edu <- as.factor(PFAS_A$edu)
-PFAS_A$income <- as.factor(PFAS_A$income)
 PFAS_A$bmi_cat <- as.factor(PFAS_A$bmi_cat)
-PFAS_A$smoke <- as.factor(PFAS_A$smoke)
-PFAS_A$parity <- as.factor(PFAS_A$parity)
 PFAS_A$race <- as.factor(PFAS_A$race)
+PFAS_A$income <- as.factor(PFAS_A$income)
+PFAS_A$parity <- as.factor(PFAS_A$parity)
+PFAS_A$smoke <- as.factor(PFAS_A$smoke)
 PFAS_A$married <- as.factor(PFAS_A$married)
+PFAS_A$edu <- as.factor(PFAS_A$edu)
 
 # # CENTER AND SCALE CONTINUOUS VARIABLES
 # PFAS_A$age_enroll <- scale(PFAS_A$age_enroll)
@@ -100,11 +101,11 @@ MUAC <- PFAS_A$MUAC
 # FatMass <- PFAS_A$LNFAT
 
 # CREAT THE COVARIATE MATRIX
-cov_a <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$race, PFAS_A$menar, PFAS_A$income, 
-                       PFAS_A$smoke, PFAS_A$parity, PFAS_A$married))
+cov_a <- as.matrix(cbind(PFAS_A$age_enroll, PFAS_A$menar, PFAS_A$race, PFAS_A$income, 
+                         PFAS_A$parity, PFAS_A$smoke, PFAS_A$married))
 
 # SET THE SEED
-set.seed(123)
+set.seed(1234)
 
 # CREATE KNOTS
 # knots_alnz <- fields::cover.design(lnmixture_a_z, nd = 50)$design
@@ -172,9 +173,9 @@ beep(sound=5, expr=NULL)
 
 ```{r}
 ##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
-# save(l2m_bmi, l2m_waist, l2m_whr, l2m_muac,
-#     file="C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_A_L2.Rdata")
-# load("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_A_L2.Rdata")
+save(l2m_bmi, l2m_waist, l2m_whr, l2m_muac,
+    file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_A_L2.Rdata")
+load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_A_L2.Rdata")
 
 ```
 
@@ -308,7 +309,7 @@ uni6_bmi
 
 # WAIST CIRCUMFERENCE
 uni_waist <- ggplot(univar_waist, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity", colour='black') + xlab("Plasma PFAS, log2(ng/mL)") + ylab("Waist circ. (cm)")+
+  geom_smooth(stat = "identity", colour='black') + xlab("Plasma PFAS, log2(ng/mL)") + ylab("Waist circumference (cm)")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 25))  
 
 uni1_waist <- ggplot(univar_waist[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
@@ -843,18 +844,34 @@ p_overall_muac
 # BMI
 singvar_bmi <- SingVarRiskSummaries(fit = l2m_bmi, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+0.0874 - 1.96*0.0242
+0.0874 + 1.96*0.0242
+-0.0650 - 1.96*0.0166 
+-0.0650 + 1.96*0.0166
 
 # WAIST CIRCUMFERENCE
 singvar_waist <- SingVarRiskSummaries(fit = l2m_waist, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+4.70 - 1.96*1.75
+4.70 + 1.96*1.75
+-5.73 - 1.96*1.17
+-5.73 + 1.96*1.17
 
 # WAIST-TO-HIP-RATIO
 singvar_whr <- SingVarRiskSummaries(fit = l2m_whr, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+0.0151 - 1.96*0.00541
+0.0151 + 1.96*0.00541
+-0.0145 - 1.96*0.00402
+-0.0145 + 1.96*0.00402
 
 # MUAC
 singvar_muac <- SingVarRiskSummaries(fit = l2m_muac, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+1.70 - 1.96*0.536
+1.70 + 1.96*0.536
+-1.44 - 1.96*0.368
+-1.44 + 1.96*0.368
 
 # # WEIGHT
 # singvar_wt <- SingVarRiskSummaries(fit = m_wt, qs.diff = c(0.25, 0.75),
@@ -876,7 +893,7 @@ p_singvar_bmi <- ggplot(singvar_bmi, aes(variable, est, ymin = est - 1.96*sd, ym
                                 col = q.fixed)) + theme(text = element_text(size = 23)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "black", linewidth = 1) +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Plasma PFAS, log2(ng/mL)") + scale_y_continuous(name = "BMI (kg/m^2)")
+  scale_x_discrete(name = "Plasma PFAS") + scale_y_continuous(name = "BMI (kg/m^2)")
 p_singvar_bmi
 
 
@@ -885,7 +902,7 @@ p_singvar_waist <- ggplot(singvar_waist, aes(variable, est, ymin = est - 1.96*sd
                                 col = q.fixed)) + theme(text = element_text(size = 23)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "black", linewidth = 1) +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Plasma PFAS, log2(ng/mL)") + scale_y_continuous(name = "Waist circ. (cm)")
+  scale_x_discrete(name = "Plasma PFAS") + scale_y_continuous(name = "Waist circ. (cm)")
 p_singvar_waist
 
 
@@ -894,7 +911,7 @@ p_singvar_whr <- ggplot(singvar_whr, aes(variable, est, ymin = est - 1.96*sd, ym
                                 col = q.fixed)) + theme(text = element_text(size = 23)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "black", linewidth = 1) +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Plasma PFAS, log2(ng/mL)") + scale_y_continuous(name = "Waist-to-hip ratio")
+  scale_x_discrete(name = "Plasma PFAS") + scale_y_continuous(name = "Waist-to-hip ratio")
 p_singvar_whr
 
 
@@ -903,7 +920,7 @@ p_singvar_muac <- ggplot(singvar_muac, aes(variable, est, ymin = est - 1.96*sd, 
                                 col = q.fixed)) + theme(text = element_text(size = 23)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "black", linewidth = 1) +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Plasma PFAS, log2(ng/mL)") + scale_y_continuous(name = "MUAC (cm)")
+  scale_x_discrete(name = "Plasma PFAS") + scale_y_continuous(name = "MUAC (cm)")
 p_singvar_muac
 
 
@@ -912,7 +929,7 @@ p_singvar_muac
 #                                 col = q.fixed)) + theme(text = element_text(size = 23)) +
 #   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "black", linewidth = 1) +
 #   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-#   scale_x_discrete(name = "Plasma PFAS, log2(ng/mL)") + scale_y_continuous(name = "Weight (kg)")
+#   scale_x_discrete(name = "Plasma PFAS") + scale_y_continuous(name = "Weight (kg)")
 # p_singvar_wt
 # 
 # 
@@ -921,7 +938,7 @@ p_singvar_muac
 #                                 col = q.fixed)) + theme(text = element_text(size = 23)) +
 #   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "black", linewidth = 1) +
 #   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-#   scale_x_discrete(name = "Plasma PFAS, log2(ng/mL)") + scale_y_continuous(name = "Body fat (%)")
+#   scale_x_discrete(name = "Plasma PFAS") + scale_y_continuous(name = "Body fat (%)")
 # p_singvar_bfat
 # 
 # 
@@ -930,7 +947,7 @@ p_singvar_muac
 #                                 col = q.fixed)) + theme(text = element_text(size = 23)) +
 #   geom_hline(aes(yintercept = 0), linetype = "dashed", color = "black", linewidth = 1) +
 #   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-#   scale_x_discrete(name = "Plasma PFAS, log2(ng/mL)") + scale_y_continuous(name = "Body fat mass (kg)")
+#   scale_x_discrete(name = "Plasma PFAS") + scale_y_continuous(name = "Body fat mass (kg)")
 # p_singvar_fat
 
 ```
