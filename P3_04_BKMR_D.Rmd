@@ -13,10 +13,10 @@ library("tidyverse")
 
 ```{r}
 ##### LOAD DATASET
-PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_D.csv")
+PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D.csv")
 
 ##### LOAD WORKSPACE
-load("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_D_L2.Rdata")
+load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_D_L2.Rdata")
 
 ```
 
@@ -25,44 +25,43 @@ load("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_D_L2.R
 
 # RENAME
 PFAS_D$age_enroll <- PFAS_D$age_mom_enroll_d
-PFAS_D$race <- PFAS_D$race2_mom_epi_epia_d
-PFAS_D$edu <- PFAS_D$coll_grad
-PFAS_D$income <- PFAS_D$gt70k
 PFAS_D$menar <- PFAS_D$mom_firstperiod_12y
 PFAS_D$bmi <- PFAS_D$bmi_mom_prepreg_d
-PFAS_D$smoke <- PFAS_D$smokpreg_final_d
+PFAS_D$race <- PFAS_D$race2_mom_epi_epia_d
+PFAS_D$income <- PFAS_D$gt70k
 PFAS_D$parity <- PFAS_D$parity_d
+PFAS_D$smoke <- PFAS_D$smokpreg_final_d
 PFAS_D$married <- PFAS_D$married_cohab
+PFAS_D$edu <- PFAS_D$coll_grad
 
 # REFACTOR AND RELABEL 
-PFAS_D$race <- ifelse(PFAS_D$race == "white", 0,
-                     ifelse(PFAS_D$race == "black", 1,
-                     ifelse(PFAS_D$race == "hispa", 2,
-                     ifelse(PFAS_D$race == "asian", 3,
-                     ifelse(PFAS_D$race == "other", 4, 4)))))
-PFAS_D$edu <- ifelse(PFAS_D$edu == 1, 1, 0)
-PFAS_D$income <- ifelse(PFAS_D$income == 1, 1, 0)
 PFAS_D$bmi_cat <- ifelse(PFAS_D$bmi <18.5, 0,
                          ifelse(PFAS_D$bmi >=18.5 & PFAS_D$bmi < 25.0, 1, 
                          ifelse(PFAS_D$bmi >=25.0 & PFAS_D$bmi < 30.0, 2, 
                          ifelse(PFAS_D$bmi >=30.0 & PFAS_D$bmi < 35.0, 3,
                          ifelse(PFAS_D$bmi >=35.0, 4, 99)))))
-PFAS_D$smoke <- ifelse(PFAS_D$smoke == "former", 0,
-                         ifelse(PFAS_D$smoke == "smoke preg", 1,
-                         ifelse(PFAS_D$smoke == "xnever", 2, 2)))
+PFAS_D$race <- ifelse(PFAS_D$race == "white", 0,
+                     ifelse(PFAS_D$race == "black", 1,
+                     ifelse(PFAS_D$race == "hispa", 2,
+                     ifelse(PFAS_D$race == "asian", 3,
+                     ifelse(PFAS_D$race == "other", 4, 4)))))
+PFAS_D$income <- ifelse(PFAS_D$income == 1, 1, 0)
 PFAS_D$parity <- ifelse(PFAS_D$parity == 0, 0,
                         ifelse(PFAS_D$parity == 1, 1,
                         ifelse(PFAS_D$parity > 1, 2, 0)))
+PFAS_D$smoke <- ifelse(PFAS_D$smoke == "former", 0,
+                         ifelse(PFAS_D$smoke == "smoke preg", 1,
+                         ifelse(PFAS_D$smoke == "xnever", 2, 2)))
 PFAS_D$married <- ifelse(PFAS_D$married == 1, 1, 0)
+PFAS_D$edu <- ifelse(PFAS_D$edu == 1, 1, 0)
 
 # SET CATEGORICAL VARIABLES AS FACTORS
-PFAS_D$edu <- as.factor(PFAS_D$edu)
-PFAS_D$income <- as.factor(PFAS_D$income)
-PFAS_D$bmi_cat <- as.factor(PFAS_D$bmi_cat)
-PFAS_D$smoke <- as.factor(PFAS_D$smoke)
-PFAS_D$parity <- as.factor(PFAS_D$parity)
 PFAS_D$race <- as.factor(PFAS_D$race)
+PFAS_D$income <- as.factor(PFAS_D$income)
+PFAS_D$parity <- as.factor(PFAS_D$parity)
+PFAS_D$smoke <- as.factor(PFAS_D$smoke)
 PFAS_D$married <- as.factor(PFAS_D$married)
+PFAS_D$edu <- as.factor(PFAS_D$edu)
 
 # CENTER AND SCALE CONTINUOUS VARIABLES
 # PFAS_D$age_enroll <- scale(PFAS_D$age_enroll)
@@ -72,7 +71,7 @@ PFAS_D$married <- as.factor(PFAS_D$married)
 
 ```{r}
 ##### PREPARE VARIABLES FOR BKMR MODELS #####
-##### ANTHRO + DXA DATASET (N = 429)
+##### ANTHRO + DXA DATASET (N = 432)
 
 # CREATE MIXTURE OF PFAS
 mixture_d <- as.matrix(cbind(PFAS_D$PFOS, PFAS_D$PFOA, PFAS_D$PFNA, PFAS_D$PFHxS, 
@@ -97,8 +96,8 @@ TotFatPct <- PFAS_D$TotFatPct
 # TotLean <- PFAS_D$TotLean
 
 # CREATE THE COVARIATE MATRIX
-cov_d <- as.matrix(cbind(PFAS_D$age_enroll, PFAS_D$race, PFAS_D$menar, PFAS_D$income, 
-                       PFAS_D$smoke, PFAS_D$parity, PFAS_D$married))
+cov_d <- as.matrix(cbind(PFAS_D$age_enroll, PFAS_D$menar, PFAS_D$race, PFAS_D$income, 
+                         PFAS_D$parity, PFAS_D$smoke, PFAS_D$married))
 
 # SET THE SEED
 set.seed(123)
@@ -149,8 +148,8 @@ beep(sound=5, expr=NULL)
 ```{r}
 ##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
 # save(l2m_trnkfat, l2m_totfat, l2m_totfatpct,
-#     file="C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_D_L2.Rdata")
-# load("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/P3_BKMR_D_L2.Rdata")
+#     file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_D_L2.Rdata")
+# load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_D_L2.Rdata")
 
 ```
 
@@ -550,19 +549,31 @@ p_overall_totfatpct
 ##### ESTIMATE SINGLE PFAS EFFECT
 # TOTAL TRUNK FAT MASS
 singvar_trnkfat <- SingVarRiskSummaries(fit = l2m_trnkfat, qs.diff = c(0.25, 0.75),
-                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+                                            q.fixed = c(0.25, 0.50, 0.75), sel=sel_final, method = "approx")
+0.149 - 1.96*0.0621
+0.149 + 1.96*0.0621
+-0.126 - 1.96*0.0404
+-0.126 + 1.96*0.0404
 
 # TOTAL BODY FAT MASS
 singvar_totfat <- SingVarRiskSummaries(fit = l2m_totfat, qs.diff = c(0.25, 0.75),
-                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+                                            q.fixed = c(0.25, 0.50, 0.75), sel=sel_final, method = "approx")
+0.153 - 1.96*0.0488
+0.153 + 1.96*0.0488
+-0.120 - 1.96*0.0318
+-0.120 + 1.96*0.0318
 
 # TOTAL BODY FAT PERCENT
 singvar_totfatpct <- SingVarRiskSummaries(fit = l2m_totfatpct, qs.diff = c(0.25, 0.75),
-                                            q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+                                            q.fixed = c(0.25, 0.50, 0.75), sel=sel_final, method = "approx")
+2.28 - 1.96*0.945
+2.28 + 1.96*0.945
+-1.66 - 1.96*0.624
+-1.66 + 1.96*0.624
 
 # # TOTAL BODY LEAN MASS
 # singvar_totlean <- SingVarRiskSummaries(fit = m_totlean, qs.diff = c(0.25, 0.75),
-#                                             q.fixed = c(0.25, 0.50, 0.75),sel=sel_final, method = "approx")
+#                                             q.fixed = c(0.25, 0.50, 0.75), sel=sel_final, method = "approx")
 
 
 
@@ -573,7 +584,7 @@ p_singvar_trnkfat <- ggplot(singvar_trnkfat, aes(variable, est, ymin = est - 1.9
                                 col = q.fixed)) + theme(text = element_text(size = 23)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, color = "black") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Plasma PFAS, log2(ng/mL)") + scale_y_continuous(name = "Trunk fat mass (kg)")
+  scale_x_discrete(name = "Plasma PFAS") + scale_y_continuous(name = "Trunk fat mass (kg)")
 p_singvar_trnkfat
 
 
@@ -582,7 +593,7 @@ p_singvar_totfat <- ggplot(singvar_totfat, aes(variable, est, ymin = est - 1.96*
                                 col = q.fixed)) + theme(text = element_text(size = 23)) +
   geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, color = "black") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Plasma PFAS, log2(ng/mL)") + scale_y_continuous(name = "Body fat mass (kg)")
+  scale_x_discrete(name = "Plasma PFAS") + scale_y_continuous(name = "Body fat mass (kg)")
 p_singvar_totfat
 
 
@@ -591,7 +602,7 @@ p_singvar_totfatpct <- ggplot(singvar_totfatpct, aes(variable, est, ymin = est -
                                 col = q.fixed)) + theme(text = element_text(size = 23)) + 
   geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, color = "black") +
   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-  scale_x_discrete(name = "Plasma PFAS, log2(ng/mL)") + scale_y_continuous(name = "Body fat (%)")
+  scale_x_discrete(name = "Plasma PFAS") + scale_y_continuous(name = "Body fat (%)")
 p_singvar_totfatpct
 
 
@@ -600,7 +611,7 @@ p_singvar_totfatpct
 #                                 col = q.fixed)) + theme(text = element_text(size = 23)) +
 #   geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, color = "black") +
 #   geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
-#   scale_x_discrete(name = "Plasma PFAS, log2(ng/mL)") + scale_y_continuous(name = "Body lean mass (kg)")
+#   scale_x_discrete(name = "Plasma PFAS") + scale_y_continuous(name = "Body lean mass (kg)")
 # p_singvar_totlean
 
 ```
