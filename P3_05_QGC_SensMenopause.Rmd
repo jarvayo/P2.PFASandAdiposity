@@ -13,8 +13,8 @@ library("ggplot2")
 
 ```{r}
 ##### LOAD DATASET
-PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_A.csv")
-PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/PFASandAdiposity/Data/PFAS_D.csv")
+PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A.csv")
+PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D.csv")
 
 ```
 
@@ -111,7 +111,6 @@ PFAS_D$married <- as.factor(PFAS_D$married)
 # PFAS_D$age_enroll <- scale(PFAS_D$age_enroll)
 # PFAS_D$menar <- scale(PFAS_D$menar)
 
-
 ```
 
 ```{r}
@@ -136,7 +135,7 @@ PFAS_D_MENO1 <- subset(PFAS_D, mom_period_stopped_qu17 == 1)
 
 ```{r}
 ##### PREPARE VARIABLES FOR BKMR MODELS #####
-##### ANTHRO DATASET (N = 549)
+##### ANTHRO DATASET (N = 545)
 
 # SAVE THE NAMES OF THE PFAS IN THE MIXTURE
 l2mix <- c("L2PFOS", "L2PFOA", "L2PFNA", "L2PFHxS", "L2MeFOSAA", "L2EtFOSAA")
@@ -145,66 +144,120 @@ l2mix <- c("L2PFOS", "L2PFOA", "L2PFNA", "L2PFHxS", "L2MeFOSAA", "L2EtFOSAA")
 # cov <- c("age_enroll", "race", "menar", "income", "smoke", "parity", "married")
 
 # SET THE OUTCOME
-BMI <- PFAS_A$LNBMI
-Waist <- PFAS_A$Waist
-WHR <- PFAS_A$WHR
-MUAC <- PFAS_A$MUAC
+BMI_0 <- PFAS_A_MENO0$LNBMI
+Waist_0 <- PFAS_A_MENO0$Waist
+WHR_0 <- PFAS_A_MENO0$WHR
+MUAC_0 <- PFAS_A_MENO0$MUAC
+BMI_1 <- PFAS_A_MENO1$LNBMI
+Waist_1 <- PFAS_A_MENO1$Waist
+WHR_1 <- PFAS_A_MENO1$WHR
+MUAC_1 <- PFAS_A_MENO1$MUAC
 
-TRNKFAT <- PFAS_D$LNTKNFAT
-TOTFAT <- PFAS_D$LNTOTFAT
-TOTFATPCT <- PFAS_D$TotFatPct
+TRNKFAT_0 <- PFAS_D_MENO0$LNTKNFAT
+TOTFAT_0 <- PFAS_D_MENO0$LNTOTFAT
+TOTFATPCT_0 <- PFAS_D_MENO0$TotFatPct
+TRNKFAT_1 <- PFAS_D_MENO1$LNTKNFAT
+TOTFAT_1 <- PFAS_D_MENO1$LNTOTFAT
+TOTFATPCT_1 <- PFAS_D_MENO1$TotFatPct
 
 ```
 
 ```{r}
 ##### BUILD QGC MODELS #####
-# BMI
-l2qc_bmi1 <- qgcomp.noboot(BMI ~ age_enroll + race + menar + income + smoke + parity + married +
+### BMI
+# MENO = 0
+qc1_bmi0 <- qgcomp.noboot(BMI_0 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4)
-l2qc_bmi1
+                        expnms = l2mix, data = PFAS_A_MENO0, family=gaussian(), q=4)
+qc1_bmi0
 
-l2qc_bmi2 <- qgcomp.boot(BMI ~ age_enroll + race + menar + income + smoke + parity + married +
+qc2_bmi0 <- qgcomp.boot(BMI_0 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4, B = 500, seed = 125)
-l2qc_bmi2
+                        expnms = l2mix, data = PFAS_A_MENO0, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_bmi0
 
-
-# WAIST CIRCUMFERENCE
-l2qc_wc1 <- qgcomp.noboot(Waist ~ age_enroll + race + menar + income + smoke + parity + married +
+# MENO = 1
+qc1_bmi1 <- qgcomp.noboot(BMI_1 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4)
-l2qc_wc1
+                        expnms = l2mix, data = PFAS_A_MENO1, family=gaussian(), q=4)
+qc1_bmi1
 
-l2qc_wc2 <- qgcomp.boot(Waist ~ age_enroll + race + menar + income + smoke + parity + married +
+qc2_bmi1 <- qgcomp.boot(BMI_1 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4, B = 500, seed = 125)
-l2qc_wc2
+                        expnms = l2mix, data = PFAS_A_MENO1, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_bmi1
 
 
-# WAIST-TO-HIP-RATIO
-l2qc_whr1 <- qgcomp.noboot(WHR ~ age_enroll + race + menar + income + smoke + parity + married +
+### WAIST CIRCUMFERENCE
+# MENO = 0
+qc1_wc0 <- qgcomp.noboot(Waist_0 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4)
-l2qc_whr1
+                        expnms = l2mix, data = PFAS_A_MENO0, family=gaussian(), q=4)
+qc1_wc0
 
-l2qc_whr2 <- qgcomp.boot(WHR ~ age_enroll + race + menar + income + smoke + parity + married +
+qc2_wc0 <- qgcomp.boot(Waist_0 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4, B = 500, seed = 125)
-l2qc_whr2
+                        expnms = l2mix, data = PFAS_A_MENO0, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_wc0
 
-
-
-# MUAC
-l2qc_muac1 <- qgcomp.noboot(MUAC ~ age_enroll + race + menar + income + smoke + parity + married +
+# MENO = 1
+qc1_wc1 <- qgcomp.noboot(Waist_1 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4)
-l2qc_muac1
+                        expnms = l2mix, data = PFAS_A_MENO1, family=gaussian(), q=4)
+qc1_wc1
 
-l2qc_muac2 <- qgcomp.boot(MUAC ~ age_enroll + race + menar + income + smoke + parity + married +
+qc2_wc1 <- qgcomp.boot(Waist_1 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_A, family=gaussian(), q=4, B = 500, seed = 125)
-l2qc_muac2
+                        expnms = l2mix, data = PFAS_A_MENO1, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_wc1
+
+
+### WAIST-TO-HIP-RATIO
+# MENO = 0
+qc1_whr0 <- qgcomp.noboot(WHR_0 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A_MENO0, family=gaussian(), q=4)
+qc1_whr0
+
+qc2_whr0 <- qgcomp.boot(WHR_0 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A_MENO0, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_whr0
+
+# MENO = 1
+qc1_whr1 <- qgcomp.noboot(WHR_1 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A_MENO1, family=gaussian(), q=4)
+qc1_whr1
+
+qc2_whr1 <- qgcomp.boot(WHR_1 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A_MENO1, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_whr1
+
+
+### MUAC
+# MENO = 0
+qc1_muac0 <- qgcomp.noboot(MUAC_0 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A_MENO0, family=gaussian(), q=4)
+qc1_muac0
+
+qc2_muac0 <- qgcomp.boot(MUAC_0 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A_MENO0, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_muac0
+
+# MENO = 1
+qc1_muac1 <- qgcomp.noboot(MUAC_1 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A_MENO1, family=gaussian(), q=4)
+qc1_muac1
+
+qc2_muac1 <- qgcomp.boot(MUAC_1 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_A_MENO1, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_muac1
 
 ```
 
@@ -220,80 +273,139 @@ l2qc_muac2
 ```{r}
 ##### PLOT WEIGHTS FOR EACH OUTCOME
 # BMI
-plot(l2qc_bmi1)
+plot(qc1_bmi0)
+plot(qc1_bmi1)
 
 # WAIST CIRCUMFERENCE
-plot(l2qc_wc1)
+plot(qc1_wc0)
+plot(qc1_wc1)
 
 # WAIST-TO-HIP RATIO
-plot(l2qc_whr1)
+plot(qc1_whr0)
+plot(qc1_whr1)
 
 # MUAC
-plot(l2qc_muac1)
+plot(qc1_muac0)
+plot(qc1_muac1)
 
 ```
 
 ```{r}
 ##### PLOT...
 # BMI
-plot(l2qc_bmi2) 
-plot(l2qc_bmi2, pointwiseref = 3, xlab = "PFAS quantile", ylab = "BMI (kg/m^2)")
-pointwisebound.boot(l2qc_bmi2, pointwiseref=3)
+plot(qc2_bmi0) 
+plot(qc2_bmi0, pointwiseref = 3, xlab = "PFAS quantile", ylab = "BMI (kg/m^2)")
+pointwisebound.boot(qc2_bmi0, pointwiseref=3)
+
+plot(qc2_bmi0) 
+plot(qc2_bmi0, pointwiseref = 3, xlab = "PFAS quantile", ylab = "BMI (kg/m^2)")
+pointwisebound.boot(qc2_bmi0, pointwiseref=3)
+
 
 # WAIST CIRCUMFERENCE
-plot(l2qc_wc2)
-plot(l2qc_wc2, pointwiseref = 3)
-pointwisebound.boot(l2qc_wc2, pointwiseref=3)
+plot(qc2_wc0) 
+plot(qc2_wc0, pointwiseref = 3)
+pointwisebound.boot(qc2_wc0, pointwiseref=3)
+
+plot(qc2_wc1) 
+plot(qc2_wc1, pointwiseref = 3)
+pointwisebound.boot(qc2_wc1, pointwiseref=3)
+
 
 # WAIST-TO-HIP RATIO
-plot(l2qc_whr2)
-plot(l2qc_whr2, pointwiseref = 3)
-pointwisebound.boot(l2qc_whr2, pointwiseref=3)
+plot(qc2_whr0) 
+plot(qc2_whr0, pointwiseref = 3)
+pointwisebound.boot(qc2_whr0, pointwiseref=3)
+
+plot(qc2_whr1) 
+plot(qc2_whr1, pointwiseref = 3)
+pointwisebound.boot(qc2_whr1, pointwiseref=3)
+
 
 # MUAC
-plot(l2qc_muac2)
-plot(l2qc_muac2, pointwiseref = 3)
-pointwisebound.boot(l2qc_muac2, pointwiseref=3)
+plot(qc2_muac0) 
+plot(qc2_muac0, pointwiseref = 3)
+pointwisebound.boot(qc2_muac1, pointwiseref=3)
+
+plot(qc2_muac1) 
+plot(qc2_muac1, pointwiseref = 3)
+pointwisebound.boot(qc2_muac1, pointwiseref=3)
 
 ```
 
 
 ```{r}
 ##### BUILD QGC MODELS #####
-# TRUNK FAT MASS
-l2qc_trnkfat1 <- qgcomp.noboot(TRNKFAT ~ age_enroll + race + menar + income + smoke + parity + married +
+### TRUNK FAT MASS
+# MENO = 0
+qc1_trnkfat0 <- qgcomp.noboot(TRNKFAT_0 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_D, family=gaussian(), q=4)
-l2qc_trnkfat1
+                        expnms = l2mix, data = PFAS_D_MENO0, family=gaussian(), q=4)
+qc1_trnkfat0
 
-l2qc_trnkfat2 <- qgcomp.boot(TRNKFAT ~ age_enroll + race + menar + income + smoke + parity + married +
+qc2_trnkfat0 <- qgcomp.boot(TRNKFAT_0 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_D, family=gaussian(), q=4, B = 500, seed = 125)
-l2qc_trnkfat2
+                        expnms = l2mix, data = PFAS_D_MENO0, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_trnkfat0
 
-
-# TOTAL BODY FAT MASS
-l2qc_totfat1 <- qgcomp.noboot(TOTFAT ~ age_enroll + race + menar + income + smoke + parity + married +
+# MENO = 1
+qc1_trnkfat1 <- qgcomp.noboot(TRNKFAT_1 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_D, family=gaussian(), q=4)
-l2qc_totfat1
+                        expnms = l2mix, data = PFAS_D_MENO1, family=gaussian(), q=4)
+qc1_trnkfat1
 
-l2qc_totfat2 <- qgcomp.boot(TOTFAT ~ age_enroll + race + menar + income + smoke + parity + married +
+qc2_trnkfat1 <- qgcomp.boot(TRNKFAT_1 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_D, family=gaussian(), q=4, B = 500, seed = 125)
-l2qc_totfat2
+                        expnms = l2mix, data = PFAS_D_MENO1, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_trnkfat1
 
 
-# TOTAL BODY FAT PERCENT
-l2qc_totfatpct1 <- qgcomp.noboot(TOTFATPCT ~ age_enroll + race + menar + income + smoke + parity + married +
+### TOTAL BODY FAT MASS
+# MENO = 0
+qc1_totfat0 <- qgcomp.noboot(TOTFAT_0 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_D, family=gaussian(), q=4)
-l2qc_totfatpct1
+                        expnms = l2mix, data = PFAS_D_MENO0, family=gaussian(), q=4)
+qc1_totfat0
 
-l2qc_totfatpct2 <- qgcomp.boot(TOTFATPCT ~ age_enroll + race + menar + income + smoke + parity + married +
+qc2_totfat0 <- qgcomp.boot(TOTFAT_0 ~ age_enroll + race + menar + income + smoke + parity + married +
                           L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
-                        expnms = l2mix, data = PFAS_D, family=gaussian(), q=4, B = 500, seed = 125)
-l2qc_totfatpct2
+                        expnms = l2mix, data = PFAS_D_MENO0, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_totfat0
+
+# MENO = 1
+qc1_totfat1 <- qgcomp.noboot(TOTFAT_1 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_D_MENO1, family=gaussian(), q=4)
+qc1_totfat1
+
+qc2_totfat1 <- qgcomp.boot(TOTFAT_1 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_D_MENO1, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_totfat1
+
+
+### TOTAL BODY FAT PERCENT
+# MENO = 0
+qc1_totfatpct0 <- qgcomp.noboot(TOTFATPCT_0 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_D_MENO0, family=gaussian(), q=4)
+qc1_totfatpct0
+
+qc2_totfatpct0 <- qgcomp.boot(TOTFATPCT_0 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_D_MENO0, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_totfatpct0
+
+# MENO = 1
+qc1_totfatpct1 <- qgcomp.noboot(TOTFATPCT_1 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_D_MENO1, family=gaussian(), q=4)
+qc1_totfatpct1
+
+qc2_totfatpct1 <- qgcomp.boot(TOTFATPCT_1 ~ age_enroll + race + menar + income + smoke + parity + married +
+                          L2PFOS + L2PFOA + L2PFNA + L2PFHxS + L2MeFOSAA + L2EtFOSAA,
+                        expnms = l2mix, data = PFAS_D_MENO1, family=gaussian(), q=4, B = 500, seed = 125)
+qc2_totfatpct1
 
 ```
 
@@ -308,13 +420,16 @@ l2qc_totfatpct2
 ```{r}
 ##### PLOT WEIGHTS FOR EACH OUTCOME
 # TRUNK FAT MASS
-plot(l2qc_trnkfat1)
+plot(qc1_trnkfat0)
+plot(qc1_trnkfat1)
 
 # TOTAL BODY FAT MASS
-plot(l2qc_totfat1)
+plot(qc1_totfat0)
+plot(qc1_totfat1)
 
 # TOTAL BODY FAT PERCENT
-plot(l2qc_totfatpct1)
+plot(qc1_totfatpct0)
+plot(qc1_totfatpct1)
 
 ```
 
@@ -322,18 +437,30 @@ plot(l2qc_totfatpct1)
 
 ##### PLOT...
 # TRUNK FAT MASS
-plot(l2qc_trnkfat2)
-plot(l2qc_trnkfat2, pointwiseref = 3)
-pointwisebound.boot(l2qc_trnkfat2, pointwiseref=3)
+plot(qc2_trnkfat0)
+plot(qc2_trnkfat0, pointwiseref = 3)
+pointwisebound.boot(qc2_trnkfat0, pointwiseref=3)
+
+plot(qc2_trnkfat1)
+plot(qc2_trnkfat1, pointwiseref = 3)
+pointwisebound.boot(qc2_trnkfat1, pointwiseref=3)
 
 # TOTAL BODY FAT MASS
-plot(l2qc_totfat2)
-plot(l2qc_totfat2, pointwiseref = 3)
-pointwisebound.boot(l2qc_totfat2, pointwiseref=3)
+plot(qc2_totfat0)
+plot(qc2_totfat0, pointwiseref = 3)
+pointwisebound.boot(qc2_totfat0, pointwiseref=3)
+
+plot(qc2_totfat1)
+plot(qc2_totfat1, pointwiseref = 3)
+pointwisebound.boot(qc2_totfat1, pointwiseref=3)
 
 # TOTAL BODY FAT PERCENT
-plot(l2qc_totfatpct2)
-plot(l2qc_totfatpct2, pointwiseref = 3)
-pointwisebound.boot(l2qc_totfatpct2, pointwiseref=3)
+plot(qc2_totfatpct0)
+plot(qc2_totfatpct0, pointwiseref = 3)
+pointwisebound.boot(qc2_totfatpct0, pointwiseref=3)
+
+plot(qc2_totfatpct1)
+plot(qc2_totfatpct1, pointwiseref = 3)
+pointwisebound.boot(qc2_totfatpct1, pointwiseref=3)
 
 ```
