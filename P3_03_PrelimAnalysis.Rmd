@@ -130,6 +130,35 @@ modelsummary(unad.l2m.whr, fmt = 2, title = "LOG2-PFAS vs. WHR (Unadjusted)")
 #modelsummary(unad.lnm.lnwhr, fmt = 2, title = "LN-PFAS vs. LN-WHR (Unadjusted)")
 
 
+# WAIST-TO-HEIGHT RATIO
+# unad.lnm.whtr <- list(
+#   "PFOS" = glm(WHtR ~ LNPFOS, family = gaussian, data = PFAS_A),
+#   "PFOA" = glm(WHtR ~ LNPFOA, family = gaussian, data = PFAS_A),
+#   "PFNA" = glm(WHtR ~ LNPFNA, family = gaussian, data = PFAS_A),
+#   "PFHxS" = glm(WHtR ~ LNPFHxS, family = gaussian, data = PFAS_A),
+#   "MeFOSAA" = glm(WHtR ~ LNMeFOSAA, family = gaussian, data = PFAS_A),
+#   "EtFOSAA" = glm(WHtR ~ LNEtFOSAA, family = gaussian, data = PFAS_A))
+# modelsummary(unad.lnm.whtr, fmt = 2, title = "LN-PFAS vs. WHtR (Unadjusted)")
+
+unad.l2m.whtr <- list(
+  "PFOS" = glm(WHtR ~ L2PFOS, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(WHtR ~ L2PFOA, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(WHtR ~ L2PFNA, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(WHtR ~ L2PFHxS, family = gaussian, data = PFAS_A),
+  "MeFOSAA" = glm(WHtR ~ L2MeFOSAA, family = gaussian, data = PFAS_A),
+  "EtFOSAA" = glm(WHtR ~ L2EtFOSAA, family = gaussian, data = PFAS_A))
+modelsummary(unad.l2m.whtr, fmt = 2, title = "LOG2-PFAS vs. WHtR (Unadjusted)")
+
+#unad.lnm.lnwhr <- list(
+#  "PFOS" = glm(LNWHR ~ LNPFOS, family = gaussian, data = PFAS_A),
+#  "PFOA" = glm(LNWHR ~ LNPFOA, family = gaussian, data = PFAS_A),
+#  "PFNA" = glm(LNWHR ~ LNPFNA, family = gaussian, data = PFAS_A),
+#  "PFHxS" = glm(LNWHR ~ LNPFHxS, family = gaussian, data = PFAS_A),
+#  "MeFOSAA" = glm(LNWHR ~ LNMeFOSAA, family = gaussian, data = PFAS_A),
+#  "EtFOSAA" = glm(LNWHR ~ LNEtFOSAA, family = gaussian, data = PFAS_A))
+#modelsummary(unad.lnm.lnwhr, fmt = 2, title = "LN-PFAS vs. LN-WHR (Unadjusted)")
+
+
 # MUAC
 # unad.lnm.muac <- list(
 #   "PFOS" = glm(MUAC ~ LNPFOS, family = gaussian, data = PFAS_A),
@@ -612,6 +641,69 @@ modelsummary(ad.l2m.whr, fmt = 2,
 #             statistic = c("SE: {std.error}",
 #                           "95% CI: [{conf.low}, {conf.high}]"),
 #             coef_omit = "Interc", title = "LN-PFAS vs. LN-WHR (Adjusted)")
+
+
+# WAIST-TO-HEIGHT RATIO
+# ad.lnm.whr <- list(
+#   "PFOS" = glm(WHtR ~ LNPFOS + age_enroll + race + income + menar + smoke +  
+#                  parity + married, family = gaussian, data = PFAS_A),
+#   "PFOA" = glm(WHtR ~ LNPFOA + age_enroll + race + income + menar + smoke +  
+#                  parity + married, family = gaussian, data = PFAS_A),
+#   "PFNA" = glm(WHtR ~ LNPFNA + age_enroll + race + income + menar + smoke +  
+#                  parity + married, family = gaussian, data = PFAS_A),
+#   "PFHxS" = glm(WHtR ~ LNPFHxS + age_enroll + race + income + menar + smoke +  
+#                   parity + married, family = gaussian, data = PFAS_A),
+#   "MeFOSAA" = glm(WHtR ~ LNMeFOSAA + age_enroll + race + income + menar + smoke +  
+#                     parity + married, family = gaussian, data = PFAS_A),
+#   "EtFOSAA" = glm(WHtR ~ LNEtFOSAA + age_enroll + race + income + menar + smoke +  
+#                     parity + married, family = gaussian, data = PFAS_A))
+# 
+# modelsummary(ad.lnm.whtr, fmt = 2,
+#              estimate = "{estimate}{stars}",
+#              statistic = c("SE: {std.error}",
+#                            "95% CI: [{conf.low}, {conf.high}]"),
+#              coef_omit = "Interc", title = "LN-PFAS vs. WHtR (Adjusted)")
+
+ad.l2m.whtr <- list(
+  "PFOS" = glm(WHtR ~ L2PFOS + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(WHtR ~ L2PFOA + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(WHtR ~ L2PFNA + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(WHtR ~ L2PFHxS + age_enroll + race + income + menar + smoke +  
+                  parity + married, family = gaussian, data = PFAS_A),
+  "MeFOSAA" = glm(WHtR ~ L2MeFOSAA + age_enroll + race + income + menar + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A),
+  "EtFOSAA" = glm(WHtR ~ L2EtFOSAA + age_enroll + race + income + menar + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A))
+
+modelsummary(ad.l2m.whtr, fmt = 2,
+             estimate = "{estimate}{stars}",
+             statistic = c("SE: {std.error}",
+                           "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"),
+             coef_omit = "Interc", title = "LOG2-PFAS vs. WHtR (Adjusted)")
+
+ad.lnm.lnwhtr <- list(
+  "PFOS" = glm(LNWHtR ~ L2PFOS + age_enroll + race + income + menar + smoke +
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(LNWHtR ~ L2PFOA + age_enroll + race + income + menar + smoke +
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(LNWHtR ~ L2PFNA + age_enroll + race + income + menar + smoke +
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(LNWHtR ~ L2PFHxS + age_enroll + race + income + menar + smoke +
+                  parity + married, family = gaussian, data = PFAS_A),
+  "MeFOSAA" = glm(LNWHtR ~ L2MeFOSAA + age_enroll + race + income + menar + smoke +
+                    parity + married, family = gaussian, data = PFAS_A),
+  "EtFOSAA" = glm(LNWHtR ~ L2EtFOSAA + age_enroll + race + income + menar + smoke +
+                    parity + married, family = gaussian, data = PFAS_A))
+
+modelsummary(ad.lnm.lnwhtr, fmt = 2,
+             estimate = "{estimate}{stars}",
+             statistic = c("SE: {std.error}",
+                           "95% CI: [{conf.low}, {conf.high}]"),
+             coef_omit = "Interc", title = "LOG2-PFAS vs. LN-WHtR (Adjusted)")
 
 
 # MUAC
