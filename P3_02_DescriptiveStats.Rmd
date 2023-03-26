@@ -25,6 +25,9 @@ PFAS_X <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Dat
 ##### CREATE WAIST-TO-HIP RATIO
 PFAS_A$WHR <- PFAS_A$mom_waist_ma17 / PFAS_A$mom_hip_ma17
 
+##### CREATE WAIST-TO-HEIGHT RATIO
+PFAS_A$WHtR <- PFAS_A$mom_waist_ma17 / PFAS_A$mom_height_ma17
+
 ##### CONVERT GRAMS TO KILOGRAMS
 PFAS_D$TRUNK_FAT_mdxa17 <- PFAS_D$TRUNK_FAT_mdxa17*0.001 
 PFAS_D$WBTOT_FAT_mdxa17 <- PFAS_D$WBTOT_FAT_mdxa17*0.001
@@ -69,6 +72,7 @@ PFAS_D$L2EtFOSAA <- log(PFAS_D$Et_PFOSA_AcOH, 2)
 PFAS_A$LNBMI <- log(PFAS_A$mom_bmi_MT)
 PFAS_A$LNWAIST <- log(PFAS_A$mom_waist_ma17)
 PFAS_A$LNWHR <- log(PFAS_A$WHR)
+PFAS_A$LNWHtR <- log(PFAS_A$WHtR)
 PFAS_A$LNMUAC <- log(PFAS_A$mom_muac_ma17)
 #PFAS_A$LNFAT <- log(PFAS_A$mom_fat_ma17)
 #PFAS_A$LNBFAT <- log(PFAS_A$mom_bodyfat_ma17)
@@ -148,6 +152,7 @@ hist(PFAS_D$L2EtFOSAA)
 hist(PFAS_A$mom_bmi_MT)
 hist(PFAS_A$mom_waist_ma17)
 hist(PFAS_A$WHR)
+hist(PFAS_A$WHtR)
 hist(PFAS_A$mom_muac_ma17)
 #hist(PFAS_A$mom_fat_ma17)
 #hist(PFAS_A$mom_bodyfat_ma17)
@@ -158,6 +163,7 @@ hist(PFAS_A$mom_muac_ma17)
 hist(PFAS_A$LNBMI)
 hist(PFAS_A$LNWAIST)
 hist(PFAS_A$LNWHR)
+hist(PFAS_A$LNWHtR)
 hist(PFAS_A$LNMUAC)
 #hist(PFAS_A$LNFAT)
 #hist(PFAS_A$LNBFAT)
@@ -513,6 +519,21 @@ summary(PFAS_A$PFNA2)
 summary(PFAS_A$PFHxS)
 summary(PFAS_A$Me_PFOSA_AcOH2)
 summary(PFAS_A$Et_PFOSA_AcOH)
+
+##### ASSESS DETECTION FREQUENCIES
+LOD_PFOS <- ifelse(PFAS_A$PFOS < 0.2, 1, 0)
+LOD_PFOA <- ifelse(PFAS_A$PFOA < 0.1, 1, 0)
+LOD_PFNA <- ifelse(PFAS_A$PFNA < 0.1, 1, 0)
+LOD_PFHxS <- ifelse(PFAS_A$PFHxS < 0.1, 1, 0)
+LOD_MeF <- ifelse(PFAS_A$Me_PFOSA_AcOH2 < 0.1, 1, 0)
+LOD_EtF <- ifelse(PFAS_A$Et_PFOSA_AcOH < 0.1, 1, 0)
+
+table(LOD_PFOS)
+table(LOD_PFOA)
+table(LOD_PFNA)
+table(LOD_PFHxS)
+table(LOD_MeF)
+table(LOD_EtF)
 
 # RENAME PFAS FOR THE PLOT
 colnames(PFAS_A)[colnames(PFAS_A) == "Me_PFOSA_AcOH2"] <- "MeFOSAA"
