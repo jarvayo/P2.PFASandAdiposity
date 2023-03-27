@@ -16,7 +16,7 @@ library("tidyverse")
 PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A.csv")
 
 ##### LOAD WORKSPACE
-load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_A_L2.Rdata")
+load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_A.Rdata")
 
 ```
 
@@ -95,6 +95,7 @@ l2mixture_a_z <- scale(l2mixture_a)
 BMI <- PFAS_A$LNBMI
 Waist <- PFAS_A$Waist
 WHR <- PFAS_A$WHR
+WHtR <- PFAS_A$WHtR
 MUAC <- PFAS_A$MUAC
 # Weight <- PFAS_A$Weight
 # FatPct <- PFAS_A$FatPct
@@ -136,12 +137,21 @@ l2m_waist <- kmbayes(y = Waist, Z = l2mixture_a, X = cov_a, iter=25000, family =
                      verbose = FALSE, varsel = TRUE, knots = knots_al2)
 beep(sound=5, expr=NULL)
 
-# WAIST-TO-HIP-RATIO
+# WAIST-TO-HIP RATIO
 # l2m_whr <- kmbayes(y = WHR, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
 #                      verbose = FALSE, varsel = TRUE, knots = knots_alnz)
 # lnm_whr <- kmbayes(y = WHR, Z = lnmixture_a, X = cov_a, iter=25000, family = "gaussian", 
 #                      verbose = FALSE, varsel = TRUE, knots = knots_aln)
 l2m_whr <- kmbayes(y = WHR, Z = l2mixture_a, X = cov_a, iter=25000, family = "gaussian",
+                     verbose = FALSE, varsel = TRUE, knots = knots_al2)
+beep(sound=5, expr=NULL)
+
+# WAIST-TO-HEIGHT-RATIO
+# l2m_whtr <- kmbayes(y = WHtR, Z = lnmixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+#                      verbose = FALSE, varsel = TRUE, knots = knots_alnz)
+# lnm_whtr <- kmbayes(y = WHtR, Z = lnmixture_a, X = cov_a, iter=25000, family = "gaussian", 
+#                      verbose = FALSE, varsel = TRUE, knots = knots_aln)
+l2m_whtr <- kmbayes(y = WHtR, Z = l2mixture_a, X = cov_a, iter=25000, family = "gaussian",
                      verbose = FALSE, varsel = TRUE, knots = knots_al2)
 beep(sound=5, expr=NULL)
 
@@ -173,9 +183,9 @@ beep(sound=5, expr=NULL)
 
 ```{r}
 ##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
-save(l2m_bmi, l2m_waist, l2m_whr, l2m_muac,
-    file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_A_L2.Rdata")
-load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_A_L2.Rdata")
+save(l2m_bmi, l2m_waist, l2m_whr, l2m_whtr, l2m_muac,
+    file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_A.Rdata")
+# load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_A.Rdata")
 
 ```
 
@@ -188,6 +198,7 @@ sel <- seq(0,25000,by = 50)
 TracePlot(fit = l2m_bmi, par = "beta", sel = sel)
 TracePlot(fit = l2m_waist, par = "beta", sel = sel)
 TracePlot(fit = l2m_whr, par = "beta", sel = sel)
+TracePlot(fit = l2m_whtr, par = "beta", sel = sel)
 TracePlot(fit = l2m_muac, par = "beta", sel = sel)
 # TracePlot(fit = m_wt, par = "beta", sel = sel)
 # TracePlot(fit = m_bfat, par = "beta", sel = sel)
@@ -209,9 +220,13 @@ ExtractPIPs(l2m_bmi, sel = sel_final)
 #summary(m_waist)
 ExtractPIPs(l2m_waist, sel = sel_final)
 
-# WAIST-TO-HIP-RATIO
+# WAIST-TO-HIP RATIO
 #summary(m_whr)
 ExtractPIPs(l2m_whr, sel = sel_final)
+
+# WAIST-TO-HEIGHT RATIO
+#summary(m_whtr)
+ExtractPIPs(l2m_whtr, sel = sel_final)
 
 # MUAC
 #summary(m_muac)
@@ -241,9 +256,13 @@ univar_bmi
 univar_waist <- PredictorResponseUnivar(fit = l2m_waist, sel = sel_final, method = "approx")
 univar_waist
 
-# WAIST-TO-HIP-RATIO
+# WAIST-TO-HIP RATIO
 univar_whr <- PredictorResponseUnivar(fit = l2m_whr, sel = sel_final, method = "approx")
 univar_whr
+
+# WAIST-TO-HEIGHT RATIO
+univar_whtr <- PredictorResponseUnivar(fit = l2m_whtr, sel = sel_final, method = "approx")
+univar_whtr
 
 # MUAC
 univar_muac <- PredictorResponseUnivar(fit = l2m_muac, sel = sel_final, method = "approx")
@@ -351,48 +370,48 @@ uni5_waist
 uni6_waist
 
 
-# WAIST-TO-HIP-RATIO
-uni_whr <- ggplot(univar_whr, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
-  geom_smooth(stat = "identity", colour='black') + xlab("Plasma PFAS, log2(ng/mL)") + ylab("Waist-to-hip ratio")+
+# WAIST-TO-HEIGHT RATIO
+uni_whtr <- ggplot(univar_whtr, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity", colour='black') + xlab("Plasma PFAS, log2(ng/mL)") + ylab("Waist-to-height ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 25))  
 
-uni1_whr <- ggplot(univar_whr[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni1_whtr <- ggplot(univar_whtr[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Plasma PFOS, log2(ng/mL)") + ylab("Waist-to-hip ratio")+
+  xlab("Plasma PFOS, log2(ng/mL)") + ylab("Waist-to-height ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
 
-uni2_whr <- ggplot(univar_whr[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni2_whtr <- ggplot(univar_whtr[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Plasma PFOA, log2(ng/mL)") + ylab("Waist-to-hip ratio")+
+  xlab("Plasma PFOA, log2(ng/mL)") + ylab("Waist-to-height ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
 
-uni3_whr <- ggplot(univar_whr[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni3_whtr <- ggplot(univar_whtr[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Plasma PFNA, log2(ng/mL)") + ylab("Waist-to-hip ratio")+
+  xlab("Plasma PFNA, log2(ng/mL)") + ylab("Waist-to-height ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
 
-uni4_whr <- ggplot(univar_whr[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni4_whtr <- ggplot(univar_whtr[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Plasma PFHxS, log2(ng/mL)") + ylab("Waist-to-hip ratio")+
+  xlab("Plasma PFHxS, log2(ng/mL)") + ylab("Waist-to-height ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
 
-uni5_whr <- ggplot(univar_whr[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni5_whtr <- ggplot(univar_whtr[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Plasma MeFOSAA, log2(ng/mL)") + ylab("Waist-to-hip ratio")+
+  xlab("Plasma MeFOSAA, log2(ng/mL)") + ylab("Waist-to-height ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
 
-uni6_whr <- ggplot(univar_whr[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+uni6_whtr <- ggplot(univar_whtr[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
   geom_smooth(stat = "identity", colour='black') + theme_classic() +
-  xlab("Plasma EtFOSAA, log2(ng/mL)") + ylab("Waist-to-hip ratio")+
+  xlab("Plasma EtFOSAA, log2(ng/mL)") + ylab("Waist-to-height ratio")+
   geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
 
-uni_whr
-uni1_whr
-uni2_whr
-uni3_whr
-uni4_whr
-uni5_whr
-uni6_whr
+uni_whtr
+uni1_whtr
+uni2_whtr
+uni3_whtr
+uni4_whtr
+uni5_whtr
+uni6_whtr
 
 
 # MUAC
@@ -589,7 +608,7 @@ interact_waist <- PredictorResponseBivarLevels(pred.resp.df = bivar_waist, Z = l
 interact_waist_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_waist, Z = l2mixture_a,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
-# WAIST-TO-HIP-RATIO
+# WAIST-TO-HIP RATIO
 bivar_whr <- PredictorResponseBivar(fit = l2m_whr, min.plot.dist = 1, sel = sel_final, method = "approx")
 interact_whr <- PredictorResponseBivarLevels(pred.resp.df = bivar_whr, Z = l2mixture_a,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
@@ -717,8 +736,12 @@ overall_bmi <- OverallRiskSummaries(fit = l2m_bmi, q.fixed = 0.50, sel = sel_fin
 overall_waist <- OverallRiskSummaries(fit = l2m_waist, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
 
-# WAIST-TO-HIP-RATIO
+# WAIST-TO-HIP RATIO
 overall_whr <- OverallRiskSummaries(fit = l2m_whr, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+
+# WAIST-TO-HEIGHT RATIO
+overall_whtr <- OverallRiskSummaries(fit = l2m_whtr, q.fixed = 0.50, sel = sel_final,
                                                method = "approx", qs = seq(0.25, 0.75, by = 0.05))
 
 # MUAC
@@ -768,7 +791,7 @@ p_overall_waist <- ggplot(overall_waist, aes(quantile, est, ymin = est - 1.96*sd
 p_overall_waist
 
 
-# WAIST-TO-HIP-RATIO
+# WAIST-TO-HIP RATIO
 p_overall_whr <- ggplot(overall_whr, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "red", linewidth = 1) +
                geom_pointrange() +
@@ -780,6 +803,20 @@ p_overall_whr <- ggplot(overall_whr, aes(quantile, est, ymin = est - 1.96*sd, ym
                axis.title.x = element_text(angle = 0, color = 'black', size = 25),
                axis.title.y = element_text(angle = 90, color = 'black', size = 25))
 p_overall_whr
+
+
+# WAIST-TO-HIP RATIO
+p_overall_whtr <- ggplot(overall_whtr, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "red", linewidth = 1) +
+               geom_pointrange() +
+               scale_y_continuous(name = "Waist-to-height ratio")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 25),
+               axis.text.y = element_text(size = 25),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 25),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 25))
+p_overall_whtr
 
 
 # MUAC
@@ -861,7 +898,7 @@ singvar_waist2 <- SingVarRiskSummaries(fit = l2m_waist, qs.diff = c(0.25, 0.75),
 -5.73 - 1.96*1.17
 -5.73 + 1.96*1.17
 
-# WAIST-TO-HIP-RATIO
+# WAIST-TO-HIP RATIO
 singvar_whr <- SingVarRiskSummaries(fit = l2m_whr, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75), sel = sel_final, method = "approx")
 singvar_whr2 <- SingVarRiskSummaries(fit = l2m_whr, qs.diff = c(0.25, 0.75),
@@ -870,6 +907,12 @@ singvar_whr2 <- SingVarRiskSummaries(fit = l2m_whr, qs.diff = c(0.25, 0.75),
 0.0151 + 1.96*0.00541
 -0.0145 - 1.96*0.00402
 -0.0145 + 1.96*0.00402
+
+# WAIST-TO-HIP RATIO
+singvar_whtr <- SingVarRiskSummaries(fit = l2m_whtr, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75), sel = sel_final, method = "approx")
+singvar_whtr2 <- SingVarRiskSummaries(fit = l2m_whtr, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.50), sel = sel_final, method = "approx")
 
 # MUAC
 singvar_muac <- SingVarRiskSummaries(fit = l2m_muac, qs.diff = c(0.25, 0.75),
@@ -919,7 +962,7 @@ p_singvar_waist <- ggplot(singvar_waist, aes(variable, est, ymin = est - 1.96*sd
 p_singvar_waist
 
 
-# WAIST-TO-HIP-RATIO
+# WAIST-TO-HIP RATIO
 p_singvar_whr <- ggplot(singvar_whr, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
                                 col = q.fixed)) + 
   theme_bw() + theme(text = element_text(size = 23)) + theme(axis.title.y = element_blank()) +
@@ -965,7 +1008,7 @@ p_singvar_waist2 <- ggplot(singvar_waist2, aes(variable, est, ymin = est - 1.96*
 p_singvar_waist2
 
 
-# WAIST-TO-HIP-RATIO
+# WAIST-TO-HIP RATIO
 p_singvar_whr2 <- ggplot(singvar_whr2, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) + 
   theme_bw() + theme(text = element_text(size = 23, color = "black")) + theme(axis.title.y = element_blank()) +
   scale_x_discrete(limits = c("EtFOSAA", "MeFOSAA", "PFHxS", "PFNA", "PFOA", "PFOS")) +
@@ -1027,7 +1070,7 @@ overall_interact_bmi <- SingVarIntSummaries(fit = l2m_bmi, qs.diff = c(0.25, 0.7
 overall_interact_waist <- SingVarIntSummaries(fit = l2m_waist, qs.diff = c(0.25, 0.75),
                                        qs.fixed = c(0.25, 0.75),sel=sel_final)
 
-# WAIST-TO-HIP-RATIO
+# WAIST-TO-HIP RATIO
 overall_interact_whr <- SingVarIntSummaries(fit = l2m_whr, qs.diff = c(0.25, 0.75),
                                        qs.fixed = c(0.25, 0.75),sel=sel_final)
 
@@ -1068,7 +1111,7 @@ p_overall_interact_waist <- ggplot(overall_interact_waist, aes(variable, est, ym
 p_overall_interact_waist
 
 
-# WAIST-TO-HIP-RATIO
+# WAIST-TO-HIP RATIO
 p_overall_interact_whr <- ggplot(overall_interact_whr, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
   geom_pointrange(position = position_dodge(width = 0.75)) + theme(text = element_text(size = 25)) +
   geom_hline(yintercept = 0, lty = 2, color = "red", linewidth = 1) + coord_flip() +
