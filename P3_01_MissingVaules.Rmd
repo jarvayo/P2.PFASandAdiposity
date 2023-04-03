@@ -19,6 +19,9 @@ PFAS_IPW_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAd
 PFAS_A_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A_C.sas7bdat")
 PFAS_D_NA <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D_C.sas7bdat")
 
+```
+
+```{r}
 ##### CREATE WAIST-TO-HIP RATIO
 PFAS_IPW_NA$WHR <- PFAS_IPW_NA$mom_waist_ma17 / PFAS_IPW_NA$mom_hip_ma17
 PFAS_D_NA$WHR <- PFAS_D_NA$mom_waist_ma17 / PFAS_D_NA$mom_hip_ma17
@@ -27,9 +30,41 @@ PFAS_D_NA$WHR <- PFAS_D_NA$mom_waist_ma17 / PFAS_D_NA$mom_hip_ma17
 PFAS_IPW_NA$WHtR <- PFAS_IPW_NA$mom_waist_ma17 / PFAS_IPW_NA$mom_height_ma17
 PFAS_D_NA$WHtR <- PFAS_D_NA$mom_waist_ma17 / PFAS_D_NA$mom_height_ma17
 
+##### CREATE DIFFERENCE IN BMI
+PFAS_IPW_NA$DBMI <- PFAS_IPW_NA$mom_bmi_MT - PFAS_IPW_NA$bmi_mom_prepreg_d
+PFAS_D_NA$DBMI <- PFAS_D_NA$mom_bmi_MT - PFAS_D_NA$bmi_mom_prepreg_d
+
+##### CREATE TRUNK FAT INDEX
+PFAS_IPW_NA$mom_height_ma17 <- PFAS_IPW_NA$mom_height_ma17 * 0.01
+PFAS_A_NA$mom_height_ma17 <- PFAS_A_NA$mom_height_ma17 * 0.01
+# summary(PFAS_IPW_NA$mom_height_ma17)
+# summary(PFAS_A_NA$mom_height_ma17)
+
+PFAS_IPW_NA$TRUNK_FAT_mdxa17 <- PFAS_IPW_NA$TRUNK_FAT_mdxa17*0.001 
+PFAS_A_NA$TRUNK_FAT_mdxa17 <- PFAS_A_NA$TRUNK_FAT_mdxa17*0.001 
+# summary(PFAS_IPW_NA$TRUNK_FAT_mdxa17)
+# summary(PFAS_A_NA$TRUNK_FAT_mdxa17)
+
+PFAS_IPW_NA$TFIN <- PFAS_IPW_NA$TRUNK_FAT_mdxa17 / ((PFAS_IPW_NA$mom_height_ma17)^2)
+PFAS_A_NA$TFIN  <- PFAS_A_NA$TRUNK_FAT_mdxa17 / ((PFAS_A_NA$mom_height_ma17)^2)
+# summary(PFAS_IPW_NA$TFIN)
+# summary(PFAS_IPW_NA$TFIN)
+
+##### CREATE TOTAL BODY FAT INDEX
+PFAS_IPW_NA$WBTOT_FAT_mdxa17 <- PFAS_IPW_NA$WBTOT_FAT_mdxa17*0.001 
+PFAS_A_NA$WBTOT_FAT_mdxa17 <- PFAS_A_NA$WBTOT_FAT_mdxa17*0.001 
+summary(PFAS_IPW_NA$WBTOT_FAT_mdxa17)
+summary(PFAS_A_NA$WBTOT_FAT_mdxa17)
+
+PFAS_IPW_NA$BFIN <- PFAS_IPW_NA$WBTOT_FAT_mdxa17 / ((PFAS_IPW_NA$mom_height_ma17)^2)
+PFAS_A_NA$BFIN  <- PFAS_A_NA$WBTOT_FAT_mdxa17 / ((PFAS_A_NA$mom_height_ma17)^2)
+summary(PFAS_IPW_NA$BFIN)
+summary(PFAS_A_NA$BFIN)
+
 ```
 
 ```{r}
+##### DETERMINE DETECTION FREQUENCIES FOR ALL PFAS
 LOD_PFOS <- ifelse(PFAS_A_NA$PFOS < 0.2, 1, 0)
 LOD_PFOA <- ifelse(PFAS_A_NA$PFOA < 0.1, 1, 0)
 LOD_PFNA <- ifelse(PFAS_A_NA$PFNA < 0.1, 1, 0)
@@ -44,7 +79,6 @@ table(LOD_MeF)
 table(LOD_EtF)
 
 ```
-
 
 ```{r}
 ##### CLEAN AND SUMMARIZE IPW DATASET #####
@@ -313,6 +347,7 @@ PFAS_IPW_BIND <- cbind(PFAS_IPW_NA ,PFAS_IPW_IMP)
 
 ##### CREATE INDICATOR FOR MISSINGNESS IN OUTCOME MEASURES
 PFAS_IPW_BIND$mom_bmi_MT <- ifelse(is.na(PFAS_IPW_BIND$mom_bmi_MT), 9999, PFAS_IPW_BIND$mom_bmi_MT)
+PFAS_IPW_BIND$DBMI <- ifelse(is.na(PFAS_IPW_BIND$DBMI), 9999, PFAS_IPW_BIND$DBMI)
 PFAS_IPW_BIND$mom_waist_ma17 <- ifelse(is.na(PFAS_IPW_BIND$mom_waist_ma17), 9999, PFAS_IPW_BIND$mom_waist_ma17)
 PFAS_IPW_BIND$WHR <- ifelse(is.na(PFAS_IPW_BIND$WHR), 9999, PFAS_IPW_BIND$WHR)
 PFAS_IPW_BIND$WHtR <- ifelse(is.na(PFAS_IPW_BIND$WHtR), 9999, PFAS_IPW_BIND$WHtR)
@@ -320,6 +355,8 @@ PFAS_IPW_BIND$mom_muac_ma17 <- ifelse(is.na(PFAS_IPW_BIND$mom_muac_ma17), 9999, 
 PFAS_IPW_BIND$TRUNK_FAT_mdxa17 <- ifelse(is.na(PFAS_IPW_BIND$TRUNK_FAT_mdxa17), 9999, PFAS_IPW_BIND$TRUNK_FAT_mdxa17)
 PFAS_IPW_BIND$WBTOT_FAT_mdxa17 <- ifelse(is.na(PFAS_IPW_BIND$WBTOT_FAT_mdxa17), 9999, PFAS_IPW_BIND$WBTOT_FAT_mdxa17)
 PFAS_IPW_BIND$WBTOT_PFAT_mdxa17 <- ifelse(is.na(PFAS_IPW_BIND$WBTOT_PFAT_mdxa17), 9999, PFAS_IPW_BIND$WBTOT_PFAT_mdxa17)
+PFAS_IPW_BIND$TFIN <- ifelse(is.na(PFAS_IPW_BIND$TFIN), 9999, PFAS_IPW_BIND$TFIN)
+PFAS_IPW_BIND$BFIN <- ifelse(is.na(PFAS_IPW_BIND$BFIN), 9999, PFAS_IPW_BIND$BFIN)
 
 ##### DROP VARIABLES WITH MISSING (NON-IMPUTED) DATA
 PFAS_IPW_COMP <- PFAS_IPW_BIND[ , colSums(is.na(PFAS_IPW_BIND)) == 0]
@@ -327,6 +364,7 @@ PFAS_IPW_COMP <- PFAS_IPW_COMP %>% select(-contains(".1"))
 
 ##### USE INDICATOR FOR MISSING OUTCOME MEASURE TO RE-ENTER "NA"
 PFAS_IPW_COMP$mom_bmi_MT <- ifelse(PFAS_IPW_COMP$mom_bmi_MT == 9999, NA, PFAS_IPW_COMP$mom_bmi_MT)
+PFAS_IPW_COMP$DBMI <- ifelse(PFAS_IPW_COMP$DBMI == 9999, NA, PFAS_IPW_COMP$DBMI)
 PFAS_IPW_COMP$mom_waist_ma17 <- ifelse(PFAS_IPW_COMP$mom_waist_ma17 == 9999, NA, PFAS_IPW_COMP$mom_waist_ma17)
 PFAS_IPW_COMP$WHR <- ifelse(PFAS_IPW_COMP$WHR == 9999, NA, PFAS_IPW_COMP$WHR)
 PFAS_IPW_COMP$WHtR <- ifelse(PFAS_IPW_COMP$WHtR == 9999, NA, PFAS_IPW_COMP$WHtR)
@@ -334,6 +372,8 @@ PFAS_IPW_COMP$mom_muac_ma17 <- ifelse(PFAS_IPW_COMP$mom_muac_ma17 == 9999, NA, P
 PFAS_IPW_COMP$TRUNK_FAT_mdxa17 <- ifelse(PFAS_IPW_COMP$TRUNK_FAT_mdxa17 == 9999, NA, PFAS_IPW_COMP$TRUNK_FAT_mdxa17)
 PFAS_IPW_COMP$WBTOT_FAT_mdxa17 <- ifelse(PFAS_IPW_COMP$WBTOT_FAT_mdxa17 == 9999, NA, PFAS_IPW_COMP$WBTOT_FAT_mdxa17)
 PFAS_IPW_COMP$WBTOT_PFAT_mdxa17 <- ifelse(PFAS_IPW_COMP$WBTOT_PFAT_mdxa17 == 9999, NA, PFAS_IPW_COMP$WBTOT_PFAT_mdxa17)
+PFAS_IPW_COMP$TFIN <- ifelse(PFAS_IPW_COMP$TFIN == 9999, NA, PFAS_IPW_COMP$TFIN)
+PFAS_IPW_COMP$BFIN <- ifelse(PFAS_IPW_COMP$BFIN == 9999, NA, PFAS_IPW_COMP$BFIN)
 
 ```
 
@@ -360,6 +400,8 @@ PFAS_A_BIND <- cbind(PFAS_A_NA ,PFAS_A_IMP)
 PFAS_A_BIND$TRUNK_FAT_mdxa17 <- ifelse(is.na(PFAS_A_BIND$TRUNK_FAT_mdxa17), 9999, PFAS_A_BIND$TRUNK_FAT_mdxa17)
 PFAS_A_BIND$WBTOT_FAT_mdxa17 <- ifelse(is.na(PFAS_A_BIND$WBTOT_FAT_mdxa17), 9999, PFAS_A_BIND$WBTOT_FAT_mdxa17)
 PFAS_A_BIND$WBTOT_PFAT_mdxa17 <- ifelse(is.na(PFAS_A_BIND$WBTOT_PFAT_mdxa17), 9999, PFAS_A_BIND$WBTOT_PFAT_mdxa17)
+PFAS_A_BIND$TFIN <- ifelse(is.na(PFAS_A_BIND$TFIN), 9999, PFAS_A_BIND$TFIN)
+PFAS_A_BIND$BFIN <- ifelse(is.na(PFAS_A_BIND$BFIN), 9999, PFAS_A_BIND$BFIN)
 
 ##### DROP VARIABLES WITH MISSING (NON-IMPUTED) DATA
 PFAS_A_COMP <- PFAS_A_BIND[ , colSums(is.na(PFAS_A_BIND)) == 0]
@@ -369,6 +411,8 @@ PFAS_A_COMP <- PFAS_A_COMP %>% select(-contains(".1"))
 PFAS_A_COMP$TRUNK_FAT_mdxa17 <- ifelse(PFAS_A_COMP$TRUNK_FAT_mdxa17 == 9999, NA, PFAS_A_COMP$TRUNK_FAT_mdxa17)
 PFAS_A_COMP$WBTOT_FAT_mdxa17 <- ifelse(PFAS_A_COMP$WBTOT_FAT_mdxa17 == 9999, NA, PFAS_A_COMP$WBTOT_FAT_mdxa17)
 PFAS_A_COMP$WBTOT_PFAT_mdxa17 <- ifelse(PFAS_A_COMP$WBTOT_PFAT_mdxa17 == 9999, NA, PFAS_A_COMP$WBTOT_PFAT_mdxa17)
+PFAS_A_COMP$TFIN <- ifelse(PFAS_A_COMP$TFIN == 9999, NA, PFAS_A_COMP$TFIN)
+PFAS_A_COMP$BFIN <- ifelse(PFAS_A_COMP$BFIN == 9999, NA, PFAS_A_COMP$BFIN)
 
 ```
 
@@ -393,6 +437,7 @@ PFAS_D_BIND <- cbind(PFAS_D_NA ,PFAS_D_IMP)
 
 ##### CREATE INDICATOR FOR MISSINGNESS IN OUTCOME MEASURES
 PFAS_D_BIND$mom_bmi_MT <- ifelse(is.na(PFAS_D_BIND$mom_bmi_MT), 9999, PFAS_D_BIND$mom_bmi_MT)
+PFAS_D_BIND$DBMI <- ifelse(is.na(PFAS_D_BIND$DBMI), 9999, PFAS_D_BIND$DBMI)
 PFAS_D_BIND$mom_waist_ma17 <- ifelse(is.na(PFAS_D_BIND$mom_waist_ma17), 9999, PFAS_D_BIND$mom_waist_ma17)
 PFAS_D_BIND$WHR <- ifelse(is.na(PFAS_D_BIND$WHR), 9999, PFAS_D_BIND$WHR)
 PFAS_D_BIND$WHtR <- ifelse(is.na(PFAS_D_BIND$WHtR), 9999, PFAS_D_BIND$WHtR)
@@ -404,6 +449,7 @@ PFAS_D_COMP <- PFAS_D_COMP %>% select(-contains(".1"))
 
 ##### USE INDICATOR FOR MISSING OUTCOME MEASURE TO RE-ENTER "NA"
 PFAS_D_COMP$mom_bmi_MT <- ifelse(PFAS_D_COMP$mom_bmi_MT == 9999, NA, PFAS_D_COMP$mom_bmi_MT)
+PFAS_D_COMP$DBMI <- ifelse(PFAS_D_COMP$DBMI == 9999, NA, PFAS_D_COMP$DBMI)
 PFAS_D_COMP$mom_waist_ma17 <- ifelse(PFAS_D_COMP$mom_waist_ma17 == 9999, NA, PFAS_D_COMP$mom_waist_ma17)
 PFAS_D_COMP$WHR <- ifelse(PFAS_D_COMP$WHR == 9999, NA, PFAS_D_COMP$WHR)
 PFAS_D_COMP$WHtR <- ifelse(PFAS_D_COMP$WHtR == 9999, NA, PFAS_D_COMP$WHtR)
