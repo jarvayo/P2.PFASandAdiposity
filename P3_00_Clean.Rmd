@@ -18,6 +18,7 @@ PFAS <- merge(BMI, PFAS, by = "aid", all.y = T)
 PFAS$mom_weight_ma17 <- PFAS$mom_weight_ma17.x
 PFAS$mom_height_ma17 <- PFAS$mom_height_ma17.x
 
+##### REPLACE MISSING VALUES AND BLANK SPACES WITH "NA"
 PFAS[PFAS == "NaN"] <- NA
 PFAS[PFAS == ""] <- NA
 
