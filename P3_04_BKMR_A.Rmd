@@ -112,7 +112,7 @@ set.seed(1234)
 # knots_alnz <- fields::cover.design(lnmixture_a_z, nd = 50)$design
 # knots_aln <- fields::cover.design(lnmixture_a, nd = 50)$design
 knots_al2 <- fields::cover.design(l2mixture_a, nd = 50)$design
-# knots_al2z <- fields::cover.design(l2mixture_a_z, nd = 50)$design
+knots_al2_z <- fields::cover.design(l2mixture_a_z, nd = 50)$design
 
 ```
 
@@ -123,8 +123,8 @@ knots_al2 <- fields::cover.design(l2mixture_a, nd = 50)$design
 #                     verbose = FALSE, varsel = TRUE, knots = knots_alnz)
 # lnm_bmi <- kmbayes(y = BMI, Z = lnmixture_a, X = cov_a, iter=25000, family = "gaussian", 
 #                      verbose = FALSE, varsel = TRUE, knots = knots_aln)
-l2m_bmi <- kmbayes(y = BMI, Z = l2mixture_a, X = cov_a, iter=25000, family = "gaussian", 
-                      verbose = FALSE, varsel = TRUE, knots = knots_al2)
+l2m_bmi <- kmbayes(y = BMI, Z = l2mixture_a_z, X = cov_a, iter=25000, family = "gaussian", 
+                      verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
 beep(sound=5, expr=NULL)
 
 
@@ -133,8 +133,8 @@ beep(sound=5, expr=NULL)
 #                      verbose = FALSE, varsel = TRUE, knots = knots_alnz)
 # lnm_waist <- kmbayes(y = Waist, Z = lnmixture_a, X = cov_a, iter=25000, family = "gaussian", 
 #                      verbose = FALSE, varsel = TRUE, knots = knots_aln)
-l2m_waist <- kmbayes(y = Waist, Z = l2mixture_a, X = cov_a, iter=25000, family = "gaussian",
-                     verbose = FALSE, varsel = TRUE, knots = knots_al2)
+l2m_waist <- kmbayes(y = Waist, Z = l2mixture_a_z, X = cov_a, iter=25000, family = "gaussian",
+                     verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
 beep(sound=5, expr=NULL)
 
 # WAIST-TO-HIP RATIO
@@ -142,8 +142,8 @@ beep(sound=5, expr=NULL)
 #                      verbose = FALSE, varsel = TRUE, knots = knots_alnz)
 # lnm_whr <- kmbayes(y = WHR, Z = lnmixture_a, X = cov_a, iter=25000, family = "gaussian", 
 #                      verbose = FALSE, varsel = TRUE, knots = knots_aln)
-l2m_whr <- kmbayes(y = WHR, Z = l2mixture_a, X = cov_a, iter=25000, family = "gaussian",
-                     verbose = FALSE, varsel = TRUE, knots = knots_al2)
+l2m_whr <- kmbayes(y = WHR, Z = l2mixture_a_z, X = cov_a, iter=25000, family = "gaussian",
+                     verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
 beep(sound=5, expr=NULL)
 
 # WAIST-TO-HEIGHT-RATIO
@@ -151,8 +151,8 @@ beep(sound=5, expr=NULL)
 #                      verbose = FALSE, varsel = TRUE, knots = knots_alnz)
 # lnm_whtr <- kmbayes(y = WHtR, Z = lnmixture_a, X = cov_a, iter=25000, family = "gaussian", 
 #                      verbose = FALSE, varsel = TRUE, knots = knots_aln)
-l2m_whtr <- kmbayes(y = WHtR, Z = l2mixture_a, X = cov_a, iter=25000, family = "gaussian",
-                     verbose = FALSE, varsel = TRUE, knots = knots_al2)
+l2m_whtr <- kmbayes(y = WHtR, Z = l2mixture_a_z, X = cov_a, iter=25000, family = "gaussian",
+                     verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
 beep(sound=5, expr=NULL)
 
 # MUAC
@@ -160,8 +160,8 @@ beep(sound=5, expr=NULL)
 #                      verbose = FALSE, varsel = TRUE, knots = knots_alnz)
 # lnm_muac <- kmbayes(y = MUAC, Z = lnmixture_a, X = cov_a, iter=25000, family = "gaussian", 
 #                      verbose = FALSE, varsel = TRUE, knots = knots_aln)
-l2m_muac <- kmbayes(y = MUAC, Z = l2mixture_a, X = cov_a, iter=25000, family = "gaussian",
-                     verbose = FALSE, varsel = TRUE, knots = knots_al2)
+l2m_muac <- kmbayes(y = MUAC, Z = l2mixture_a_z, X = cov_a, iter=25000, family = "gaussian",
+                     verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
 beep(sound=5, expr=NULL)
 
 # # WEIGHT
@@ -596,51 +596,51 @@ uni6_muac
 ##### SUBESQUENTLY, PREDICT INTERACTIONS AMONG PFAS
 # BMI
 bivar_bmi <- PredictorResponseBivar(fit = l2m_bmi, min.plot.dist = 1, sel = sel_final, method = "approx")
-interact_bmi <- PredictorResponseBivarLevels(pred.resp.df = bivar_bmi, Z = l2mixture_a,
+interact_bmi <- PredictorResponseBivarLevels(pred.resp.df = bivar_bmi, Z = l2mixture_a_z,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-interact_bmi_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_bmi, Z = l2mixture_a,
+interact_bmi_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_bmi, Z = l2mixture_a_z,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
 # WAIST CIRCUMFERENCE
 bivar_waist <- PredictorResponseBivar(fit = l2m_waist, min.plot.dist = 1, sel = sel_final, method = "approx")
-interact_waist <- PredictorResponseBivarLevels(pred.resp.df = bivar_waist, Z = l2mixture_a,
+interact_waist <- PredictorResponseBivarLevels(pred.resp.df = bivar_waist, Z = l2mixture_a_z,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-interact_waist_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_waist, Z = l2mixture_a,
+interact_waist_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_waist, Z = l2mixture_a_z,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
 # WAIST-TO-HIP RATIO
 bivar_whr <- PredictorResponseBivar(fit = l2m_whr, min.plot.dist = 1, sel = sel_final, method = "approx")
-interact_whr <- PredictorResponseBivarLevels(pred.resp.df = bivar_whr, Z = l2mixture_a,
+interact_whr <- PredictorResponseBivarLevels(pred.resp.df = bivar_whr, Z = l2mixture_a_z,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-interact_whr_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_whr, Z = l2mixture_a,
+interact_whr_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_whr, Z = l2mixture_a_z,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
 # MUAC
 bivar_muac <- PredictorResponseBivar(fit = l2m_muac, min.plot.dist = 1, sel = sel_final, method = "approx")
-interact_muac <- PredictorResponseBivarLevels(pred.resp.df = bivar_muac, Z = l2mixture_a,
+interact_muac <- PredictorResponseBivarLevels(pred.resp.df = bivar_muac, Z = l2mixture_a_z,
                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-interact_muac_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_muac, Z = l2mixture_a,
+interact_muac_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_muac, Z = l2mixture_a_z,
                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
 # # WEIGHT
 # bivar_wt <- PredictorResponseBivar(fit = m_wt, min.plot.dist = 1, sel = sel_final, method = "approx")
-# interact_wt <- PredictorResponseBivarLevels(pred.resp.df = bivar_wt, Z = l2mixture_a,
+# interact_wt <- PredictorResponseBivarLevels(pred.resp.df = bivar_wt, Z = l2mixture_a_z,
 #                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-# interact_wt_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_wt, Z = l2mixture_a,
+# interact_wt_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_wt, Z = l2mixture_a_z,
 #                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 # 
 # # BODY FAT %
 # bivar_bfat <- PredictorResponseBivar(fit = m_bfat, min.plot.dist = 1, sel = sel_final, method = "approx")
-# interact_bfat <- PredictorResponseBivarLevels(pred.resp.df = bivar_bfat, Z = l2mixture_a,
+# interact_bfat <- PredictorResponseBivarLevels(pred.resp.df = bivar_bfat, Z = l2mixture_a_z,
 #                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-# interact_bfat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_bfat, Z = l2mixture_a,
+# interact_bfat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_bfat, Z = l2mixture_a_z,
 #                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 # 
 # # BODY FAT MASS
 # bivar_fat <- PredictorResponseBivar(fit = m_fat, min.plot.dist = 1, sel = sel_final, method = "approx")
-# interact_fat <- PredictorResponseBivarLevels(pred.resp.df = bivar_fat, Z = l2mixture_a,
+# interact_fat <- PredictorResponseBivarLevels(pred.resp.df = bivar_fat, Z = l2mixture_a_z,
 #                                                both_pairs = T, qs = c(0.25, 0.50, 0.75))
-# interact_fat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_fat, Z = l2mixture_a,
+# interact_fat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_fat, Z = l2mixture_a_z,
 #                                                     both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
 
 
