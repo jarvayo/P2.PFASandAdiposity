@@ -25,12 +25,34 @@ PFAS_X <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Dat
 ##### CREATE WAIST-TO-HIP RATIO
 PFAS_A$WHR <- PFAS_A$mom_waist_ma17 / PFAS_A$mom_hip_ma17
 
+
 ##### CREATE WAIST-TO-HEIGHT RATIO
+# CONVERT METERS TO CENTIMETERS
+PFAS_A$mom_height_ma17 <- PFAS_A$mom_height_ma17 * 100
 PFAS_A$WHtR <- PFAS_A$mom_waist_ma17 / PFAS_A$mom_height_ma17
 
-##### CONVERT GRAMS TO KILOGRAMS
+##### CREATE DIFFERENCE IN BMI
+PFAS_A$DBMI <- PFAS_A$mom_bmi_MT - PFAS_A$bmi_mom_prepreg_d
+
+
+##### CREATE TRUNK FAT INDEX
+# CONVERT CENTIMETERS TO METERS
+PFAS_D$mom_height_ma17 <- PFAS_D$mom_height_ma17 * 0.01
+
+# CONVERT GRAMS TO KILOGRAMS
 PFAS_D$TRUNK_FAT_mdxa17 <- PFAS_D$TRUNK_FAT_mdxa17*0.001 
+
+PFAS_D$TFIN  <- PFAS_D$TRUNK_FAT_mdxa17 / ((PFAS_D$mom_height_ma17)^2)
+
+
+##### CREATE TOTAL BODY FAT INDEX
+# CONVERT GRAMS TO KILOGRAMS
 PFAS_D$WBTOT_FAT_mdxa17 <- PFAS_D$WBTOT_FAT_mdxa17*0.001
+
+PFAS_D$BFIN  <- PFAS_D$WBTOT_FAT_mdxa17 / ((PFAS_D$mom_height_ma17)^2)
+
+
+# ##### CONVERT GRAMS TO KILOGRAMS
 # PFAS_D$WBTOT_LEAN_mdxa17 <- PFAS_D$WBTOT_LEAN_mdxa17*0.001
 
 ```
@@ -70,6 +92,7 @@ PFAS_D$L2EtFOSAA <- log(PFAS_D$Et_PFOSA_AcOH, 2)
 
 ##### TRANSFORM OUTCOME MEASURES TO OBSERVE SHAPE OF DISTRIBUTION
 PFAS_A$LNBMI <- log(PFAS_A$mom_bmi_MT)
+PFAS_A$LNDBMI <- log(PFAS_A$DBMI)
 PFAS_A$LNWAIST <- log(PFAS_A$mom_waist_ma17)
 PFAS_A$LNWHR <- log(PFAS_A$WHR)
 PFAS_A$LNWHtR <- log(PFAS_A$WHtR)
@@ -82,6 +105,8 @@ PFAS_A$LNMUAC <- log(PFAS_A$mom_muac_ma17)
 PFAS_D$LNTKNFAT <- log(PFAS_D$TRUNK_FAT_mdxa17)
 PFAS_D$LNTOTFAT <- log(PFAS_D$WBTOT_FAT_mdxa17)
 PFAS_D$LNPFAT <- log(PFAS_D$WBTOT_PFAT_mdxa17)
+PFAS_D$LNTFIN <- log(PFAS_D$TFIN)
+PFAS_D$LNBFIN <- log(PFAS_D$BFIN)
 #PFAS_D$LNTOTLEAN <- log(PFAS_D$WBTOT_LEAN_mdxa17)
 #PFAS_D$LNVAT_AREA <- log(PFAS_D$VAT_AREA_mdxa17)
 #PFAS_D$LNSAT_AREA <- log(PFAS_D$SAT_AREA_mdxa17)
@@ -150,6 +175,7 @@ hist(PFAS_D$L2EtFOSAA)
 ```{r}
 ##### DESCRIBE DISTRIBUTION OF OUTCOME MEASURES, ANTHRO DATASET
 hist(PFAS_A$mom_bmi_MT)
+hist(PFAS_A$DBMI)
 hist(PFAS_A$mom_waist_ma17)
 hist(PFAS_A$WHR)
 hist(PFAS_A$WHtR)
@@ -161,6 +187,7 @@ hist(PFAS_A$mom_muac_ma17)
 
 # DESCRIBE THE LOG-DISTRIBUTION OF OUTCOME MEASURES, ANTHRO DATASET
 hist(PFAS_A$LNBMI)
+hist(PFAS_A$LNDBMI)
 hist(PFAS_A$LNWAIST)
 hist(PFAS_A$LNWHR)
 hist(PFAS_A$LNWHtR)
@@ -175,6 +202,8 @@ hist(PFAS_A$LNMUAC)
 hist(PFAS_D$TRUNK_FAT_mdxa17)
 hist(PFAS_D$WBTOT_FAT_mdxa17)
 hist(PFAS_D$WBTOT_PFAT_mdxa17)
+hist(PFAS_D$TFIN)
+hist(PFAS_D$BFIN)
 #hist(PFAS_D$WBTOT_LEAN_mdxa17)
 #hist(PFAS_D$VAT_AREA_mdxa17)
 #hist(PFAS_D$SAT_AREA_mdxa17)
@@ -191,6 +220,8 @@ hist(PFAS_D$WBTOT_PFAT_mdxa17)
 hist(PFAS_D$LNTKNFAT)
 hist(PFAS_D$LNTOTFAT)
 hist(PFAS_D$LNPFAT)
+hist(PFAS_D$LNTFIN)
+hist(PFAS_D$LNBFIN)
 #hist(PFAS_D$LNTOTLEAN)
 #hist(PFAS_D$LNVAT_AREA)
 #hist(PFAS_D$LNSAT_AREA)
@@ -582,6 +613,7 @@ corrplot(p_corr, type = "upper", order = "hclust", method = "circle",
 
 ##### OUTCOMES DISTRIBUTION TABLE
 summary(PFAS_A$mom_bmi_MT)
+summary(PFAS_A$DBMI)
 summary(PFAS_A$mom_waist_ma17)
 summary(PFAS_A$WHR)
 summary(PFAS_A$WHtR)
@@ -590,10 +622,11 @@ summary(PFAS_A$mom_muac_ma17)
 # summary(PFAS_A$mom_bodyfat_ma17)
 # summary(PFAS_A$mom_ffm_ma17)
 # summary(PFAS_A$mom_weight_ma17)
-table1(~ mom_bmi_MT + mom_waist_ma17 + WHR + WHtR + mom_muac_ma17, data = PFAS_A, overall = "Total")
+table1(~ mom_bmi_MT + DBMI + mom_waist_ma17 + WHR + WHtR + mom_muac_ma17, data = PFAS_A, overall = "Total")
 
-# RENAME PFAS FOR THE PLOT
+# RENAME OUTCOMES FOR THE PLOT
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_bmi_MT"] <- "BMI"
+colnames(PFAS_A)[colnames(PFAS_A) == "DBMI"] <- "DBMI"
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_waist_ma17"] <- "Waist"
 colnames(PFAS_A)[colnames(PFAS_A) == "WHR"] <- "WHR"
 colnames(PFAS_A)[colnames(PFAS_A) == "WHtR"] <- "WHtR"
@@ -606,7 +639,7 @@ colnames(PFAS_A)[colnames(PFAS_A) == "mom_muac_ma17"] <- "MUAC"
 
 ##### OUTCOMES CORRELATION MATRIX
 # ANTHRO
-OUTCOMES_A_corr <- PFAS_A[ , c("BMI", "Waist", "WHR", "WHtR", "MUAC")]
+OUTCOMES_A_corr <- PFAS_A[ , c("BMI", "DBMI", "Waist", "WHR", "WHtR", "MUAC")]
 o_A_corr <- cor(OUTCOMES_A_corr)
 round(o_A_corr, 2)
 
@@ -622,6 +655,8 @@ corrplot(o_A_corr, type = "upper", order = "hclust", method = "circle",
 summary(PFAS_D$TRUNK_FAT_mdxa17)
 summary(PFAS_D$WBTOT_FAT_mdxa17)
 summary(PFAS_D$WBTOT_PFAT_mdxa17)
+summary(PFAS_D$TFIN)
+summary(PFAS_D$BFIN)
 # summary(PFAS_D$WBTOT_LEAN_mdxa17)
 # summary(PFAS_D$VAT_AREA_mdxa17)
 # summary(PFAS_D$SAT_AREA_mdxa17)
@@ -637,13 +672,16 @@ summary(PFAS_D$mom_waist_ma17)
 summary(PFAS_D$WHR)
 summary(PFAS_D$WHtR)
 summary(PFAS_D$mom_muac_ma17)
-table1(~ TRUNK_FAT_mdxa17 + WBTOT_FAT_mdxa17 + WBTOT_PFAT_mdxa17 + mom_bmi_MT + 
-         mom_waist_ma17 + WHR + WHtR + mom_muac_ma17, data = PFAS_D, overall = "Total")
+table1(~ TRUNK_FAT_mdxa17 + WBTOT_FAT_mdxa17 + WBTOT_PFAT_mdxa17 + TFIN + BFIN + 
+         mom_bmi_MT + DBMI + mom_waist_ma17 + WHR + WHtR + mom_muac_ma17, 
+       data = PFAS_D, overall = "Total")
 
-# RENAME PFAS FOR THE PLOT
+# RENAME OUTCOMES FOR THE PLOT
 colnames(PFAS_D)[colnames(PFAS_D) == "TRUNK_FAT_mdxa17"] <- "TrnkFat"
 colnames(PFAS_D)[colnames(PFAS_D) == "WBTOT_FAT_mdxa17"] <- "TotFat"
 colnames(PFAS_D)[colnames(PFAS_D) == "WBTOT_PFAT_mdxa17"] <- "TotFatPct"
+colnames(PFAS_D)[colnames(PFAS_D) == "TFIN"] <- "TFIN"
+colnames(PFAS_D)[colnames(PFAS_D) == "BFIN"] <- "BFIN"
 #colnames(PFAS_D)[colnames(PFAS_D) == "WBTOT_LEAN_mdxa17"] <- "TotLean"
 #colnames(PFAS_D)[colnames(PFAS_D) == "VAT_AREA_mdxa17"] <- "VT area"
 #colnames(PFAS_D)[colnames(PFAS_D) == "SAT_AREA_mdxa17"] <- "ST area"
@@ -655,6 +693,7 @@ colnames(PFAS_D)[colnames(PFAS_D) == "WBTOT_PFAT_mdxa17"] <- "TotFatPct"
 #colnames(PFAS_D)[colnames(PFAS_D) == "SAT_MASS_mdxa17"] <- "ST mass"
 #colnames(PFAS_D)[colnames(PFAS_D) == "TAT_MASS_mdxa17"] <- "TT mass"
 colnames(PFAS_D)[colnames(PFAS_D) == "mom_bmi_MT"] <- "BMI"
+colnames(PFAS_D)[colnames(PFAS_D) == "DBMI"] <- "DBMI"
 colnames(PFAS_D)[colnames(PFAS_D) == "mom_waist_ma17"] <- "Waist"
 colnames(PFAS_D)[colnames(PFAS_D) == "WHR"] <- "WHR"
 colnames(PFAS_D)[colnames(PFAS_D) == "WHtR"] <- "WHtR"
@@ -663,7 +702,7 @@ colnames(PFAS_D)[colnames(PFAS_D) == "mom_muac_ma17"] <- "MUAC"
 
 ##### OUTCOMES CORRELATION MATRIX
 # DXA
-OUTCOMES_D_corr <- PFAS_D[ , c("TrnkFat", "TotFat", "TotFatPct")]
+OUTCOMES_D_corr <- PFAS_D[ , c("TrnkFat", "TotFat", "TotFatPct", "TFIN", "BFIN")]
 o_D_corr <- cor(OUTCOMES_D_corr)
 round(o_D_corr, 2)
 
@@ -671,7 +710,7 @@ corrplot(o_D_corr, type = "upper", order = "hclust", method = "circle",
          tl.col = "black", tl.srt = 45, col = COL2('RdBu', 10), addCoef.col = 'black')
 
 # DXA + ANTHRO
-OUTCOMES_D_corr <- PFAS_D[ , c("BMI", "Waist", "WHR", "WHtR", "MUAC", "TrnkFat", "TotFat", "TotFatPct")]
+OUTCOMES_D_corr <- PFAS_D[ , c("BMI", "DBMI", "Waist", "WHR", "WHtR", "MUAC", "TrnkFat", "TotFat", "TotFatPct", "TFIN", "BFIN")]
 o_D_corr <- cor(OUTCOMES_D_corr)
 round(o_D_corr, 2)
 
