@@ -19,6 +19,16 @@ PFAS_A <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Dat
 PFAS_D <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D_COMP.csv")
 PFAS_X <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_X.csv")
 
+##### PFAS CORRELATION MATRIX
+PFAS_A$mom_waist_ma17
+PFAS_corr <- PFAS_D[ , c("mom_weight_ma17", "mom_height_ma17", "mom_waist_ma17")]
+p_corr <- cor(PFAS_corr)
+round(p_corr, 2)
+
+corrplot(p_corr, type = "upper", order = "hclust", method = "circle",
+         tl.col = "black", tl.srt = 45, col = COL2('RdBu', 10), addCoef.col = 'black')
+
+
 ```
 
 ```{r}
