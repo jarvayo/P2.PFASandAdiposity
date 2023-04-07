@@ -12,7 +12,8 @@ library("data.table")
 
 ```{r}
 ##### LOAD DATASET
-PFAS <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/ja_062922_4.sas7bdat")
+# PFAS <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/ja_062922_4.sas7bdat")
+PFAS <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/ja_062922_FFQ.sas7bdat")
 BMI <- read.sas7bdat("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/ja_071022.sas7bdat")
 PFAS <- merge(BMI, PFAS, by = "aid", all.y = T)
 PFAS$mom_weight_ma17 <- PFAS$mom_weight_ma17.x
@@ -122,7 +123,7 @@ PFAS_2 <- subset(PFAS_2, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH
                                     mom_firstperiod_12y, mom_period_stopped_qu17, mom_period_ystopped_age_qu17, 
                                     TRUNK_FAT_mdxa17, WBTOT_FAT_mdxa17, WBTOT_PFAT_mdxa17, WBTOT_LEAN_mdxa17,
                                     mom_bmi_MT, mom_weight_ma17, mom_height_ma17, mom_waist_ma17, mom_hip_ma17, mom_muac_ma17, 
-                                    mom_bodyfat_ma17, mom_ffm_ma17, mom_fat_ma17))
+                                    mom_bodyfat_ma17, mom_ffm_ma17, mom_fat_ma17, fish_d_f1, dark_meat_f1))
 
 PFAS_5 <- subset(PFAS_5, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH2, Et_PFOSA_AcOH,
                                     g_age_days_COLL_D_BLD1, age_mom_enroll_d, age_days_comp_d_ma17, age_days_mdxa17, 
@@ -131,7 +132,7 @@ PFAS_5 <- subset(PFAS_5, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH
                                     mom_firstperiod_12y, mom_period_stopped_qu17, mom_period_ystopped_age_qu17, 
                                     TRUNK_FAT_mdxa17, WBTOT_FAT_mdxa17, WBTOT_PFAT_mdxa17, WBTOT_LEAN_mdxa17,
                                     mom_bmi_MT, mom_weight_ma17, mom_height_ma17, mom_waist_ma17, mom_hip_ma17, mom_muac_ma17, 
-                                    mom_bodyfat_ma17, mom_ffm_ma17, mom_fat_ma17))
+                                    mom_bodyfat_ma17, mom_ffm_ma17, mom_fat_ma17, fish_d_f1, dark_meat_f1))
 
 PFAS_6 <- subset(PFAS_6, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH2, Et_PFOSA_AcOH,
                                     g_age_days_COLL_D_BLD1, age_mom_enroll_d, age_days_comp_d_ma17, age_days_mdxa17, 
@@ -141,12 +142,13 @@ PFAS_6 <- subset(PFAS_6, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH
                                     mom_bmi_MT, mom_weight_ma17, mom_height_ma17, mom_waist_ma17, mom_hip_ma17, mom_muac_ma17,
                                     SAT_AREA_mdxa17, SAT_MASS_mdxa17, SAT_VOLUME_mdxa17, TAT_AREA_mdxa17, TAT_MASS_mdxa17,
                                     TAT_VOLUME_mdxa17, VAT_AREA_mdxa17, VAT_MASS_mdxa17, VAT_VOLUME_mdxa17, WEIGHT_mdxa17,
-                                    TRUNK_FAT_mdxa17, WBTOT_FAT_mdxa17, WBTOT_PFAT_mdxa17, WBTOT_LEAN_mdxa17))
+                                    TRUNK_FAT_mdxa17, WBTOT_FAT_mdxa17, WBTOT_PFAT_mdxa17, WBTOT_LEAN_mdxa17, fish_d_f1, 
+                                    dark_meat_f1))
 
  
 PFAS_X <- subset(PFAS_X, select = c(aid, age_mom_enroll_d, bmi_mom_prepreg_d, coll_grad, gt70k, mom_firstperiod_1,
                                     mom_period_stopped_qu17, mom_periodstopped_age_qu17, married_cohab, pari_d,
-                                    race2_mom_epi_epia_d, smokpreg_final_d))
+                                    race2_mom_epi_epia_d, smokpreg_final_d, fish_d_f1, dark_meat_f1))
 
 
 ##### SAVE DATASET
