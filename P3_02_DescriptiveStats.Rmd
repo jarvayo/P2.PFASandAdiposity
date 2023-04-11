@@ -261,6 +261,9 @@ PFAS_A$smoke <- PFAS_A$smokpreg_final_d
 PFAS_A$married <- PFAS_A$married_cohab
 PFAS_A$edu <- PFAS_A$coll_grad
 PFAS_A$meno <- PFAS_A$mom_period_ystopped_age_qu17
+PFAS_A$fish <- PFAS_A$fish_d_f1
+PFAS_A$darkmeat <- PFAS_A$dark_meat_f1
+PFAS_A$height <- PFAS_A$mom_height_ma17
 
 
 ##### RE-LABEL 
@@ -331,6 +334,8 @@ label(PFAS_A$married) <- "Married or cohabitating"
 label(PFAS_A$edu) <- "Education"
 label(PFAS_A$meno_cat) <- "Menopausal status"
 label(PFAS_A$meno) <- "Age at menopause"
+label(PFAS_A$fish) <- "Fish and shellfish consumption"
+label(PFAS_A$darkmeat) <- "Dark meat consumption"
 
 
 ##### ADD UNITS
@@ -341,10 +346,13 @@ units(PFAS_A$menar) <- "years"
 units(PFAS_A$bmi)  <- "kg/m2"
 units(PFAS_A$bmi_cat)  <- "kg/m2"
 units(PFAS_A$meno) <- "years"
+units(PFAS_A$fish) <- "servings/week"
+units(PFAS_A$darkmeat) <- "servings/week"
 
 ##### TABE 1
 table1(~ age_enroll + age_fu + fu_time + menar + bmi + bmi_cat + race +  income + 
-         parity + smoke + married + edu + meno_cat +meno, data = PFAS_A, overall = "Total")
+         parity + smoke + married + edu + meno_cat + meno + fish + darkmeat, 
+       data = PFAS_A, overall = "Total")
 
 ```
 
@@ -364,6 +372,9 @@ PFAS_D$smoke <- PFAS_D$smokpreg_final_d
 PFAS_D$married <- PFAS_D$married_cohab
 PFAS_D$edu <- PFAS_D$coll_grad
 PFAS_D$meno <- PFAS_D$mom_period_ystopped_age_qu17
+PFAS_D$fish <- PFAS_D$fish_d_f1
+PFAS_D$darkmeat <- PFAS_D$dark_meat_f1
+PFAS_D$height <- PFAS_D$mom_height_ma17
 
 
 ##### RE-LABEL 
@@ -434,6 +445,8 @@ label(PFAS_D$married) <- "Married or cohabitating"
 label(PFAS_D$edu) <- "Education"
 label(PFAS_D$meno_cat) <- "Menopausal status"
 label(PFAS_D$meno) <- "Age at menopause"
+label(PFAS_D$fish) <- "Fish and shellfish consumption"
+label(PFAS_D$darkmeat) <- "Dark meat consumption"
 
 
 ##### ADD UNITS
@@ -444,11 +457,14 @@ units(PFAS_D$menar) <- "years"
 units(PFAS_D$bmi)  <- "kg/m2"
 units(PFAS_D$bmi_cat)  <- "kg/m2"
 units(PFAS_D$meno) <- "years"
+units(PFAS_D$fish) <- "servings/week"
+units(PFAS_D$darkmeat) <- "servings/week"
 
 
 ##### TABE 1
 table1(~ age_enroll + age_fu + fu_time + menar + bmi + bmi_cat + race +  income + 
-         parity + smoke + married + edu + meno_cat + meno, data = PFAS_D, overall = "Total")
+         parity + smoke + married + edu + meno_cat + meno + fish + darkmeat, 
+       data = PFAS_D, overall = "Total")
 
 ```
 
@@ -466,6 +482,8 @@ PFAS_X$smoke <- PFAS_X$smokpreg_final_d
 PFAS_X$married <- PFAS_X$married_cohab
 PFAS_X$edu <- PFAS_X$coll_grad
 PFAS_X$meno <- PFAS_X$mom_periodstopped_age_qu17
+PFAS_X$fish <- PFAS_X$fish_d_f1
+PFAS_X$darkmeat <- PFAS_X$dark_meat_f1
 
 
 ##### RE-LABEL 
@@ -534,6 +552,8 @@ label(PFAS_X$married) <- "Married or cohabitating"
 label(PFAS_X$edu) <- "Education"
 label(PFAS_X$meno_cat) <- "Menopausal status"
 label(PFAS_X$meno) <- "Age at menopause"
+label(PFAS_X$fish) <- "Fish and shellfish consumption"
+label(PFAS_X$darkmeat) <- "Dark meat consumption"
 
 
 ##### ADD UNITS
@@ -542,11 +562,13 @@ units(PFAS_X$menar) <- "years"
 units(PFAS_X$bmi)  <- "kg/m2"
 units(PFAS_X$bmi_cat)  <- "kg/m2"
 units(PFAS_X$meno) <- "years"
+units(PFAS_X$fish) <- "servings/week"
+units(PFAS_X$darkmeat) <- "servings/week"
 
 
 ##### TABE 1
 table1(~ age_enroll + menar + bmi + bmi_cat + race +  income + parity + smoke + 
-         married + edu + meno_cat + meno, data = PFAS_X, overall = "Total")
+         married + edu + meno_cat + meno + fish + darkmeat, data = PFAS_X, overall = "Total")
 
 ```
 
@@ -623,6 +645,7 @@ corrplot(p_corr, type = "upper", order = "hclust", method = "circle",
 
 ##### OUTCOMES DISTRIBUTION TABLE
 summary(PFAS_A$mom_bmi_MT)
+summary(PFAS_A$mom_weight_ma17)
 summary(PFAS_A$DBMI)
 summary(PFAS_A$mom_waist_ma17)
 summary(PFAS_A$WHR)
@@ -636,6 +659,7 @@ table1(~ mom_bmi_MT + DBMI + mom_waist_ma17 + WHR + WHtR + mom_muac_ma17, data =
 
 # RENAME OUTCOMES FOR THE PLOT
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_bmi_MT"] <- "BMI"
+colnames(PFAS_A)[colnames(PFAS_A) == "mom_weight_ma17"] <- "Weight"
 colnames(PFAS_A)[colnames(PFAS_A) == "DBMI"] <- "DBMI"
 colnames(PFAS_A)[colnames(PFAS_A) == "mom_waist_ma17"] <- "Waist"
 colnames(PFAS_A)[colnames(PFAS_A) == "WHR"] <- "WHR"
@@ -649,7 +673,7 @@ colnames(PFAS_A)[colnames(PFAS_A) == "mom_muac_ma17"] <- "MUAC"
 
 ##### OUTCOMES CORRELATION MATRIX
 # ANTHRO
-OUTCOMES_A_corr <- PFAS_A[ , c("BMI", "DBMI", "Waist", "WHR", "WHtR", "MUAC")]
+OUTCOMES_A_corr <- PFAS_A[ , c("BMI", "Weight", "DBMI", "Waist", "WHR", "WHtR", "MUAC")]
 o_A_corr <- cor(OUTCOMES_A_corr)
 round(o_A_corr, 2)
 
