@@ -64,23 +64,6 @@ PFAS_A_NA$BFIN  <- PFAS_A_NA$WBTOT_FAT_mdxa17 / ((PFAS_A_NA$mom_height_ma17)^2)
 ```
 
 ```{r}
-##### DETERMINE DETECTION FREQUENCIES FOR ALL PFAS
-LOD_PFOS <- ifelse(PFAS_A_NA$PFOS < 0.2, 1, 0)
-LOD_PFOA <- ifelse(PFAS_A_NA$PFOA < 0.1, 1, 0)
-LOD_PFNA <- ifelse(PFAS_A_NA$PFNA < 0.1, 1, 0)
-LOD_PFHxS <- ifelse(PFAS_A_NA$PFHxS < 0.1, 1, 0)
-LOD_MeF <- ifelse(PFAS_A_NA$Me_PFOSA_AcOH2 < 0.1, 1, 0)
-LOD_EtF <- ifelse(PFAS_A_NA$Et_PFOSA_AcOH < 0.1, 1, 0)
-table(LOD_PFOS)
-table(LOD_PFOA)
-table(LOD_PFNA)
-table(LOD_PFHxS)
-table(LOD_MeF)
-table(LOD_EtF)
-
-```
-
-```{r}
 ##### CLEAN AND SUMMARIZE IPW DATASET #####
 
 ##### REPLACE MISSING VALUES AND BLANK SPACES WITH "NA"
