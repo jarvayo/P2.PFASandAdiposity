@@ -2,7 +2,7 @@
 ##### PRE-LIMINARY ANALYSIS                                 #####
 #####                                                       #####
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ##### LOAD PACKAGES
 library("tidyverse")
 library("modelsummary")
