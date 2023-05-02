@@ -2,7 +2,7 @@
 ##### EVALUATE DISTRIBUTION OF VARIABLES AND CREATE TABLE 1 #####
 #####                                                       #####
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ##### LOAD PACKAGES
 library("tidyverse")
 library("dplyr")
