@@ -2,7 +2,7 @@
 ##### CLEAN PFAS DATA SET AND ENFORCE ELIGIBILITY CRITERIA #####
 #####                                                        #####
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ##### LOAD PACKAGES
 library("sas7bdat")
 library("haven")
