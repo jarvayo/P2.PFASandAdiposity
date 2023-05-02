@@ -19,45 +19,41 @@ PFAS_A <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Dat
 PFAS_D <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D_COMP.csv")
 PFAS_X <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_X.csv")
 
-##### PFAS CORRELATION MATRIX
-PFAS_A$mom_waist_ma17
-PFAS_corr <- PFAS_D[ , c("mom_weight_ma17", "mom_height_ma17", "mom_waist_ma17")]
-p_corr <- cor(PFAS_corr)
-round(p_corr, 2)
-
-corrplot(p_corr, type = "upper", order = "hclust", method = "circle",
-         tl.col = "black", tl.srt = 45, col = COL2('RdBu', 10), addCoef.col = 'black')
-
-
 ```
 
 ```{r}
-##### CREATE WAIST-TO-HIP RATIO
-PFAS_A$WHR <- PFAS_A$mom_waist_ma17 / PFAS_A$mom_hip_ma17
-
-
-##### CREATE WAIST-TO-HEIGHT RATIO
-# CONVERT METERS TO CENTIMETERS
-PFAS_A$mom_height_ma17 <- PFAS_A$mom_height_ma17 * 100
-PFAS_A$WHtR <- PFAS_A$mom_waist_ma17 / PFAS_A$mom_height_ma17
-
-##### CREATE DIFFERENCE IN BMI
-PFAS_A$DBMI <- PFAS_A$mom_bmi_MT - PFAS_A$bmi_mom_prepreg_d
+# ##### CREATE WAIST-TO-HIP RATIO
+# PFAS_A$WHR <- PFAS_A$mom_waist_ma17 / PFAS_A$mom_hip_ma17
+# 
+# 
+# ##### CREATE WAIST-TO-HEIGHT RATIO
+# # CONVERT METERS TO CENTIMETERS
+# PFAS_A$mom_height_ma17 <- PFAS_A$mom_height_ma17 * 100
+# PFAS_A$WHtR <- PFAS_A$mom_waist_ma17 / PFAS_A$mom_height_ma17
+# 
+# ##### CREATE DIFFERENCE IN BMI
+# PFAS_A$DBMI <- PFAS_A$mom_bmi_MT - PFAS_A$bmi_mom_prepreg_d
 
 
 ##### CREATE TRUNK FAT INDEX
 # CONVERT CENTIMETERS TO METERS
+summary(PFAS_D$mom_height_ma17)
 PFAS_D$mom_height_ma17 <- PFAS_D$mom_height_ma17 * 0.01
+summary(PFAS_D$mom_height_ma17)
 
 # CONVERT GRAMS TO KILOGRAMS
+summary(PFAS_D$TRUNK_FAT_mdxa17)
 PFAS_D$TRUNK_FAT_mdxa17 <- PFAS_D$TRUNK_FAT_mdxa17*0.001 
+summary(PFAS_D$TRUNK_FAT_mdxa17)
 
 PFAS_D$TFIN  <- PFAS_D$TRUNK_FAT_mdxa17 / ((PFAS_D$mom_height_ma17)^2)
 
 
 ##### CREATE TOTAL BODY FAT INDEX
 # CONVERT GRAMS TO KILOGRAMS
+summary(PFAS_D$WBTOT_FAT_mdxa17)
 PFAS_D$WBTOT_FAT_mdxa17 <- PFAS_D$WBTOT_FAT_mdxa17*0.001
+summary(PFAS_D$WBTOT_FAT_mdxa17)
 
 PFAS_D$BFIN  <- PFAS_D$WBTOT_FAT_mdxa17 / ((PFAS_D$mom_height_ma17)^2)
 
@@ -101,32 +97,33 @@ PFAS_D$L2EtFOSAA <- log(PFAS_D$Et_PFOSA_AcOH, 2)
 
 
 ##### TRANSFORM OUTCOME MEASURES TO OBSERVE SHAPE OF DISTRIBUTION
-PFAS_A$LNBMI <- log(PFAS_A$mom_bmi_MT)
-PFAS_A$LNDBMI <- log(PFAS_A$DBMI)
+PFAS_A$LNWT <- log(PFAS_A$mom_weight_ma17)
 PFAS_A$LNWAIST <- log(PFAS_A$mom_waist_ma17)
-PFAS_A$LNWHR <- log(PFAS_A$WHR)
-PFAS_A$LNWHtR <- log(PFAS_A$WHtR)
-PFAS_A$LNMUAC <- log(PFAS_A$mom_muac_ma17)
-#PFAS_A$LNFAT <- log(PFAS_A$mom_fat_ma17)
-#PFAS_A$LNBFAT <- log(PFAS_A$mom_bodyfat_ma17)
-#PFAS_A$LNFFAT <- log(PFAS_A$mom_ffm_ma17)
-#PFAS_A$LNWT <- log(PFAS_A$mom_weight_ma17)
+# PFAS_A$LNBMI <- log(PFAS_A$mom_bmi_MT)
+# PFAS_A$LNDBMI <- log(PFAS_A$DBMI)
+# PFAS_A$LNWHR <- log(PFAS_A$WHR)
+# PFAS_A$LNWHtR <- log(PFAS_A$WHtR)
+# PFAS_A$LNMUAC <- log(PFAS_A$mom_muac_ma17)
+# PFAS_A$LNFAT <- log(PFAS_A$mom_fat_ma17)
+# PFAS_A$LNBFAT <- log(PFAS_A$mom_bodyfat_ma17)
+# PFAS_A$LNFFAT <- log(PFAS_A$mom_ffm_ma17)
+# PFAS_A$LNWT <- log(PFAS_A$mom_weight_ma17)
 
 PFAS_D$LNTKNFAT <- log(PFAS_D$TRUNK_FAT_mdxa17)
 PFAS_D$LNTOTFAT <- log(PFAS_D$WBTOT_FAT_mdxa17)
-PFAS_D$LNPFAT <- log(PFAS_D$WBTOT_PFAT_mdxa17)
 PFAS_D$LNTFIN <- log(PFAS_D$TFIN)
 PFAS_D$LNBFIN <- log(PFAS_D$BFIN)
-#PFAS_D$LNTOTLEAN <- log(PFAS_D$WBTOT_LEAN_mdxa17)
-#PFAS_D$LNVAT_AREA <- log(PFAS_D$VAT_AREA_mdxa17)
-#PFAS_D$LNSAT_AREA <- log(PFAS_D$SAT_AREA_mdxa17)
-#PFAS_D$LNTAT_AREA <- log(PFAS_D$TAT_AREA_mdxa17)
-#PFAS_D$LNVAT_MASS <- log(PFAS_D$VAT_MASS_mdxa17)
-#PFAS_D$LNSAT_MASS <- log(PFAS_D$SAT_MASS_mdxa17)
-#PFAS_D$LNTAT_MASS <- log(PFAS_D$TAT_MASS_mdxa17)
-#PFAS_D$LNVAT_VOLUME <- log(PFAS_D$VAT_VOLUME_mdxa17)
-#PFAS_D$LNSAT_VOLUME <- log(PFAS_D$SAT_VOLUME_mdxa17)
-#PFAS_D$LNTAT_VOLUME <- log(PFAS_D$TAT_VOLUME_mdxa17)
+# PFAS_D$LNPFAT <- log(PFAS_D$WBTOT_PFAT_mdxa17)
+# PFAS_D$LNTOTLEAN <- log(PFAS_D$WBTOT_LEAN_mdxa17)
+# PFAS_D$LNVAT_AREA <- log(PFAS_D$VAT_AREA_mdxa17)
+# PFAS_D$LNSAT_AREA <- log(PFAS_D$SAT_AREA_mdxa17)
+# PFAS_D$LNTAT_AREA <- log(PFAS_D$TAT_AREA_mdxa17)
+# PFAS_D$LNVAT_MASS <- log(PFAS_D$VAT_MASS_mdxa17)
+# PFAS_D$LNSAT_MASS <- log(PFAS_D$SAT_MASS_mdxa17)
+# PFAS_D$LNTAT_MASS <- log(PFAS_D$TAT_MASS_mdxa17)
+# PFAS_D$LNVAT_VOLUME <- log(PFAS_D$VAT_VOLUME_mdxa17)
+# PFAS_D$LNSAT_VOLUME <- log(PFAS_D$SAT_VOLUME_mdxa17)
+# PFAS_D$LNTAT_VOLUME <- log(PFAS_D$TAT_VOLUME_mdxa17)
 
 ```
 
@@ -184,64 +181,64 @@ hist(PFAS_D$L2EtFOSAA)
 
 ```{r}
 ##### DESCRIBE DISTRIBUTION OF OUTCOME MEASURES, ANTHRO DATASET
-hist(PFAS_A$mom_bmi_MT)
-hist(PFAS_A$DBMI)
+hist(PFAS_A$mom_weight_ma17)
 hist(PFAS_A$mom_waist_ma17)
-hist(PFAS_A$WHR)
-hist(PFAS_A$WHtR)
-hist(PFAS_A$mom_muac_ma17)
-#hist(PFAS_A$mom_fat_ma17)
-#hist(PFAS_A$mom_bodyfat_ma17)
-#hist(PFAS_A$mom_ffm_ma17)
-#hist(PFAS_A$mom_weight_ma17)
+# hist(PFAS_A$mom_bmi_MT)
+# hist(PFAS_A$DBMI)
+# hist(PFAS_A$WHR)
+# hist(PFAS_A$WHtR)
+# hist(PFAS_A$mom_muac_ma17)
+# hist(PFAS_A$mom_fat_ma17)
+# hist(PFAS_A$mom_bodyfat_ma17)
+# hist(PFAS_A$mom_ffm_ma17)
 
 # DESCRIBE THE LOG-DISTRIBUTION OF OUTCOME MEASURES, ANTHRO DATASET
-hist(PFAS_A$LNBMI)
-hist(PFAS_A$LNDBMI)
+hist(PFAS_A$LNWT)
 hist(PFAS_A$LNWAIST)
-hist(PFAS_A$LNWHR)
-hist(PFAS_A$LNWHtR)
-hist(PFAS_A$LNMUAC)
-#hist(PFAS_A$LNFAT)
-#hist(PFAS_A$LNBFAT)
-#hist(PFAS_A$LNFFAT)
-#hist(PFAS_A$LNWT)
+# hist(PFAS_A$LNBMI)
+# hist(PFAS_A$LNDBMI)
+# hist(PFAS_A$LNWHR)
+# hist(PFAS_A$LNWHtR)
+# hist(PFAS_A$LNMUAC)
+# hist(PFAS_A$LNFAT)
+# hist(PFAS_A$LNBFAT)
+# hist(PFAS_A$LNFFAT)
 
 
 ##### DESCRIBE DISTRIBUTION OF OUTCOME MEASURES, DXA DATASET
 hist(PFAS_D$TRUNK_FAT_mdxa17)
 hist(PFAS_D$WBTOT_FAT_mdxa17)
-hist(PFAS_D$WBTOT_PFAT_mdxa17)
 hist(PFAS_D$TFIN)
 hist(PFAS_D$BFIN)
-#hist(PFAS_D$WBTOT_LEAN_mdxa17)
-#hist(PFAS_D$VAT_AREA_mdxa17)
-#hist(PFAS_D$SAT_AREA_mdxa17)
-#hist(PFAS_D$TAT_AREA_mdxa17)
-#hist(PFAS_D$VAT_MASS_mdxa17)
-#hist(PFAS_D$SAT_MASS_mdxa17)
-#hist(PFAS_D$TAT_MASS_mdxa17)
-#hist(PFAS_D$VAT_VOLUME_mdxa17)
-#hist(PFAS_D$SAT_VOLUME_mdxa17)
-#hist(PFAS_D$TAT_VOLUME_mdxa17)
+# hist(PFAS_D$WBTOT_PFAT_mdxa17)
+# hist(PFAS_D$WBTOT_LEAN_mdxa17)
+# hist(PFAS_D$VAT_AREA_mdxa17)
+# hist(PFAS_D$SAT_AREA_mdxa17)
+# hist(PFAS_D$TAT_AREA_mdxa17)
+# hist(PFAS_D$VAT_MASS_mdxa17)
+# hist(PFAS_D$SAT_MASS_mdxa17)
+# hist(PFAS_D$TAT_MASS_mdxa17)
+# hist(PFAS_D$VAT_VOLUME_mdxa17)
+# hist(PFAS_D$SAT_VOLUME_mdxa17)
+# hist(PFAS_D$TAT_VOLUME_mdxa17)
 
 
 # DESCRIBE THE LOG-DISTRIBUTION OF OUTCOME MEASURES, DXA DATASET
 hist(PFAS_D$LNTKNFAT)
 hist(PFAS_D$LNTOTFAT)
-hist(PFAS_D$LNPFAT)
 hist(PFAS_D$LNTFIN)
 hist(PFAS_D$LNBFIN)
-#hist(PFAS_D$LNTOTLEAN)
-#hist(PFAS_D$LNVAT_AREA)
-#hist(PFAS_D$LNSAT_AREA)
-#hist(PFAS_D$LNTAT_AREA)
-#hist(PFAS_D$LNVAT_MASS)
-#hist(PFAS_D$LNSAT_MASS)
-#hist(PFAS_D$LNTAT_MASS)
-#hist(PFAS_D$LNVAT_VOLUME)
-#hist(PFAS_D$LNSAT_VOLUME)
-#hist(PFAS_D$LNTAT_VOLUME)
+# hist(PFAS_D$LNPFAT)
+# hist(PFAS_D$LNTOTLEAN)
+# hist(PFAS_D$LNVAT_AREA)
+# hist(PFAS_D$LNSAT_AREA)
+# hist(PFAS_D$LNTAT_AREA)
+# hist(PFAS_D$LNVAT_MASS)
+# hist(PFAS_D$LNSAT_MASS)
+# hist(PFAS_D$LNTAT_MASS)
+# hist(PFAS_D$LNVAT_VOLUME)
+# hist(PFAS_D$LNSAT_VOLUME)
+# hist(PFAS_D$LNTAT_VOLUME)
 
 ```
 
