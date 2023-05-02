@@ -1,0 +1,290 @@
+#####                                                       #####
+##### PRE-LIMINARY ANALYSIS: SENSITIVITY ANANLYSIS (IPCW)   #####
+#####                                                       #####
+
+```{r message=FALSE, warning=FALSE}
+##### LOAD PACKAGES
+library("tidyverse")
+library("modelsummary")
+library("kableExtra")
+library("gt")
+library("shiny") 
+library("olsrr")
+
+```
+
+```{r}
+##### LOAD DATASET
+# THIS DATA SET INCLUDES ALL PEOPLE (THOSE BOTH WITH AND WITHOUT OUTCOMES)
+PFAS_IPW <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_IPW_COMP.csv")
+
+```
+
+```{r}
+##### PREPARE DATASET FOR WEIGHTED REGRESSION
+PFAS_IPW$Waist <- PFAS_IPW$mom_waist_ma17
+PFAS_IPW$MUAC <- PFAS_IPW$mom_muac_ma17
+
+# CREATE INDICATOR VARIABLES TO TELL US WHO WAS CENSORED
+PFAS_IPW$a.cens <- ifelse(is.na(PFAS_IPW$Waist) | is.na(PFAS_IPW$MUAC), 1, 0)
+
+table(PFAS_IPW$a.cens)
+
+
+```
+
+```{r}
+##### PREPARE VARIABLES FOR WEIGHTS AND LINEAR REGRESSION
+PFAS_IPW$L2PFOS <- log(PFAS_IPW$PFOS, 2)
+PFAS_IPW$L2PFOA <- log(PFAS_IPW$PFOA, 2)
+PFAS_IPW$L2PFNA <- log(PFAS_IPW$PFNA2, 2)
+PFAS_IPW$L2PFHxS <- log(PFAS_IPW$PFHxS, 2)
+PFAS_IPW$L2MeFOSAA <- log(PFAS_IPW$Me_PFOSA_AcOH2, 2)
+PFAS_IPW$L2EtFOSAA <- log(PFAS_IPW$Et_PFOSA_AcOH, 2)
+
+
+##### RENAME
+PFAS_IPW$age_enroll <- PFAS_IPW$age_mom_enroll_d
+PFAS_IPW$race <- PFAS_IPW$race2_mom_epi_epia_d
+PFAS_IPW$edu <- PFAS_IPW$coll_grad
+PFAS_IPW$menar <- PFAS_IPW$mom_firstperiod_12y
+PFAS_IPW$bmi <- PFAS_IPW$bmi_mom_prepreg_d
+PFAS_IPW$smoke <- PFAS_IPW$smokpreg_final_d
+PFAS_IPW$income <- PFAS_IPW$gt70k
+PFAS_IPW$parity <- PFAS_IPW$parity_d
+PFAS_IPW$married <- PFAS_IPW$married_cohab
+
+
+##### RE-LABEL 
+PFAS_IPW$race <- ifelse(PFAS_IPW$race == "white", 0,
+                     ifelse(PFAS_IPW$race == "black", 1,
+                     ifelse(PFAS_IPW$race == "hispa", 2,
+                     ifelse(PFAS_IPW$race == "asian", 3,
+                     ifelse(PFAS_IPW$race == "other", 4, 4)))))
+PFAS_IPW$edu <- ifelse(PFAS_IPW$edu == 1, 1, 0)
+PFAS_IPW$bmi_cat <- ifelse(PFAS_IPW$bmi <18.5, 0,
+                         ifelse(PFAS_IPW$bmi >=18.5 & PFAS_IPW$bmi < 25.0, 1, 
+                         ifelse(PFAS_IPW$bmi >=25.0 & PFAS_IPW$bmi < 30.0, 2, 
+                         ifelse(PFAS_IPW$bmi >=30.0 & PFAS_IPW$bmi < 35.0, 3,
+                         ifelse(PFAS_IPW$bmi >=35.0, 4, 99)))))
+PFAS_IPW$smoke <- ifelse(PFAS_IPW$smoke == "former", 0,
+                         ifelse(PFAS_IPW$smoke == "smoke preg", 1,
+                         ifelse(PFAS_IPW$smoke == "xnever", 2, 2)))
+PFAS_IPW$income <- ifelse(PFAS_IPW$income == 1, 1, 0)
+PFAS_IPW$parity <- ifelse(PFAS_IPW$parity == 0, 0,
+                        ifelse(PFAS_IPW$parity == 1, 1,
+                        ifelse(PFAS_IPW$parity > 1, 2, 0)))
+PFAS_IPW$married <- ifelse(PFAS_IPW$married == 1, 1, 0)
+
+
+##### REFACTOR
+PFAS_IPW$race <- factor(PFAS_IPW$race,
+                        levels = c(0, 1, 2, 3, 4),
+                        labels = c("White", "Black", "Hispanic", "Asian", "Other/More than 1 race"))
+PFAS_IPW$edu <- factor(PFAS_IPW$edu,
+                       levels = c(0, 1),
+                       labels = c(" < college degree", ">= college degree"))
+PFAS_IPW$bmi_cat <- factor(PFAS_IPW$bmi_cat,
+                       levels = c(0, 1, 2, 3, 4),
+                       labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
+                                  "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
+                                  "Extremely obese (>= 35)"))
+PFAS_IPW$smoke <- factor(PFAS_IPW$smoke,
+                         levels = c(0, 1, 2),
+                         labels = c("Former smoker", "Smoked during pregnancy", "Never smoked"))
+PFAS_IPW$income <- factor(PFAS_IPW$income,
+                       levels = c(0, 1),
+                       labels = c(" <= $70,000", "> $70,000"))
+PFAS_IPW$parity <- factor(PFAS_IPW$parity,
+                          levels = c(0, 1, 2),
+                          labels = c("0", "1", ">= 2"))
+PFAS_IPW$married <- factor(PFAS_IPW$married,
+                          levels = c(0, 1),
+                          labels = c("No", "Yes"))
+
+
+# SET CATEGORICAL VARIABLES AS FACTORS
+PFAS_IPW$edu <- as.factor(PFAS_IPW$edu)
+PFAS_IPW$income <- as.factor(PFAS_IPW$income)
+PFAS_IPW$smoke <- as.factor(PFAS_IPW$smoke)
+PFAS_IPW$parity <- as.factor(PFAS_IPW$parity)
+PFAS_IPW$race <- as.factor(PFAS_IPW$race)
+PFAS_IPW$married <- as.factor(PFAS_IPW$married)
+
+```
+
+```{r}
+##### ESTIMATE THE NUMERATOR OF CENSORING WEIGHTS
+# PFOS
+a_n_PFOS <- glm(a.cens ~ L2PFOS, family = binomial(), data = PFAS_IPW)
+a_pn_PFOS <- 1-predict(a_n_PFOS, type = "response")
+
+# PFOA
+a_n_PFOA <- glm(a.cens ~ L2PFOA, family = binomial(), data = PFAS_IPW)
+a_pn_PFOA <- 1-predict(a_n_PFOA, type = "response")
+
+# PFNA
+a_n_PFNA <- glm(a.cens ~ L2PFNA, family = binomial(), data = PFAS_IPW)
+a_pn_PFNA <- 1-predict(a_n_PFNA, type = "response")
+
+# PFHxS
+a_n_PFHxS <- glm(a.cens ~ L2PFHxS, family = binomial(), data = PFAS_IPW)
+a_pn_PFHxS <- 1-predict(a_n_PFHxS, type = "response")
+
+# MeFOSAA
+a_n_MeFOSAA <- glm(a.cens ~ L2MeFOSAA, family = binomial(), data = PFAS_IPW)
+a_pn_MeFOSAA <- 1-predict(a_n_MeFOSAA, type = "response")
+
+# EtFOSAA
+a_n_EtFOSAA <- glm(a.cens ~ L2EtFOSAA, family = binomial(), data = PFAS_IPW)
+a_pn_EtFOSAA <- 1-predict(a_n_EtFOSAA, type = "response")
+
+
+##### ESTIMATE THE DENOMINATOR OF CENSORING WEIGHTS 
+# PFOS
+a_d_PFOS <- glm(a.cens ~ L2PFOS + age_enroll + race + income + bmi + edu + smoke +  
+                 parity + married, family = binomial(), data = PFAS_IPW)
+a_pd_PFOS <- 1-predict(a_d_PFOS, type = "response")
+
+# PFOA
+a_d_PFOA <- glm(a.cens ~ L2PFOA + age_enroll + race + income + bmi + edu + smoke +  
+                 parity + married, family = binomial(), data = PFAS_IPW)
+a_pd_PFOA <- 1-predict(a_d_PFOA, type = "response")
+
+# PFNA
+a_d_PFNA <- glm(a.cens ~ L2PFNA + age_enroll + race + income + bmi + edu + smoke +  
+                 parity + married, family = binomial(), data = PFAS_IPW)
+a_pd_PFNA <- 1-predict(a_d_PFNA, type = "response")
+
+# PFHxS
+a_d_PFHxS <- glm(a.cens ~ L2PFHxS + age_enroll + race + income + bmi + edu + smoke +  
+                 parity + married, family = binomial(), data = PFAS_IPW)
+a_pd_PFHxS <- 1-predict(a_d_PFHxS, type = "response")
+
+# MeFOSAA
+a_d_MeFOSAA <- glm(a.cens ~ L2MeFOSAA + age_enroll + race + income + bmi + edu + smoke +  
+                 parity + married, family = binomial(), data = PFAS_IPW)
+a_pd_MeFOSAA <- 1-predict(a_d_MeFOSAA, type = "response")
+
+# EtFOSAA
+a_d_EtFOSAA <- glm(a.cens ~ L2EtFOSAA + age_enroll + race + income + bmi + edu + smoke +  
+                 parity + married, family = binomial(), data = PFAS_IPW)
+a_pd_EtFOSAA <- 1-predict(a_d_EtFOSAA, type = "response")
+
+
+##### CREATE WEIGHTS 
+# PFOS
+PFAS_IPW$PFOS_w <- a_pn_PFOS / a_pd_PFOS
+summary(PFAS_IPW$PFOS_w)
+
+# PFOA
+PFAS_IPW$PFOA_w <- a_pn_PFOA / a_pd_PFOA
+summary(PFAS_IPW$PFOA_w)
+
+# PFNA
+PFAS_IPW$PFNA_w <- a_pn_PFNA / a_pd_PFNA
+summary(PFAS_IPW$PFNA_w)
+
+# PFHxS
+PFAS_IPW$PFHxS_w <- a_pn_PFHxS / a_pd_PFHxS
+summary(PFAS_IPW$PFHxS_w)
+
+# MeFOSAA
+PFAS_IPW$MeFOSAA_w <- a_pn_MeFOSAA / a_pd_MeFOSAA
+summary(PFAS_IPW$MeFOSAA_w)
+
+# EtFOSAA
+PFAS_IPW$EtFOSAA_w <- a_pn_EtFOSAA / a_pd_EtFOSAA
+summary(PFAS_IPW$EtFOSAA_w)
+
+```
+
+```{r}
+##### RUN ADJUSTED LINEAR REGRESSION MODELS
+# WAIST CIRCUMFERENCE
+ad.l2m.waist <- list(
+  "PFOS" = glm(Waist ~ L2PFOS + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(Waist ~ L2PFOA + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(Waist ~ L2PFNA + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(Waist ~ L2PFHxS + age_enroll + race + income + menar + smoke +  
+                  parity + married, family = gaussian, data = PFAS_A),
+  "MeFOSSA" = glm(Waist ~ L2MeFOSAA + age_enroll + race + income + menar + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A),
+  "EtFOSSA" = glm(Waist ~ L2EtFOSAA + age_enroll + race + income + menar + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A))
+
+modelsummary(ad.l2m.waist, fmt = 2,
+             estimate = "{estimate}{stars}",
+             statistic = c("SE: {std.error}",
+                           "95% CI: [{conf.low}, {conf.high}]"),
+             coef_omit = "Interc", title = "LOG2-PFAS vs. WAIST CIRCUMFERENCE")
+
+
+wad.l2m.waist <- list(
+  "PFOS" = glm(Waist ~ L2PFOS + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
+  "PFOA" = glm(Waist ~ L2PFOA + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_IPW, weights = PFOA_w),
+  "PFNA" = glm(Waist ~ L2PFNA + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_IPW, weights = PFNA_w),
+  "PFHxS" = glm(Waist ~ L2PFHxS + age_enroll + race + income + menar + smoke +  
+                  parity + married, family = gaussian, data = PFAS_IPW, weights = PFHxS_w),
+  "MeFOSSA" = glm(Waist ~ L2MeFOSAA + age_enroll + race + income + menar + smoke +  
+                    parity + married, family = gaussian, data = PFAS_IPW, weights = MeFOSAA_w),
+  "EtFOSSA" = glm(Waist ~ L2EtFOSAA + age_enroll + race + income + menar + smoke +  
+                    parity + married, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
+
+modelsummary(wad.l2m.waist, fmt = 2,
+             estimate = "{estimate}{stars}",
+             statistic = c("SE: {std.error}",
+                           "95% CI: [{conf.low}, {conf.high}]"),
+             coef_omit = "Interc", title = "LOG2-PFAS vs. WAIST CIRCUMFERENCE (IPC Weighted)")
+
+
+
+# MUAC
+ad.l2m.muac <- list(
+  "PFOS" = glm(MUAC ~ L2PFOS + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(MUAC ~ L2PFOA + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(MUAC ~ L2PFNA + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(MUAC ~ L2PFHxS + age_enroll + race + income + menar + smoke +  
+                  parity + married, family = gaussian, data = PFAS_A),
+  "MeFOSSA" = glm(MUAC ~ L2MeFOSAA + age_enroll + race + income + menar + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A),
+  "EtFOSSA" = glm(MUAC ~ L2EtFOSAA + age_enroll + race + income + menar + smoke +  
+                    parity + married, family = gaussian, data = PFAS_A))
+
+modelsummary(ad.l2m.muac, fmt = 2,
+             estimate = "{estimate}{stars}",
+             statistic = c("SE: {std.error}",
+                           "95% CI: [{conf.low}, {conf.high}]"),
+             coef_omit = "Interc", title = "LOG2-PFAS vs. MUAC")
+
+
+wad.l2m.muac <- list(
+  "PFOS" = glm(MUAC ~ L2PFOS + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
+  "PFOA" = glm(MUAC ~ L2PFOA + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_IPW, weights = PFOA_w),
+  "PFNA" = glm(MUAC ~ L2PFNA + age_enroll + race + income + menar + smoke +  
+                 parity + married, family = gaussian, data = PFAS_IPW, weights = PFNA_w),
+  "PFHxS" = glm(MUAC ~ L2PFHxS + age_enroll + race + income + menar + smoke +  
+                  parity + married, family = gaussian, data = PFAS_IPW, weights = PFHxS_w),
+  "MeFOSSA" = glm(MUAC ~ L2MeFOSAA + age_enroll + race + income + menar + smoke +  
+                    parity + married, family = gaussian, data = PFAS_IPW, weights = MeFOSAA_w),
+  "EtFOSSA" = glm(MUAC ~ L2EtFOSAA + age_enroll + race + income + menar + smoke +  
+                    parity + married, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
+
+modelsummary(wad.l2m.muac, fmt = 2,
+             estimate = "{estimate}{stars}",
+             statistic = c("SE: {std.error}",
+                           "95% CI: [{conf.low}, {conf.high}]"),
+             coef_omit = "Interc", title = "LOG2-PFAS vs. MUAC (IPC Weighted)")
+
+```
