@@ -26,14 +26,26 @@ PFAS[PFAS == ""] <- NA
 ```
 
 ```{r}
-##### FOR PFAS CONCENTRATIONS BELOW THE LOD, REPLACE WITH "LOD/(SQRT(2))"
+##### CHECK FOR DUPLICATE IDS IN THE DATASET
+sum(duplicated(PFAS$familyid)) # 28 DUPLICATES
 
-#PFAS$PFOS <- ifelse(!is.na(PFAS$PFOS) & PFAS$PFOS < 0.2, PFAS$PFOS == (0.2/(sqrt(2))), PFAS$PFOS)
-#PFAS$PFOA <- ifelse(!is.na(PFAS$PFOA) & PFAS$PFOA < 0.1, PFAS$PFOA == (0.1/(sqrt(2))), PFAS$PFOA)
-#PFAS$PFNA2 <- ifelse(!is.na(PFAS$PFNA2) & PFAS$PFNA2 < 0.1, PFAS$PFNA2 == (0.1/(sqrt(2))), PFAS$PFNA2)
-#PFAS$PFHxS <- ifelse(!is.na(PFAS$PFHxS) & PFAS$PFHxS < 0.1, PFAS$PFHxS == (0.1/(sqrt(2))), PFAS$PFHxS)
-#PFAS$Me_PFOSA_AcOH2 <- ifelse(!is.na(PFAS$Me_PFOSA_AcOH2) & PFAS$Me_PFOSA_AcOH2 < 0.1, PFAS$Me_PFOSA_AcOH2 == (0.1/(sqrt(2))), PFAS$Me_PFOSA_AcOH2)
-#PFAS$Et_PFOSA_AcOH <- ifelse(!is.na(PFAS$Et_PFOSA_AcOH) & PFAS$Et_PFOSA_AcOH < 0.1, PFAS$Et_PFOSA_AcOH == (0.1/(sqrt(2))), PFAS$Et_PFOSA_AcOH)
+# DROP THE SECOND DUPLICATE
+DUPS <- PFAS[duplicated(PFAS$familyid),]
+
+PFAS <- PFAS[order(PFAS$familyid),]
+PFAS <- PFAS[!duplicated(PFAS$familyid),]
+
+```
+
+```{r}
+# ##### FOR PFAS CONCENTRATIONS BELOW THE LOD, REPLACE WITH "LOD/(SQRT(2))"
+# 
+# PFAS$PFOS <- ifelse(!is.na(PFAS$PFOS) & PFAS$PFOS < 0.2, PFAS$PFOS == (0.2/(sqrt(2))), PFAS$PFOS)
+# PFAS$PFOA <- ifelse(!is.na(PFAS$PFOA) & PFAS$PFOA < 0.1, PFAS$PFOA == (0.1/(sqrt(2))), PFAS$PFOA)
+# PFAS$PFNA2 <- ifelse(!is.na(PFAS$PFNA2) & PFAS$PFNA2 < 0.1, PFAS$PFNA2 == (0.1/(sqrt(2))), PFAS$PFNA2)
+# PFAS$PFHxS <- ifelse(!is.na(PFAS$PFHxS) & PFAS$PFHxS < 0.1, PFAS$PFHxS == (0.1/(sqrt(2))), PFAS$PFHxS)
+# PFAS$Me_PFOSA_AcOH2 <- ifelse(!is.na(PFAS$Me_PFOSA_AcOH2) & PFAS$Me_PFOSA_AcOH2 < 0.1, PFAS$Me_PFOSA_AcOH2 == (0.1/(sqrt(2))), PFAS$Me_PFOSA_AcOH2)
+# PFAS$Et_PFOSA_AcOH <- ifelse(!is.na(PFAS$Et_PFOSA_AcOH) & PFAS$Et_PFOSA_AcOH < 0.1, PFAS$Et_PFOSA_AcOH == (0.1/(sqrt(2))), PFAS$Et_PFOSA_AcOH)
 
 # THERE IS NO NEED TO RUN THIS CODE BECAUSE THE CONCENTRATIONS < LOD ALREADY EQUAL LOD/SQRT(2)
 
@@ -48,45 +60,34 @@ summary(PFAS$PFNA2)
 summary(PFAS$PFHxS)
 summary(PFAS$PFDeA)
 summary(PFAS$Me_PFOSA_AcOH2)
-summary(PFAS$Et_PFOSA_AcOH) # INDIVIDUALS ARE MISSING ALL OR NONE OF EACH PFAS (N = 483)
+summary(PFAS$Et_PFOSA_AcOH) # INDIVIDUALS ARE MISSING ALL OR NONE OF EACH PFAS (N = 473)
 
 ##### DETERMINE ANTHROPOMETRY MISSINGNESS
-summary(PFAS$mom_bmi_MT) # 1424 MISSING
-summary(PFAS$mom_waist_ma17) # 1419 MISSING
-summary(PFAS$mom_hip_ma17) # 1420 MISSING
-summary(PFAS$mom_muac_ma17) # 1420 MISSING
-#summary(PFAS$mom_fat_ma17) # 1428 MISSING, BODY FAT MASS
-#summary(PFAS$mom_bodyfat_ma17) # 1427 MISSING, BODY FAT %
-#summary(PFAS$mom_ffm_ma17) # 1427 MISSING, FAT FREE MASS
-#summary(PFAS$mom_weight_ma17) # 1424 MISSING
+summary(PFAS$mom_height_ma17) # 1402 MISSING, HEIGHT (CM)
+summary(PFAS$mom_weight_ma17) # 1408 MISSING, WEIGHT (KG)
+summary(PFAS$mom_waist_ma17) # 1403 MISSING, WAIST CIRCUMFERENCE (CM)
+# summary(PFAS$mom_bmi_MT) 
+# summary(PFAS$mom_hip_ma17) 
+# summary(PFAS$mom_muac_ma17) 
+# summary(PFAS$mom_fat_ma17) # BODY FAT MASS
+# summary(PFAS$mom_bodyfat_ma17) # BODY FAT %
+# summary(PFAS$mom_ffm_ma17) # FAT FREE MASS
 
 ##### DETERMINE DXA OUTCOME MISSINGNESS
-summary(PFAS$TRUNK_FAT_mdxa17) # 1577 MISSING, TOTAL TRUNK FAT MASS (G)
-summary(PFAS$WBTOT_FAT_mdxa17) # 1577 MISSING, TOTAL FAT MASS (G)
-summary(PFAS$WBTOT_PFAT_mdxa17) # 1577 MISSING, TOTAL BODY FAT %
-#summary(PFAS$WBTOT_LEAN_mdxa17) # 1577 MISSING, TOTAL LEAN MASS (G)
-#summary(PFAS$WEIGHT_mdxa17) # INDIVIDUALS ARE MISSING ALL OR NONE OF EACH DXA MEASURE (N = 1577)
-#summary(PFAS$VAT_AREA_mdxa17)
-#summary(PFAS$VAT_MASS_mdxa17)
-#summary(PFAS$VAT_VOLUME_mdxa17)
-#summary(PFAS$SAT_AREA_mdxa17)
-#summary(PFAS$SAT_MASS_mdxa17)
-#summary(PFAS$SAT_VOLUME_mdxa17)
-#summary(PFAS$TAT_AREA_mdxa17)
-#summary(PFAS$TAT_MASS_mdxa17)
-#summary(PFAS$TAT_VOLUME_mdxa17) 
-
-```
-
-```{r}
-##### CHECK FOR DUPLICATE IDS IN THE DATASET
-sum(duplicated(PFAS$familyid)) # 28 DUPLICATES
-
-# DROP THE SECOND DUPLICATE
-DUPS <- PFAS[duplicated(PFAS$familyid),]
-
-PFAS <- PFAS[order(PFAS$familyid),]
-PFAS <- PFAS[!duplicated(PFAS$familyid),]
+summary(PFAS$TRUNK_FAT_mdxa17) # 1551 MISSING, TOTAL TRUNK FAT MASS (G)
+summary(PFAS$WBTOT_FAT_mdxa17) # 1551 MISSING, TOTAL BODY FAT MASS (G)
+# summary(PFAS$WBTOT_PFAT_mdxa17) # TOTAL BODY FAT %
+# summary(PFAS$WBTOT_LEAN_mdxa17) # TOTAL LEAN MASS (G)
+# summary(PFAS$WEIGHT_mdxa17)
+# summary(PFAS$VAT_AREA_mdxa17)
+# summary(PFAS$VAT_MASS_mdxa17)
+# summary(PFAS$VAT_VOLUME_mdxa17)
+# summary(PFAS$SAT_AREA_mdxa17)
+# summary(PFAS$SAT_MASS_mdxa17)
+# summary(PFAS$SAT_VOLUME_mdxa17)
+# summary(PFAS$TAT_AREA_mdxa17)
+# summary(PFAS$TAT_MASS_mdxa17)
+# summary(PFAS$TAT_VOLUME_mdxa17) 
 
 ```
 
@@ -95,18 +96,18 @@ PFAS <- PFAS[!duplicated(PFAS$familyid),]
 PFAS_1 <- subset(PFAS, !is.na(PFOS)) # MISSING 1ST OR 2ND TRIMESTER PFAS DATA (I.E., 22 WEEKS GESTATION)
 PFAS_2 <- subset(PFAS_1, t1diab_mom_epi_epia_d == 2 | is.na(t1diab_mom_epi_epia_d)) # HISTORY OF T1 DIABETES
 PFAS_2 <- subset(PFAS_2, t2diab_mom_epi_epia_d == 2 | is.na(t2diab_mom_epi_epia_d)) # HISTORY OF T2 DIABETES
-PFAS_3 <- subset(PFAS_2, !is.na(mom_bmi_MT)) # MISSING BMI 
-PFAS_3 <- subset(PFAS_3, !is.na(mom_waist_ma17)) # MISSING WAIST MEASUREMENT 
-PFAS_4 <- subset(PFAS_3, !is.na(mom_hip_ma17)) # MISSING HIP MEASUREMENT 
-PFAS_5 <- subset(PFAS_4, !is.na(mom_muac_ma17)) # MISSING MUAC
-PFAS_6 <- subset(PFAS_5, !is.na(TRUNK_FAT_mdxa17)) # MISSING DXA MEASURES 
+PFAS_3 <- subset(PFAS_2, !is.na(mom_height_ma17)) # MISSING HEIGHT MEASUREMENT
+PFAS_3 <- subset(PFAS_3, !is.na(mom_weight_ma17)) # MISSING WEIGHT MEASUREMENT 
+PFAS_4 <- subset(PFAS_3, !is.na(mom_waist_ma17)) # MISSING WAIST MEASUREMENT  
+
+PFAS_5 <- subset(PFAS_4, !is.na(TRUNK_FAT_mdxa17)) # MISSING DXA MEASURES 
 
 ```
 
 ```{r}
 ##### CREATE A DATASET OF INDIVIDUALS EXCLUDED FROM THE MAIN ANALYSIS (I.E., "PFAS_X")
-PFAS_6$include <- 1+0
-PFAS_X <- merge(PFAS, PFAS_6, by = "aid", all.x = TRUE)
+PFAS_5$include <- 1+0
+PFAS_X <- merge(PFAS, PFAS_5, by = "aid", all.x = TRUE)
 PFAS_X <- subset(PFAS_X, is.na(include))
 
 colnames(PFAS_X)<-gsub(".y","",colnames(PFAS_X))
@@ -125,7 +126,7 @@ PFAS_2 <- subset(PFAS_2, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH
                                     mom_bmi_MT, mom_weight_ma17, mom_height_ma17, mom_waist_ma17, mom_hip_ma17, mom_muac_ma17, 
                                     mom_bodyfat_ma17, mom_ffm_ma17, mom_fat_ma17, fish_d_f1, dark_meat_f1))
 
-PFAS_5 <- subset(PFAS_5, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH2, Et_PFOSA_AcOH,
+PFAS_4 <- subset(PFAS_4, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH2, Et_PFOSA_AcOH,
                                     g_age_days_COLL_D_BLD1, age_mom_enroll_d, age_days_comp_d_ma17, age_days_mdxa17, 
                                     mom_age_days_comp_d_ma17, bmi_mom_prepreg_d, race2_mom_epi_epia_d, coll_grad, 
                                     gt70k, income_hh_epq_epqa_d, parity_d, smokpreg_final_d, married_cohab, 
@@ -134,7 +135,7 @@ PFAS_5 <- subset(PFAS_5, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH
                                     mom_bmi_MT, mom_weight_ma17, mom_height_ma17, mom_waist_ma17, mom_hip_ma17, mom_muac_ma17, 
                                     mom_bodyfat_ma17, mom_ffm_ma17, mom_fat_ma17, fish_d_f1, dark_meat_f1))
 
-PFAS_6 <- subset(PFAS_6, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH2, Et_PFOSA_AcOH,
+PFAS_5 <- subset(PFAS_5, select = c(aid, PFOS, PFOA, PFNA2, PFHxS, Me_PFOSA_AcOH2, Et_PFOSA_AcOH,
                                     g_age_days_COLL_D_BLD1, age_mom_enroll_d, age_days_comp_d_ma17, age_days_mdxa17, 
                                     mom_age_days_mdxa17, bmi_mom_prepreg_d, race2_mom_epi_epia_d, coll_grad, 
                                     gt70k, income_hh_epq_epqa_d, parity_d, smokpreg_final_d, married_cohab, 
@@ -152,14 +153,14 @@ PFAS_X <- subset(PFAS_X, select = c(aid, age_mom_enroll_d, bmi_mom_prepreg_d, co
 
 
 ##### SAVE DATASET
-write.csv(PFAS_2, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_IPW_C.csv", row.names = T)
+# write.csv(PFAS_2, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_IPW_C.csv", row.names = T)
 write_sas(PFAS_2, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_IPW_C.sas7bdat")
 
-write.csv(PFAS_5, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A_C.csv", row.names = T)
-write_sas(PFAS_5, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A_C.sas7bdat")
+# write.csv(PFAS_4, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A_C.csv", row.names = T)
+write_sas(PFAS_4, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A_C.sas7bdat")
 
-write.csv(PFAS_6, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D_C.csv", row.names = T)
-write_sas(PFAS_6, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D_C.sas7bdat")
+# write.csv(PFAS_5, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D_C.csv", row.names = T)
+write_sas(PFAS_5, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D_C.sas7bdat")
 
 # THE "C" AT THE END OF THE SAVED FILES INDICATES THAT THE DATASET IS CLEAN
 # THE "IPW" AT THE END OF THE SAVED FILES INDICATES THAT THE DATASET IS USED FOR IPCW
@@ -167,7 +168,7 @@ write_sas(PFAS_6, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Dat
 # THE "D" INDICATES THAT THE DATASET HAS THE DXA MEASURES
 
 write.csv(PFAS_X, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_X.csv", row.names = T)
-write_sas(PFAS_X, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_X.sas7bdat")
+# write_sas(PFAS_X, "C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_X.sas7bdat")
 
 # THE "X" AT THE END OF THE SAVED FILES INDICATES THAT THE DATASET IS COMPOSED OF EXCLUDED INDIVIDUALS
 
