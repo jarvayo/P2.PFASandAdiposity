@@ -115,6 +115,8 @@ summary(PFAS_IPW_NA$mom_firstperiod_12y)
 summary(PFAS_IPW_NA$mom_period_ystopped_age_qu17)
 summary(PFAS_IPW_NA$fish_d_f1)
 summary(PFAS_IPW_NA$dark_meat_f1)
+summary(PFAS_IPW_NA$mod_pre_d)
+summary(PFAS_IPW_NA$vig_pre_d)
 
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
@@ -197,6 +199,8 @@ summary(PFAS_A_NA$mom_firstperiod_12y)
 summary(PFAS_A_NA$mom_period_ystopped_age_qu17)
 summary(PFAS_A_NA$fish_d_f1)
 summary(PFAS_A_NA$dark_meat_f1)
+summary(PFAS_A_NA$mod_pre_d)
+summary(PFAS_A_NA$vig_pre_d)
 
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
@@ -222,7 +226,8 @@ summary(PFAS_A_NA$parity_cat)
 
 ##### TABLE OF MISSINGNESS
 table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + age_days_comp_d_ma17 + mom_firstperiod_12y +
-         bmi_mom_prepreg_d + meno_cat + mom_period_ystopped_age_qu17 + fish_d_f1 + dark_meat_f1, 
+         bmi_mom_prepreg_d + meno_cat + mom_period_ystopped_age_qu17 + fish_d_f1 + dark_meat_f1 +
+         mod_pre_d + vig_pre_d, 
        data = PFAS_A_NA, overall="Total")
 
 table1(~ meno_cat + bmi_cat + race2_mom_epi_epia_d + coll_grad + 
@@ -288,6 +293,8 @@ summary(PFAS_D_NA$mom_firstperiod_12y)
 summary(PFAS_D_NA$mom_period_ystopped_age_qu17)
 summary(PFAS_D_NA$fish_d_f1)
 summary(PFAS_D_NA$dark_meat_f1)
+summary(PFAS_D_NA$mod_pre_d)
+summary(PFAS_D_NA$vig_pre_d)
 
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
@@ -311,7 +318,8 @@ summary(PFAS_D_NA$parity_cat)
 
 ##### TABLE OF MISSINGNESS
 table1(~ age_mom_enroll_d + mom_age_mdxa17 + age_days_mdxa17 + mom_firstperiod_12y +
-         bmi_mom_prepreg_d + meno_cat + mom_period_ystopped_age_qu17 + fish_d_f1 + dark_meat_f1, 
+         bmi_mom_prepreg_d + meno_cat + mom_period_ystopped_age_qu17 + fish_d_f1 + dark_meat_f1 +
+         mod_pre_d + vig_pre_d, 
          data = PFAS_D_NA, overall="Total")
 
 table1(~ meno_cat + bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k  + 
@@ -325,7 +333,7 @@ table1(~ meno_cat + bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_IPW_ARG <- aregImpute(~ gt70k + fish_d_f1 + dark_meat_f1 + mom_firstperiod_12y + 
+PFAS_IPW_ARG <- aregImpute(~ mod_pre_d + vig_pre_d + gt70k + fish_d_f1 + dark_meat_f1 + mom_firstperiod_12y + 
                              mom_period_stopped_qu17 + mom_period_ystopped_age_qu17 + 
                              married_cohab + coll_grad + race2_mom_epi_epia_d + 
                              smokpreg_final_d + bmi_mom_prepreg_d + parity_d + 
@@ -381,7 +389,7 @@ PFAS_IPW_COMP$BFIN <- ifelse(PFAS_IPW_COMP$BFIN == 9999, NA, PFAS_IPW_COMP$BFIN)
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_A_ARG <- aregImpute(~ gt70k + fish_d_f1 + dark_meat_f1 + mom_firstperiod_12y + 
+PFAS_A_ARG <- aregImpute(~ mod_pre_d + vig_pre_d + gt70k + fish_d_f1 + dark_meat_f1 + mom_firstperiod_12y + 
                            mom_period_stopped_qu17 + mom_period_ystopped_age_qu17 + 
                            married_cohab + coll_grad + race2_mom_epi_epia_d + 
                            smokpreg_final_d + bmi_mom_prepreg_d + parity_d + 
@@ -421,7 +429,7 @@ PFAS_A_COMP$BFIN <- ifelse(PFAS_A_COMP$BFIN == 9999, NA, PFAS_A_COMP$BFIN)
 ##### https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/
 set.seed(1234)
 
-PFAS_D_ARG <- aregImpute(~ gt70k + fish_d_f1 + dark_meat_f1 + mom_firstperiod_12y + 
+PFAS_D_ARG <- aregImpute(~ mod_pre_d + vig_pre_d + gt70k + fish_d_f1 + dark_meat_f1 + mom_firstperiod_12y + 
                            mom_period_stopped_qu17 + mom_period_ystopped_age_qu17 + 
                            married_cohab + coll_grad + race2_mom_epi_epia_d + 
                            smokpreg_final_d + bmi_mom_prepreg_d + parity_d + 
@@ -464,7 +472,8 @@ PFAS_D_COMP$mom_waist_ma17 <- ifelse(PFAS_D_COMP$mom_waist_ma17 == 9999, NA, PFA
 ```{r}
 ##### RE-CHECK VARIABLE DISTRIBUTION FOR DATASET WITH IMPUTED DATA 
 table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + age_days_comp_d_ma17 + 
-         mom_firstperiod_12y + bmi_mom_prepreg_d + fish_d_f1 + dark_meat_f1, 
+         mom_firstperiod_12y + bmi_mom_prepreg_d + fish_d_f1 + dark_meat_f1 +
+         mod_pre_d + vig_pre_d, 
        data = PFAS_A_COMP, overall="Total")
 
 table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k +
@@ -473,7 +482,8 @@ table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k +
 
 ##### RE-CHECK VARIABLE DISTRIBUTION FOR DATASET WITH IMPUTED DATA 
 table1(~ age_mom_enroll_d + mom_age_mdxa17 + age_days_mdxa17 + 
-         mom_firstperiod_12y + bmi_mom_prepreg_d + fish_d_f1 + dark_meat_f1, 
+         mom_firstperiod_12y + bmi_mom_prepreg_d + fish_d_f1 + dark_meat_f1 +
+         mod_pre_d + vig_pre_d, 
        data = PFAS_D_COMP, overall="Total")
 
 table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k +
