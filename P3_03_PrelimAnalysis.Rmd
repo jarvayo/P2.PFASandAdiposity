@@ -696,11 +696,11 @@ modelsummary(ad.l2m.trnkfat, fmt = 4, estimate = "{estimate}{stars}",
 
 # TOTAL BODY FAT MASS
 ad.l2m.totfat <- list(
-  "PFOS" = glm(TotFat ~ L2PFOS + age + race + bmi_cat + smoke + exer_cat +
+  "PFOS" = glm(TotFat ~ L2PFOS + age + race + bmi_cat + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_D),
-  "PFOA" = glm(TotFat ~ L2PFOA + age + race + bmi_cat + smoke + exer_cat +
+  "PFOA" = glm(TotFat ~ L2PFOA + age + race + bmi_cat + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_D),
-  "PFNA" = glm(TotFat ~ L2PFNA + age + race + bmi_cat + smoke + 
+  "PFNA" = glm(TotFat ~ L2PFNA + age + race + bmi_cat + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_D),
   "PFHxS" = glm(TotFat ~ L2PFHxS + age + race + bmi_cat + smoke + 
                   parity + married + fish + height, family = gaussian, data = PFAS_D),
