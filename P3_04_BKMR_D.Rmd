@@ -2,7 +2,7 @@
 ##### RUN MIXTURES ANALYSIS WITH BKMR IN DXA DATASET  #####
 #####                                                 #####
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ##### LOAD PACKAGES
 library("bkmr")
 library("ggplot2")
@@ -11,7 +11,7 @@ library("tidyverse")
 
 ```
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ##### LOAD DATASET
 PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D.csv")
 
