@@ -2,7 +2,7 @@
 ##### RUN MIXTURES ANALYSIS WITH QUANTILE G-COMPUTATION IN ANTHRO        #####
 #####                                                                    #####
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ##### LOAD PACKAGES
 library('qgcomp')
 library("tidyverse")
@@ -11,7 +11,7 @@ library("ggplot2")
 
 ```
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ##### LOAD DATASET
 PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A.csv")
 PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D.csv")
