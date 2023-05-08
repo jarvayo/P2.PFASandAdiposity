@@ -76,7 +76,7 @@ PFAS_A$darkmeat_s <- scale(PFAS_A$darkmeat)
 
 ##### TABE 1
 table1(~ age + menar + bmi + bmi_cat + race +  income + parity + smoke +
-         married + edu + fish + darkmeat + exer + exer_cat, data = PFAS_A, overall = "Total")
+         married + edu + fish + darkmeat, data = PFAS_A, overall = "Total")
 
 ```
 
@@ -134,7 +134,7 @@ PFAS_D$darkmeat_s <- scale(PFAS_D$darkmeat)
 
 ##### TABE 1
 table1(~ age + menar + bmi + bmi_cat + race +  income + parity + smoke +
-         married + edu + fish + darkmeat + exer + excer_cat, data = PFAS_D, overall = "Total")
+         married + edu + fish + darkmeat, data = PFAS_D, overall = "Total")
 
 ```
 
@@ -722,31 +722,32 @@ modelsummary(ad.l2m.totfat, fmt = 4, estimate = "{estimate}{stars}",
 PFAS_A <- PFAS_A %>% relocate(aid, L2PFOS, L2PFOA, L2PFNA, L2PFHxS, L2MeFOSAA, L2EtFOSAA, everything()) 
 PFAS_D <- PFAS_D %>% relocate(aid, L2PFOS, L2PFOA, L2PFNA, L2PFHxS, L2MeFOSAA, L2EtFOSAA, everything()) 
 
-# BMI
-pval_BMI <- NULL
+
+# WEIGHT
+pval_WT <- NULL
 for (i in 2:7){
-m_BMI <- glm(PFAS_A$LNBMI ~ PFAS_A[[i]] + PFAS_A$age + PFAS_A$race + 
-                PFAS_A$income + PFAS_A$menar + PFAS_A$smoke +  PFAS_A$parity + 
-                PFAS_A$married, family = gaussian)
-p_BMI <- summary(m_BMI)$coefficients[2,]
-pval_BMI <- rbind(pval_BMI, p_BMI)
-rownames(pval_BMI)[i-1] <- paste("X", i-1, sep="")
+m_WT <- glm(PFAS_A$Weight ~ PFAS_A[[i]] + PFAS_A$age + PFAS_A$race + 
+                PFAS_A$bmi_cat + PFAS_A$smoke +  PFAS_A$parity + 
+                PFAS_A$married + PFAS_A$fish + PFAS_A$height, family = gaussian)
+p_WT <- summary(m_WT)$coefficients[2,]
+pval_WT <- rbind(pval_WT, p_WT)
+rownames(pval_WT)[i-1] <- paste("X", i-1, sep="")
 }
 
-pval_BMI_set <- pval_BMI[,4]
-BH_BMI <- p.adjust(pval_BMI_set, method="BH")
-BY_BMI <- p.adjust(pval_BMI_set, method="BY")
-FDR_BMI <- p.adjust(pval_BMI_set, method="fdr")
-FWER_BMI <- as.data.frame(cbind(pval_BMI_set, BH_BMI, BY_BMI, FDR_BMI))
-FWER_BMI
+pval_WT_set <- pval_WT[,4]
+BH_WT <- p.adjust(pval_WT_set, method="BH")
+BY_WT <- p.adjust(pval_WT_set, method="BY")
+FDR_WT <- p.adjust(pval_WT_set, method="fdr")
+FWER_WT <- as.data.frame(cbind(pval_WT_set, BH_WT, BY_WT, FDR_WT))
+FWER_WT
 
 
 # Waist
 pval_Waist <- NULL
 for (i in 2:7){
 m_Waist <- glm(PFAS_A$Waist ~ PFAS_A[[i]] + PFAS_A$age + PFAS_A$race + 
-                PFAS_A$income + PFAS_A$menar + PFAS_A$smoke +  PFAS_A$parity + 
-                PFAS_A$married, family = gaussian)
+                PFAS_A$bmi_cat + PFAS_A$smoke +  PFAS_A$parity + 
+                PFAS_A$married + PFAS_A$fish + PFAS_A$height, family = gaussian)
 p_Waist <- summary(m_Waist)$coefficients[2,]
 pval_Waist <- rbind(pval_Waist, p_Waist)
 rownames(pval_Waist)[i-1] <- paste("X", i-1, sep="")
@@ -760,69 +761,88 @@ FWER_Waist <- as.data.frame(cbind(pval_Waist_set, BH_Waist, BY_Waist, FDR_Waist)
 FWER_Waist
 
 
-# WHR
-pval_WHR <- NULL
-for (i in 2:7){
-m_WHR <- glm(PFAS_A$WHR ~ PFAS_A[[i]] + PFAS_A$age + PFAS_A$race + 
-                PFAS_A$income + PFAS_A$menar + PFAS_A$smoke +  PFAS_A$parity + 
-                PFAS_A$married, family = gaussian)
-p_WHR <- summary(m_WHR)$coefficients[2,]
-pval_WHR <- rbind(pval_WHR, p_WHR)
-rownames(pval_WHR)[i-1] <- paste("X", i-1, sep="")
-}
-
-pval_WHR_set <- pval_WHR[,4]
-BH_WHR <- p.adjust(pval_WHR_set, method="BH")
-BY_WHR <- p.adjust(pval_WHR_set, method="BY")
-FDR_WHR <- p.adjust(pval_WHR_set, method="fdr")
-FWER_WHR <- as.data.frame(cbind(pval_WHR_set, BH_WHR, BY_WHR, FDR_WHR))
-FWER_WHR
-
-
-# WHtR
-pval_WHtR <- NULL
-for (i in 2:7){
-m_WHtR <- glm(PFAS_A$WHtR ~ PFAS_A[[i]] + PFAS_A$age + PFAS_A$race + 
-                PFAS_A$income + PFAS_A$menar + PFAS_A$smoke +  PFAS_A$parity + 
-                PFAS_A$married, family = gaussian)
-p_WHtR <- summary(m_WHtR)$coefficients[2,]
-pval_WHtR <- rbind(pval_WHtR, p_WHtR)
-rownames(pval_WHtR)[i-1] <- paste("X", i-1, sep="")
-}
-
-pval_WHtR_set <- pval_WHtR[,4]
-BH_WHtR <- p.adjust(pval_WHtR_set, method="BH")
-BY_WHtR <- p.adjust(pval_WHtR_set, method="BY")
-FDR_WHtR <- p.adjust(pval_WHtR_set, method="fdr")
-FWER_WHtR <- as.data.frame(cbind(pval_WHtR_set, BH_WHtR, BY_WHtR, FDR_WHtR))
-FWER_WHtR
-
-
-# MUAC
-pval_MUAC <- NULL
-for (i in 2:7){
-m_MUAC <- glm(PFAS_A$MUAC ~ PFAS_A[[i]] + PFAS_A$age + PFAS_A$race + 
-                PFAS_A$income + PFAS_A$menar + PFAS_A$smoke +  PFAS_A$parity + 
-                PFAS_A$married, family = gaussian)
-p_MUAC <- summary(m_MUAC)$coefficients[2,]
-pval_MUAC <- rbind(pval_MUAC, p_MUAC)
-rownames(pval_MUAC)[i-1] <- paste("X", i-1, sep="")
-}
-
-pval_MUAC_set <- pval_MUAC[,4]
-BH_MUAC <- p.adjust(pval_MUAC_set, method="BH")
-BY_MUAC <- p.adjust(pval_MUAC_set, method="BY")
-FDR_MUAC <- p.adjust(pval_MUAC_set, method="fdr")
-FWER_MUAC <- as.data.frame(cbind(pval_MUAC_set, BH_MUAC, BY_MUAC, FDR_MUAC))
-FWER_MUAC
+# # BMI
+# pval_BMI <- NULL
+# for (i in 2:7){
+# m_BMI <- glm(PFAS_A$LNBMI ~ PFAS_A[[i]] + PFAS_A$age + PFAS_A$race + 
+#                 PFAS_A$income + PFAS_A$menar + PFAS_A$smoke +  PFAS_A$parity + 
+#                 PFAS_A$married, family = gaussian)
+# p_BMI <- summary(m_BMI)$coefficients[2,]
+# pval_BMI <- rbind(pval_BMI, p_BMI)
+# rownames(pval_BMI)[i-1] <- paste("X", i-1, sep="")
+# }
+# 
+# pval_BMI_set <- pval_BMI[,4]
+# BH_BMI <- p.adjust(pval_BMI_set, method="BH")
+# BY_BMI <- p.adjust(pval_BMI_set, method="BY")
+# FDR_BMI <- p.adjust(pval_BMI_set, method="fdr")
+# FWER_BMI <- as.data.frame(cbind(pval_BMI_set, BH_BMI, BY_BMI, FDR_BMI))
+# FWER_BMI
+# 
+# 
+# # WHR
+# pval_WHR <- NULL
+# for (i in 2:7){
+# m_WHR <- glm(PFAS_A$WHR ~ PFAS_A[[i]] + PFAS_A$age + PFAS_A$race + 
+#                 PFAS_A$income + PFAS_A$menar + PFAS_A$smoke +  PFAS_A$parity + 
+#                 PFAS_A$married, family = gaussian)
+# p_WHR <- summary(m_WHR)$coefficients[2,]
+# pval_WHR <- rbind(pval_WHR, p_WHR)
+# rownames(pval_WHR)[i-1] <- paste("X", i-1, sep="")
+# }
+# 
+# pval_WHR_set <- pval_WHR[,4]
+# BH_WHR <- p.adjust(pval_WHR_set, method="BH")
+# BY_WHR <- p.adjust(pval_WHR_set, method="BY")
+# FDR_WHR <- p.adjust(pval_WHR_set, method="fdr")
+# FWER_WHR <- as.data.frame(cbind(pval_WHR_set, BH_WHR, BY_WHR, FDR_WHR))
+# FWER_WHR
+# 
+# 
+# # WHtR
+# pval_WHtR <- NULL
+# for (i in 2:7){
+# m_WHtR <- glm(PFAS_A$WHtR ~ PFAS_A[[i]] + PFAS_A$age + PFAS_A$race + 
+#                 PFAS_A$income + PFAS_A$menar + PFAS_A$smoke +  PFAS_A$parity + 
+#                 PFAS_A$married, family = gaussian)
+# p_WHtR <- summary(m_WHtR)$coefficients[2,]
+# pval_WHtR <- rbind(pval_WHtR, p_WHtR)
+# rownames(pval_WHtR)[i-1] <- paste("X", i-1, sep="")
+# }
+# 
+# pval_WHtR_set <- pval_WHtR[,4]
+# BH_WHtR <- p.adjust(pval_WHtR_set, method="BH")
+# BY_WHtR <- p.adjust(pval_WHtR_set, method="BY")
+# FDR_WHtR <- p.adjust(pval_WHtR_set, method="fdr")
+# FWER_WHtR <- as.data.frame(cbind(pval_WHtR_set, BH_WHtR, BY_WHtR, FDR_WHtR))
+# FWER_WHtR
+# 
+# 
+# # MUAC
+# pval_MUAC <- NULL
+# for (i in 2:7){
+# m_MUAC <- glm(PFAS_A$MUAC ~ PFAS_A[[i]] + PFAS_A$age + PFAS_A$race + 
+#                 PFAS_A$income + PFAS_A$menar + PFAS_A$smoke +  PFAS_A$parity + 
+#                 PFAS_A$married, family = gaussian)
+# p_MUAC <- summary(m_MUAC)$coefficients[2,]
+# pval_MUAC <- rbind(pval_MUAC, p_MUAC)
+# rownames(pval_MUAC)[i-1] <- paste("X", i-1, sep="")
+# }
+# 
+# pval_MUAC_set <- pval_MUAC[,4]
+# BH_MUAC <- p.adjust(pval_MUAC_set, method="BH")
+# BY_MUAC <- p.adjust(pval_MUAC_set, method="BY")
+# FDR_MUAC <- p.adjust(pval_MUAC_set, method="fdr")
+# FWER_MUAC <- as.data.frame(cbind(pval_MUAC_set, BH_MUAC, BY_MUAC, FDR_MUAC))
+# FWER_MUAC
 
 
 # TRNK
 pval_TRNK <- NULL
 for (i in 2:7){
-m_TRNK <- glm(PFAS_D$LNTKNFAT ~ PFAS_D[[i]] + PFAS_D$age + PFAS_D$race + 
-                PFAS_D$income + PFAS_D$menar + PFAS_D$smoke +  PFAS_D$parity + 
-                PFAS_D$married, family = gaussian)
+m_TRNK <- glm(PFAS_D$TrnkFat ~ PFAS_D[[i]] + PFAS_D$age + PFAS_D$race + 
+                PFAS_D$bmi_cat + PFAS_D$smoke +  PFAS_D$parity + 
+                PFAS_D$married + PFAS_D$fish + PFAS_D$height, family = gaussian)
 p_TRNK <- summary(m_TRNK)$coefficients[2,]
 pval_TRNK <- rbind(pval_TRNK, p_TRNK)
 rownames(pval_TRNK)[i-1] <- paste("X", i-1, sep="")
@@ -839,9 +859,9 @@ FWER_TRNK
 # FAT
 pval_FAT <- NULL
 for (i in 2:7){
-m_FAT <- glm(PFAS_D$LNTOTFAT ~ PFAS_D[[i]] + PFAS_D$age + PFAS_D$race + 
-                PFAS_D$income + PFAS_D$menar + PFAS_D$smoke +  PFAS_D$parity + 
-                PFAS_D$married, family = gaussian)
+m_FAT <- glm(PFAS_D$TotFat ~ PFAS_D[[i]] + PFAS_D$age + PFAS_D$race + 
+                PFAS_D$bmi_cat + PFAS_D$smoke +  PFAS_D$parity + 
+                PFAS_D$married + PFAS_D$fish + PFAS_D$height, family = gaussian)
 p_FAT <- summary(m_FAT)$coefficients[2,]
 pval_FAT <- rbind(pval_FAT, p_FAT)
 rownames(pval_FAT)[i-1] <- paste("X", i-1, sep="")
@@ -855,60 +875,60 @@ FWER_FAT <- as.data.frame(cbind(pval_FAT_set, BH_FAT, BY_FAT, FDR_FAT))
 FWER_FAT
 
 
-# TRUNK FAT INDEX
-pval_TFIN <- NULL
-for (i in 2:7){
-m_TFIN <- glm(PFAS_D$LNTFIN ~ PFAS_D[[i]] + PFAS_D$age + PFAS_D$race + 
-                PFAS_D$income + PFAS_D$menar + PFAS_D$smoke +  PFAS_D$parity + 
-                PFAS_D$married, family = gaussian)
-p_TFIN <- summary(m_TFIN)$coefficients[2,]
-pval_TFIN <- rbind(pval_TFIN, p_TFIN)
-rownames(pval_TFIN)[i-1] <- paste("X", i-1, sep="")
-}
-
-pval_TFIN_set <- pval_TFIN[,4]
-BH_TFIN <- p.adjust(pval_TFIN_set, method="BH")
-BY_TFIN <- p.adjust(pval_TFIN_set, method="BY")
-FDR_TFIN <- p.adjust(pval_TFIN_set, method="fdr")
-FWER_TFIN <- as.data.frame(cbind(pval_TFIN_set, BH_TFIN, BY_TFIN, FDR_TFIN))
-FWER_TFIN
-
-
-# BODY FAT INDEX
-pval_BFIN <- NULL
-for (i in 2:7){
-m_BFIN <- glm(PFAS_D$LNBFIN ~ PFAS_D[[i]] + PFAS_D$age + PFAS_D$race + 
-                PFAS_D$income + PFAS_D$menar + PFAS_D$smoke +  PFAS_D$parity + 
-                PFAS_D$married, family = gaussian)
-p_BFIN <- summary(m_BFIN)$coefficients[2,]
-pval_BFIN <- rbind(pval_BFIN, p_BFIN)
-rownames(pval_BFIN)[i-1] <- paste("X", i-1, sep="")
-}
-
-pval_BFIN_set <- pval_BFIN[,4]
-BH_BFIN <- p.adjust(pval_BFIN_set, method="BH")
-BY_BFIN <- p.adjust(pval_BFIN_set, method="BY")
-FDR_BFIN <- p.adjust(pval_BFIN_set, method="fdr")
-FWER_BFIN <- as.data.frame(cbind(pval_BFIN_set, BH_BFIN, BY_BFIN, FDR_BFIN))
-FWER_BFIN
-
-
-# PFAT
-pval_PFAT <- NULL
-for (i in 2:7){
-m_PFAT <- glm(PFAS_D$TotFatPct ~ PFAS_D[[i]] + PFAS_D$age + PFAS_D$race + 
-                PFAS_D$income + PFAS_D$menar + PFAS_D$smoke +  PFAS_D$parity + 
-                PFAS_D$married, family = gaussian)
-p_PFAT <- summary(m_PFAT)$coefficients[2,]
-pval_PFAT <- rbind(pval_PFAT, p_PFAT)
-rownames(pval_PFAT)[i-1] <- paste("X", i-1, sep="")
-}
-
-pval_PFAT_set <- pval_PFAT[,4]
-BH_PFAT <- p.adjust(pval_PFAT_set, method="BH")
-BY_PFAT <- p.adjust(pval_PFAT_set, method="BY")
-FDR_PFAT <- p.adjust(pval_PFAT_set, method="fdr")
-FWER_PFAT <- as.data.frame(cbind(pval_PFAT_set, BH_PFAT, BY_PFAT, FDR_PFAT))
-FWER_PFAT
+# # TRUNK FAT INDEX
+# pval_TFIN <- NULL
+# for (i in 2:7){
+# m_TFIN <- glm(PFAS_D$LNTFIN ~ PFAS_D[[i]] + PFAS_D$age + PFAS_D$race + 
+#                 PFAS_D$income + PFAS_D$menar + PFAS_D$smoke +  PFAS_D$parity + 
+#                 PFAS_D$married, family = gaussian)
+# p_TFIN <- summary(m_TFIN)$coefficients[2,]
+# pval_TFIN <- rbind(pval_TFIN, p_TFIN)
+# rownames(pval_TFIN)[i-1] <- paste("X", i-1, sep="")
+# }
+# 
+# pval_TFIN_set <- pval_TFIN[,4]
+# BH_TFIN <- p.adjust(pval_TFIN_set, method="BH")
+# BY_TFIN <- p.adjust(pval_TFIN_set, method="BY")
+# FDR_TFIN <- p.adjust(pval_TFIN_set, method="fdr")
+# FWER_TFIN <- as.data.frame(cbind(pval_TFIN_set, BH_TFIN, BY_TFIN, FDR_TFIN))
+# FWER_TFIN
+# 
+# 
+# # BODY FAT INDEX
+# pval_BFIN <- NULL
+# for (i in 2:7){
+# m_BFIN <- glm(PFAS_D$LNBFIN ~ PFAS_D[[i]] + PFAS_D$age + PFAS_D$race + 
+#                 PFAS_D$income + PFAS_D$menar + PFAS_D$smoke +  PFAS_D$parity + 
+#                 PFAS_D$married, family = gaussian)
+# p_BFIN <- summary(m_BFIN)$coefficients[2,]
+# pval_BFIN <- rbind(pval_BFIN, p_BFIN)
+# rownames(pval_BFIN)[i-1] <- paste("X", i-1, sep="")
+# }
+# 
+# pval_BFIN_set <- pval_BFIN[,4]
+# BH_BFIN <- p.adjust(pval_BFIN_set, method="BH")
+# BY_BFIN <- p.adjust(pval_BFIN_set, method="BY")
+# FDR_BFIN <- p.adjust(pval_BFIN_set, method="fdr")
+# FWER_BFIN <- as.data.frame(cbind(pval_BFIN_set, BH_BFIN, BY_BFIN, FDR_BFIN))
+# FWER_BFIN
+# 
+# 
+# # PFAT
+# pval_PFAT <- NULL
+# for (i in 2:7){
+# m_PFAT <- glm(PFAS_D$TotFatPct ~ PFAS_D[[i]] + PFAS_D$age + PFAS_D$race + 
+#                 PFAS_D$income + PFAS_D$menar + PFAS_D$smoke +  PFAS_D$parity + 
+#                 PFAS_D$married, family = gaussian)
+# p_PFAT <- summary(m_PFAT)$coefficients[2,]
+# pval_PFAT <- rbind(pval_PFAT, p_PFAT)
+# rownames(pval_PFAT)[i-1] <- paste("X", i-1, sep="")
+# }
+# 
+# pval_PFAT_set <- pval_PFAT[,4]
+# BH_PFAT <- p.adjust(pval_PFAT_set, method="BH")
+# BY_PFAT <- p.adjust(pval_PFAT_set, method="BY")
+# FDR_PFAT <- p.adjust(pval_PFAT_set, method="fdr")
+# FWER_PFAT <- as.data.frame(cbind(pval_PFAT_set, BH_PFAT, BY_PFAT, FDR_PFAT))
+# FWER_PFAT
 
 ```
