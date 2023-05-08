@@ -16,62 +16,62 @@ library("tidyverse")
 PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D.csv")
 
 ##### LOAD WORKSPACE
-# load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_D.Rdata")
+load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_D.Rdata")
 
 ```
 
 ```{r}
-##### TRANSFORMVARIABLES TO NUMERIC FOR BKMR COVARIATE MATRIX
-
-# RENAME
-PFAS_D$age <- PFAS_D$age_mom_enroll_d
-PFAS_D$menar <- PFAS_D$mom_firstperiod_12y
-PFAS_D$bmi <- PFAS_D$bmi_mom_prepreg_d
-PFAS_D$race <- PFAS_D$race2_mom_epi_epia_d
-PFAS_D$income <- PFAS_D$gt70k
-PFAS_D$parity <- PFAS_D$parity_d
-PFAS_D$smoke <- PFAS_D$smokpreg_final_d
-PFAS_D$married <- PFAS_D$married_cohab
-PFAS_D$edu <- PFAS_D$coll_grad
-PFAS_D$fish <- PFAS_D$fish_d_f1
-PFAS_D$darkmeat <- PFAS_D$dark_meat_f1
-
-# REFACTOR AND RELABEL 
-PFAS_D$bmi_cat <- ifelse(PFAS_D$bmi <18.5, 0,
-                         ifelse(PFAS_D$bmi >=18.5 & PFAS_D$bmi < 25.0, 1, 
-                         ifelse(PFAS_D$bmi >=25.0 & PFAS_D$bmi < 30.0, 2, 
-                         ifelse(PFAS_D$bmi >=30.0 & PFAS_D$bmi < 35.0, 3,
-                         ifelse(PFAS_D$bmi >=35.0, 4, 99)))))
-PFAS_D$race <- ifelse(PFAS_D$race == "white", 0,
-                     ifelse(PFAS_D$race == "black", 1,
-                     ifelse(PFAS_D$race == "hispa", 2,
-                     ifelse(PFAS_D$race == "asian", 3,
-                     ifelse(PFAS_D$race == "other", 4, 4)))))
-PFAS_D$income <- ifelse(PFAS_D$income == 1, 1, 0)
-PFAS_D$parity <- ifelse(PFAS_D$parity == 0, 0,
-                        ifelse(PFAS_D$parity == 1, 1,
-                        ifelse(PFAS_D$parity > 1, 2, 0)))
-PFAS_D$smoke <- ifelse(PFAS_D$smoke == "former", 0,
-                         ifelse(PFAS_D$smoke == "smoke preg", 1,
-                         ifelse(PFAS_D$smoke == "xnever", 2, 2)))
-PFAS_D$married <- ifelse(PFAS_D$married == 1, 1, 0)
-PFAS_D$edu <- ifelse(PFAS_D$edu == 1, 1, 0)
-
-# SET CATEGORICAL VARIABLES AS FACTORS
-PFAS_D$bmi_cat <- as.factor(PFAS_D$bmi_cat)
-PFAS_D$race <- as.factor(PFAS_D$race)
-PFAS_D$income <- as.factor(PFAS_D$income)
-PFAS_D$parity <- as.factor(PFAS_D$parity)
-PFAS_D$smoke <- as.factor(PFAS_D$smoke)
-PFAS_D$married <- as.factor(PFAS_D$married)
-PFAS_D$edu <- as.factor(PFAS_D$edu)
-
-# CENTER AND SCALE CONTINUOUS VARIABLES
-PFAS_D$height_s <- scale(PFAS_D$height)
-PFAS_D$age_s <- scale(PFAS_D$age)
-PFAS_D$menar_s <- scale(PFAS_D$menar)
-PFAS_D$fish_s <- scale(PFAS_D$fish)
-PFAS_D$darkmeat_s <- scale(PFAS_D$darkmeat)
+# ##### TRANSFORMVARIABLES TO NUMERIC FOR BKMR COVARIATE MATRIX
+# 
+# # RENAME
+# PFAS_D$age <- PFAS_D$age_mom_enroll_d
+# PFAS_D$menar <- PFAS_D$mom_firstperiod_12y
+# PFAS_D$bmi <- PFAS_D$bmi_mom_prepreg_d
+# PFAS_D$race <- PFAS_D$race2_mom_epi_epia_d
+# PFAS_D$income <- PFAS_D$gt70k
+# PFAS_D$parity <- PFAS_D$parity_d
+# PFAS_D$smoke <- PFAS_D$smokpreg_final_d
+# PFAS_D$married <- PFAS_D$married_cohab
+# PFAS_D$edu <- PFAS_D$coll_grad
+# PFAS_D$fish <- PFAS_D$fish_d_f1
+# PFAS_D$darkmeat <- PFAS_D$dark_meat_f1
+# 
+# # REFACTOR AND RELABEL 
+# PFAS_D$bmi_cat <- ifelse(PFAS_D$bmi <18.5, 0,
+#                          ifelse(PFAS_D$bmi >=18.5 & PFAS_D$bmi < 25.0, 1, 
+#                          ifelse(PFAS_D$bmi >=25.0 & PFAS_D$bmi < 30.0, 2, 
+#                          ifelse(PFAS_D$bmi >=30.0 & PFAS_D$bmi < 35.0, 3,
+#                          ifelse(PFAS_D$bmi >=35.0, 4, 99)))))
+# PFAS_D$race <- ifelse(PFAS_D$race == "white", 0,
+#                      ifelse(PFAS_D$race == "black", 1,
+#                      ifelse(PFAS_D$race == "hispa", 2,
+#                      ifelse(PFAS_D$race == "asian", 3,
+#                      ifelse(PFAS_D$race == "other", 4, 4)))))
+# PFAS_D$income <- ifelse(PFAS_D$income == 1, 1, 0)
+# PFAS_D$parity <- ifelse(PFAS_D$parity == 0, 0,
+#                         ifelse(PFAS_D$parity == 1, 1,
+#                         ifelse(PFAS_D$parity > 1, 2, 0)))
+# PFAS_D$smoke <- ifelse(PFAS_D$smoke == "former", 0,
+#                          ifelse(PFAS_D$smoke == "smoke preg", 1,
+#                          ifelse(PFAS_D$smoke == "xnever", 2, 2)))
+# PFAS_D$married <- ifelse(PFAS_D$married == 1, 1, 0)
+# PFAS_D$edu <- ifelse(PFAS_D$edu == 1, 1, 0)
+# 
+# # SET CATEGORICAL VARIABLES AS FACTORS
+# PFAS_D$bmi_cat <- as.factor(PFAS_D$bmi_cat)
+# PFAS_D$race <- as.factor(PFAS_D$race)
+# PFAS_D$income <- as.factor(PFAS_D$income)
+# PFAS_D$parity <- as.factor(PFAS_D$parity)
+# PFAS_D$smoke <- as.factor(PFAS_D$smoke)
+# PFAS_D$married <- as.factor(PFAS_D$married)
+# PFAS_D$edu <- as.factor(PFAS_D$edu)
+# 
+# # CENTER AND SCALE CONTINUOUS VARIABLES
+# PFAS_D$height_s <- scale(PFAS_D$height)
+# PFAS_D$age_s <- scale(PFAS_D$age)
+# PFAS_D$menar_s <- scale(PFAS_D$menar)
+# PFAS_D$fish_s <- scale(PFAS_D$fish)
+# PFAS_D$darkmeat_s <- scale(PFAS_D$darkmeat)
 
 ```
 
@@ -114,16 +114,16 @@ knots_dl2_z <- fields::cover.design(l2mixture_d_z, nd = 40)$design
 ```
 
 ```{r}
-##### BUILD BKMR MODELS
-# TRUNK FAT MASS
-l2m_trnkfat <- kmbayes(y = TrnkFat, Z = l2mixture_d_z, X = cov_d, iter = 20000, family = "gaussian",
-                     verbose = FALSE, varsel = TRUE, knots = knots_dl2_z)
-beep(sound=5, expr=NULL)
-
-# TOTAL BODY FAT MASS
-l2m_totfat <- kmbayes(y = TotFat, Z = l2mixture_d_z, X = cov_d, iter = 20000, family = "gaussian",
-                     verbose = FALSE, varsel = TRUE, knots = knots_dl2_z)
-beep(sound=5, expr=NULL)
+# ##### BUILD BKMR MODELS
+# # TRUNK FAT MASS
+# l2m_trnkfat <- kmbayes(y = TrnkFat, Z = l2mixture_d_z, X = cov_d, iter = 20000, family = "gaussian",
+#                      verbose = FALSE, varsel = TRUE, knots = knots_dl2_z)
+# beep(sound=5, expr=NULL)
+# 
+# # TOTAL BODY FAT MASS
+# l2m_totfat <- kmbayes(y = TotFat, Z = l2mixture_d_z, X = cov_d, iter = 20000, family = "gaussian",
+#                      verbose = FALSE, varsel = TRUE, knots = knots_dl2_z)
+# beep(sound=5, expr=NULL)
 
 
 
@@ -157,9 +157,9 @@ beep(sound=5, expr=NULL)
 ```
 
 ```{r}
-##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
-save(l2m_trnkfat, l2m_totfat,
-    file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_D.Rdata")
+# ##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
+# save(l2m_trnkfat, l2m_totfat,
+#     file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_D.Rdata")
 
 ```
 
@@ -213,27 +213,21 @@ ExtractPIPs(l2m_totfat, sel = sel_final)
 ##### PREDICT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
 # TRUNK FAT MASS
 univar_trnkfat <- PredictorResponseUnivar(fit = l2m_trnkfat, sel = sel_final, method = "approx")
-univar_trnkfat
 
 # TOTAL BODY FAT MASS
 univar_totfat <- PredictorResponseUnivar(fit = l2m_totfat, sel = sel_final, method = "approx")
-univar_totfat
 
 # # TOTAL BODY FAT PERCENT
 # univar_totfatpct <- PredictorResponseUnivar(fit = l2m_totfatpct, sel = sel_final, method = "approx")
-# univar_totfatpct
 # 
 # # TRUNK FAT MASS INDEX
 # univar_tfin <- PredictorResponseUnivar(fit = l2m_tfin, sel = sel_final, method = "approx")
-# univar_tfin
 # 
 # # TOTAL BODY FAT MASS
 # univar_bfin <- PredictorResponseUnivar(fit = l2m_bfin, sel = sel_final, method = "approx")
-# univar_bfin
 # 
 # # TOTAL BODY LEAN MASS
 # univar_totlean <- PredictorResponseUnivar(fit = m_totlean, sel = sel_final, method = "approx")
-# univar_totlean
 
 
 ##### PLOT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
@@ -740,20 +734,49 @@ singvar_trnkfat <- SingVarRiskSummaries(fit = l2m_trnkfat, qs.diff = c(0.25, 0.7
                                             q.fixed = c(0.25, 0.50, 0.75), sel = sel_final, method = "approx")
 singvar_trnkfat2 <- SingVarRiskSummaries(fit = l2m_trnkfat, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.50), sel = sel_final, method = "approx")
-0.149 - 1.96*0.0621
-0.149 + 1.96*0.0621
--0.126 - 1.96*0.0404
--0.126 + 1.96*0.0404
+singvar_trnkfat2
+1.1765492 - 1.96*0.5923510
+1.1765492 + 1.96*0.5923510
+
+0.6816172 - 1.96*0.5253724	
+0.6816172 + 1.96*0.5253724	
+
+-0.7970705 - 1.96*0.3626802	
+-0.7970705 + 1.96*0.3626802	
+
+-0.7822324 - 1.96*0.3345458	
+-0.7822324 + 1.96*0.3345458	
+
+-0.3113605 - 1.96*0.3877612	
+-0.3113605 + 1.96*0.3877612	
+
+0.6128832 - 1.96*0.4051413
+0.6128832 + 1.96*0.4051413
 
 # TOTAL BODY FAT MASS
 singvar_totfat <- SingVarRiskSummaries(fit = l2m_totfat, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.25, 0.50, 0.75), sel = sel_final, method = "approx")
 singvar_totfat2 <- SingVarRiskSummaries(fit = l2m_totfat, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.50), sel = sel_final, method = "approx")
-0.153 - 1.96*0.0488
-0.153 + 1.96*0.0488
--0.120 - 1.96*0.0318
--0.120 + 1.96*0.0318
+singvar_totfat2
+
+2.6766143 - 1.96*0.9938747
+2.6766143 + 1.96*0.9938747
+
+0.4540515 - 1.96*0.8364523	
+0.4540515 + 1.96*0.8364523	
+
+-1.4234082 - 1.96*0.5969925	
+-1.4234082 + 1.96*0.5969925	
+
+-1.4366559 - 1.96*0.5487128	
+-1.4366559 + 1.96*0.5487128	
+
+-0.2106079 - 1.96*0.6206572	
+-0.2106079 + 1.96*0.6206572	
+
+0.9425795 - 1.96*0.6558698	
+0.9425795 + 1.96*0.6558698	
 
 # # TOTAL BODY FAT PERCENT
 # singvar_totfatpct <- SingVarRiskSummaries(fit = l2m_totfatpct, qs.diff = c(0.25, 0.75),
