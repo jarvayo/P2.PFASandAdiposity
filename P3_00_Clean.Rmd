@@ -106,8 +106,8 @@ PFAS_5 <- subset(PFAS_4, !is.na(TRUNK_FAT_mdxa17)) # MISSING DXA MEASURES
 
 ```{r}
 ##### CREATE A DATASET OF INDIVIDUALS EXCLUDED FROM THE MAIN ANALYSIS (I.E., "PFAS_X")
-PFAS_5$include <- 1+0
-PFAS_X <- merge(PFAS, PFAS_5, by = "aid", all.x = TRUE)
+PFAS_4$include <- 1+0
+PFAS_X <- merge(PFAS, PFAS_4, by = "aid", all.x = TRUE)
 PFAS_X <- subset(PFAS_X, is.na(include))
 
 colnames(PFAS_X)<-gsub(".y","",colnames(PFAS_X))
