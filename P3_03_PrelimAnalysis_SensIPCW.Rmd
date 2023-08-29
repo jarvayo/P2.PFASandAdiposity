@@ -78,6 +78,7 @@ PFAS_IPW$bmi_cat <- ifelse(PFAS_IPW$bmi <18.5, 0,
                          ifelse(PFAS_IPW$bmi >=25.0 & PFAS_IPW$bmi < 30.0, 2, 
                          ifelse(PFAS_IPW$bmi >=30.0 & PFAS_IPW$bmi < 35.0, 3,
                          ifelse(PFAS_IPW$bmi >=35.0, 4, 99)))))
+PFAS_IPW$bmi_yn <- ifelse(PFAS_IPW$bmi <25.0, 0, 1)
 PFAS_IPW$smoke <- ifelse(PFAS_IPW$smoke == "former", 0,
                          ifelse(PFAS_IPW$smoke == "smoke preg", 1,
                          ifelse(PFAS_IPW$smoke == "xnever", 2, 2)))
@@ -87,6 +88,8 @@ PFAS_IPW$parity <- ifelse(PFAS_IPW$parity == 0, 0,
                         ifelse(PFAS_IPW$parity > 1, 2, 0)))
 PFAS_IPW$married <- ifelse(PFAS_IPW$married == 1, 1, 0)
 PFAS_IPW$exer_cat <- ifelse(PFAS_IPW$exer <= 0, 0, 1)
+PFAS_IPW$meno_cat <- ifelse(PFAS_IPW$mom_period_stopped_qu17 == 2, 0,
+                        ifelse(PFAS_IPW$mom_period_stopped_qu17 == 1, 1, NA))
 
 
 ##### REFACTOR
@@ -116,12 +119,15 @@ PFAS_IPW$married <- factor(PFAS_IPW$married,
 
 
 # SET CATEGORICAL VARIABLES AS FACTORS
+PFAS_IPW$bmi_cat <- as.factor(PFAS_IPW$bmi_cat)
+PFAS_IPW$bmi_yn <- as.factor(PFAS_IPW$bmi_yn)
 PFAS_IPW$edu <- as.factor(PFAS_IPW$edu)
 PFAS_IPW$income <- as.factor(PFAS_IPW$income)
 PFAS_IPW$smoke <- as.factor(PFAS_IPW$smoke)
 PFAS_IPW$parity <- as.factor(PFAS_IPW$parity)
 PFAS_IPW$race <- as.factor(PFAS_IPW$race)
 PFAS_IPW$married <- as.factor(PFAS_IPW$married)
+PFAS_IPW$meno_cat <- as.factor(PFAS_IPW$meno_cat)
 
 PFAS_A$edu <- as.factor(PFAS_A$edu)
 PFAS_A$income <- as.factor(PFAS_A$income)
@@ -156,6 +162,7 @@ PFAS_A$fish <- PFAS_A$fish_d_f1
 PFAS_A$darkmeat <- PFAS_A$dark_meat_f1
 
 # REFACTOR AND RELABEL 
+PFAS_A$bmi_yn <- ifelse(PFAS_A$bmi <25.0, 0, 1)
 PFAS_A$bmi_cat <- ifelse(PFAS_A$bmi <18.5, 0,
                          ifelse(PFAS_A$bmi >=18.5 & PFAS_A$bmi < 25.0, 1, 
                                 ifelse(PFAS_A$bmi >=25.0 & PFAS_A$bmi < 30.0, 2, 
@@ -177,6 +184,7 @@ PFAS_A$married <- ifelse(PFAS_A$married == 1, 1, 0)
 PFAS_A$edu <- ifelse(PFAS_A$edu == 1, 1, 0)
 
 # SET CATEGORICAL VARIABLES AS FACTORS
+PFAS_A$bmi_yn <- as.factor(PFAS_A$bmi_yn)
 PFAS_A$bmi_cat <- as.factor(PFAS_A$bmi_cat)
 PFAS_A$race <- as.factor(PFAS_A$race)
 PFAS_A$income <- as.factor(PFAS_A$income)
@@ -184,6 +192,8 @@ PFAS_A$parity <- as.factor(PFAS_A$parity)
 PFAS_A$smoke <- as.factor(PFAS_A$smoke)
 PFAS_A$married <- as.factor(PFAS_A$married)
 PFAS_A$edu <- as.factor(PFAS_A$edu)
+PFAS_A$meno_cat <- as.factor(PFAS_A$meno_cat)
+
 ```
 
 ```{r}
@@ -203,6 +213,7 @@ PFAS_D$fish <- PFAS_D$fish_d_f1
 PFAS_D$darkmeat <- PFAS_D$dark_meat_f1
 
 # REFACTOR AND RELABEL 
+PFAS_D$bmi_yn <- ifelse(PFAS_D$bmi <25.0, 0, 1)
 PFAS_D$bmi_cat <- ifelse(PFAS_D$bmi <18.5, 0,
                          ifelse(PFAS_D$bmi >=18.5 & PFAS_D$bmi < 25.0, 1, 
                                 ifelse(PFAS_D$bmi >=25.0 & PFAS_D$bmi < 30.0, 2, 
@@ -224,6 +235,7 @@ PFAS_D$married <- ifelse(PFAS_D$married == 1, 1, 0)
 PFAS_D$edu <- ifelse(PFAS_D$edu == 1, 1, 0)
 
 # SET CATEGORICAL VARIABLES AS FACTORS
+PFAS_D$bmi_yn <- as.factor(PFAS_D$bmi_yn)
 PFAS_D$bmi_cat <- as.factor(PFAS_D$bmi_cat)
 PFAS_D$race <- as.factor(PFAS_D$race)
 PFAS_D$income <- as.factor(PFAS_D$income)
@@ -231,6 +243,7 @@ PFAS_D$parity <- as.factor(PFAS_D$parity)
 PFAS_D$smoke <- as.factor(PFAS_D$smoke)
 PFAS_D$married <- as.factor(PFAS_D$married)
 PFAS_D$edu <- as.factor(PFAS_D$edu)
+PFAS_D$meno_cat <- as.factor(PFAS_D$meno_cat)
 
 ```
 
@@ -439,7 +452,7 @@ modelsummary(ad.l2m.wt, fmt = 4,
              coef_omit = "Interc", title = "LOG2-PFAS vs. WEIGHT")
 
 
-# WEIGHT
+
 wad.l2m.wt <- list(
   "PFOS" = glm(Weight ~ L2PFOS + age + race + bmi_cat  + smoke + 
                  parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
@@ -460,6 +473,54 @@ modelsummary(wad.l2m.wt, fmt = 4,
                            "95% CI: [{conf.low}, {conf.high}]",
                            "p = {p.value}"),
              coef_omit = "Interc", title = "LOG2-PFAS vs. WEIGHT (IPC Weighted)")
+
+
+
+wad.l2m.wt.sens1 <- list(
+  "PFOS" = glm(Weight ~ L2PFOS*bmi_yn + age + race  + smoke + 
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
+  "PFOA" = glm(Weight ~ L2PFOA*bmi_yn + age + race + smoke +
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOA_w),
+  "PFNA" = glm(Weight ~ L2PFNA*bmi_yn + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFNA_w),
+  "PFHxS" = glm(Weight ~ L2PFHxS*bmi_yn + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFHxS_w),
+  "MeFOSAA" = glm(Weight ~ L2MeFOSAA*bmi_yn + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = MeFOSAA_w),
+  "EtFOSAA" = glm(Weight ~ L2EtFOSAA*bmi_yn + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
+
+modelsummary(wad.l2m.wt.sens1, fmt = 2,
+             estimate = "{estimate}{stars}",
+             statistic = c("SE: {std.error}",
+                           "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"),
+             coef_omit = "Interc", title = "LOG2-PFAS vs. WEIGHT (IPC Weighted, Sens)")
+
+
+
+wad.l2m.wt.sens2 <- list(
+  "PFOS" = glm(Weight ~ L2PFOS*meno_cat + age + race + bmi_cat + smoke + 
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
+  "PFOA" = glm(Weight ~ L2PFOA*meno_cat + age + race + smoke +
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOA_w),
+  "PFNA" = glm(Weight ~ L2PFNA*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFNA_w),
+  "PFHxS" = glm(Weight ~ L2PFHxS*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFHxS_w),
+  "MeFOSAA" = glm(Weight ~ L2MeFOSAA*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = MeFOSAA_w),
+  "EtFOSAA" = glm(Weight ~ L2EtFOSAA*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
+
+modelsummary(wad.l2m.wt.sens2, fmt = 2,
+             estimate = "{estimate}{stars}",
+             statistic = c("SE: {std.error}",
+                           "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"),
+             coef_omit = "Interc", title = "LOG2-PFAS vs. WEIGHT (IPC Weighted, Sens)")
+
+
 
 
 
@@ -486,6 +547,7 @@ modelsummary(ad.l2m.waist, fmt = 4,
              coef_omit = "Interc", title = "LOG2-PFAS vs. WAIST CIRCUMFERENCE")
 
 
+
 wad.l2m.waist <- list(
   "PFOS" = glm(Waist ~ L2PFOS + age + race + bmi_cat + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
@@ -506,6 +568,52 @@ modelsummary(wad.l2m.waist, fmt = 4,
                            "95% CI: [{conf.low}, {conf.high}]",
                            "p = {p.value}"),
              coef_omit = "Interc", title = "LOG2-PFAS vs. WAIST CIRCUMFERENCE (IPC Weighted)")
+
+
+
+wad.l2m.waist.sens1 <- list(
+  "PFOS" = glm(Waist ~ L2PFOS*meno_cat + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
+  "PFOA" = glm(Waist ~ L2PFOA*meno_cat + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOA_w),
+  "PFNA" = glm(Waist ~ L2PFNA*meno_cat + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFNA_w),
+  "PFHxS" = glm(Waist ~ L2PFHxS*meno_cat + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFHxS_w),
+  "MeFOSAA" = glm(Waist ~ L2MeFOSAA*meno_cat + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = MeFOSAA_w),
+  "EtFOSAA" = glm(Waist ~ L2EtFOSAA*meno_cat + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
+
+modelsummary(wad.l2m.waist.sens1, fmt = 2,
+             estimate = "{estimate}{stars}",
+             statistic = c("SE: {std.error}",
+                           "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"),
+             coef_omit = "Interc", title = "LOG2-PFAS vs. WAIST CIRCUMFERENCE (IPC Weighted, Sens)")
+
+
+
+wad.l2m.waist.sens2 <- list(
+  "PFOS" = glm(Waist ~ L2PFOS*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
+  "PFOA" = glm(Waist ~ L2PFOA*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOA_w),
+  "PFNA" = glm(Waist ~ L2PFNA*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFNA_w),
+  "PFHxS" = glm(Waist ~ L2PFHxS*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFHxS_w),
+  "MeFOSAA" = glm(Waist ~ L2MeFOSAA*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = MeFOSAA_w),
+  "EtFOSAA" = glm(Waist ~ L2EtFOSAA*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
+
+modelsummary(wad.l2m.waist.sens2, fmt = 2,
+             estimate = "{estimate}{stars}",
+             statistic = c("SE: {std.error}",
+                           "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"),
+             coef_omit = "Interc", title = "LOG2-PFAS vs. WAIST CIRCUMFERENCE (IPC Weighted, Sens)")
 
 ```
 
@@ -533,6 +641,7 @@ modelsummary(ad.l2m.trnkfat, fmt = 4, estimate = "{estimate}{stars}",
              coef_omit = "Interc", title = "LOG2-PFAS vs. TRUNK FAT MASS")
 
 
+
 wad.l2m.trnkfat <- list(
   "PFOS" = glm(TrnkFat ~ L2PFOS + age + race + bmi_cat + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
@@ -551,6 +660,49 @@ modelsummary(wad.l2m.trnkfat, fmt = 4, estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
                            "p = {p.value}"), 
              coef_omit = "Interc", title = "LOG2-PFAS vs. TRUNK FAT MASS (IPC Weighted)")
+
+
+
+wad.l2m.trnkfat.sens1 <- list(
+  "PFOS" = glm(TrnkFat ~ L2PFOS*bmi_yn + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
+  "PFOA" = glm(TrnkFat ~ L2PFOA*bmi_yn + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOA_w),
+  "PFNA" = glm(TrnkFat ~ L2PFNA*bmi_yn + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFNA_w),
+  "PFHxS" = glm(TrnkFat ~ L2PFHxS*bmi_yn + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFHxS_w),
+  "MeFOSAA" = glm(TrnkFat ~ L2MeFOSAA*bmi_yn + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = MeFOSAA_w),
+  "EtFOSAA" = glm(TrnkFat ~ L2EtFOSAA*bmi_yn + age + race + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
+
+modelsummary(wad.l2m.trnkfat.sens1, fmt = 2, estimate = "{estimate}{stars}", 
+             statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"), 
+             coef_omit = "Interc", title = "LOG2-PFAS vs. TRUNK FAT MASS (IPC Weighted, Sens)")
+
+
+
+wad.l2m.trnkfat.sens2 <- list(
+  "PFOS" = glm(TrnkFat ~ L2PFOS*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
+  "PFOA" = glm(TrnkFat ~ L2PFOA*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOA_w),
+  "PFNA" = glm(TrnkFat ~ L2PFNA*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFNA_w),
+  "PFHxS" = glm(TrnkFat ~ L2PFHxS*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFHxS_w),
+  "MeFOSAA" = glm(TrnkFat ~ L2MeFOSAA*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = MeFOSAA_w),
+  "EtFOSAA" = glm(TrnkFat ~ L2EtFOSAA*meno_cat + age + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
+
+modelsummary(wad.l2m.trnkfat.sens2, fmt = 2, estimate = "{estimate}{stars}", 
+             statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"), 
+             coef_omit = "Interc", title = "LOG2-PFAS vs. TRUNK FAT MASS (IPC Weighted, Sens)")
+
 
 
 
@@ -593,6 +745,48 @@ modelsummary(wad.l2m.totfat, fmt = 4, estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
                            "p = {p.value}"), 
              coef_omit = "Interc", title = "LOG2-PFAS vs. TOTAL BODY FAT MASS (IPW Weighted)")
+
+
+
+wad.l2m.totfat.sens1 <- list(
+  "PFOS" = glm(TotFat ~ L2PFOS*bmi_yn + age + race + smoke + exer_cat +
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
+  "PFOA" = glm(TotFat ~ L2PFOA*bmi_yn + age + race + smoke + exer_cat +
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOA_w),
+  "PFNA" = glm(TotFat ~ L2PFNA*bmi_yn + age + race + smoke + 
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFNA_w),
+  "PFHxS" = glm(TotFat ~ L2PFHxS*bmi_yn + age + race + smoke + 
+                  parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFHxS_w),
+  "MeFOSAA" = glm(TotFat ~ L2MeFOSAA*bmi_yn + age + race + smoke + 
+                    parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = MeFOSAA_w),
+  "EtFOSAA" = glm(TotFat ~ L2EtFOSAA*bmi_yn + age + race + smoke + 
+                    parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
+
+modelsummary(wad.l2m.totfat.sens1, fmt = 2, estimate = "{estimate}{stars}", 
+             statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"), 
+             coef_omit = "Interc", title = "LOG2-PFAS vs. TOTAL BODY FAT MASS (IPW Weighted, Sens)")
+
+
+
+wad.l2m.totfat.sens2 <- list(
+  "PFOS" = glm(TotFat ~ L2PFOS*bmi_yn + age + race + bmi_cat + smoke + exer_cat +
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOS_w),
+  "PFOA" = glm(TotFat ~ L2PFOA*bmi_yn + age + race + bmi_cat + smoke + exer_cat +
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFOA_w),
+  "PFNA" = glm(TotFat ~ L2PFNA*bmi_yn + age + race + bmi_cat + smoke + 
+                 parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFNA_w),
+  "PFHxS" = glm(TotFat ~ L2PFHxS*bmi_yn + age + race + bmi_cat + smoke + 
+                  parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = PFHxS_w),
+  "MeFOSAA" = glm(TotFat ~ L2MeFOSAA*bmi_yn + age + race + bmi_cat + smoke + 
+                    parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = MeFOSAA_w),
+  "EtFOSAA" = glm(TotFat ~ L2EtFOSAA*bmi_yn + age + race + bmi_cat + smoke + 
+                    parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
+
+modelsummary(wad.l2m.totfat.sens2, fmt = 2, estimate = "{estimate}{stars}", 
+             statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"), 
+             coef_omit = "Interc", title = "LOG2-PFAS vs. TOTAL BODY FAT MASS (IPW Weighted, Sens)")
 
 ```
 
