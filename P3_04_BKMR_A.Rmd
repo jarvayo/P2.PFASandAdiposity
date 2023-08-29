@@ -110,7 +110,6 @@ cov_a <- as.matrix(cbind(PFAS_A$age_s, PFAS_A$race, PFAS_A$bmi_cat, PFAS_A$smoke
 set.seed(1234)
 
 # CREATE KNOTS
-# knots_al2 <- fields::cover.design(l2mixture_a, nd = 50)$design
 knots_al2_z <- fields::cover.design(l2mixture_a_z, nd = 50)$design
 
 ```
@@ -768,9 +767,9 @@ p_overall_wt <- ggplot(overall_wt, aes(quantile, est, ymin = est - 1.96*sd, ymax
                xlab("PFAS quantile") +
                theme_classic()+ theme(
                axis.text.x = element_text(size = 25),
-               axis.text.y = element_text(size = 25),
+               axis.text.y = element_text(size = 24),
                axis.title.x = element_text(angle = 0, color = 'black', size = 25),
-               axis.title.y = element_text(angle = 90, color = 'black', size = 25))
+               axis.title.y = element_text(angle = 90, color = 'black', size = 24))
 p_overall_wt
 
 
@@ -778,13 +777,13 @@ p_overall_wt
 p_overall_waist <- ggplot(overall_waist, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
                geom_hline(yintercept = 00, linetype = "dashed", color = "red", linewidth = 1) +
                geom_pointrange() +
-               scale_y_continuous(name = "Waist circ. (cm)")+
+               scale_y_continuous(name = "Waist circ (cm)")+
                xlab("PFAS quantile") +
                theme_classic()+ theme(
                axis.text.x = element_text(size = 25),
-               axis.text.y = element_text(size = 25),
+               axis.text.y = element_text(size = 24),
                axis.title.x = element_text(angle = 0, color = 'black', size = 25),
-               axis.title.y = element_text(angle = 90, color = 'black', size = 25))
+               axis.title.y = element_text(angle = 90, color = 'black', size = 24))
 p_overall_waist
 
 
@@ -870,6 +869,35 @@ p_overall_waist
 #                axis.title.x = element_text(angle = 0, color = 'black', size = 25),
 #                axis.title.y = element_text(angle = 90, color = 'black', size = 25))
 # p_overall_fat
+
+
+
+# WEIGHT
+p_overall_wt <- ggplot(overall_wt, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "red", linewidth = 1) +
+               geom_pointrange() +
+               scale_y_continuous(name = "Weight (kg)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 25),
+               axis.text.y = element_text(size = 25),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 29, face = "bold"),
+               axis.title.y = element_text(angle = 90, color = 'purple3', size = 29, face = "bold"))
+p_overall_wt
+
+
+# WAIST CIRCUMFERENCE
+p_overall_waist <- ggplot(overall_waist, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "red", linewidth = 1) +
+               geom_pointrange() +
+               scale_y_continuous(name = "Waist circum (cm)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 25),
+               axis.text.y = element_text(size = 25),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 29, face = "bold"),
+               axis.title.y = element_text(angle = 90, color = 'purple3', size = 29, face = "bold"))
+p_overall_waist
 
 ```
 
