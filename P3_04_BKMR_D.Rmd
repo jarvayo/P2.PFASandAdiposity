@@ -108,7 +108,6 @@ cov_d <- as.matrix(cbind(PFAS_D$age_s, PFAS_D$race, PFAS_D$bmi_cat, PFAS_D$smoke
 set.seed(1234)
 
 # CREATE KNOTS
-# knots_dl2_z <- fields::cover.design(l2mixture_d, nd = 40)$design
 knots_dl2_z <- fields::cover.design(l2mixture_d_z, nd = 40)$design
 
 ```
@@ -650,9 +649,9 @@ p_overall_trnkfat <- ggplot(overall_trnkfat, aes(quantile, est, ymin = est - 1.9
                xlab("PFAS quantile") +
                theme_classic()+ theme(
                axis.text.x = element_text(size = 25),
-               axis.text.y = element_text(size = 25),
+               axis.text.y = element_text(size = 24),
                axis.title.x = element_text(angle = 0, color = 'black', size = 25),
-               axis.title.y = element_text(angle = 90, color = 'black', size = 25))
+               axis.title.y = element_text(angle = 90, color = 'black', size = 24))
 p_overall_trnkfat
 
 
@@ -664,9 +663,9 @@ p_overall_totfat <- ggplot(overall_totfat, aes(quantile, est, ymin = est - 1.96*
                xlab("PFAS quantile") +
                theme_classic()+ theme(
                axis.text.x = element_text(size = 25),
-               axis.text.y = element_text(size = 25),
+               axis.text.y = element_text(size = 24),
                axis.title.x = element_text(angle = 0, color = 'black', size = 25),
-               axis.title.y = element_text(angle = 90, color = 'black', size = 25))
+               axis.title.y = element_text(angle = 90, color = 'black', size = 24))
 p_overall_totfat
 
 
@@ -724,6 +723,33 @@ p_overall_totfat
 #                axis.title.x = element_text(angle = 0, color = 'black', size = 25),
 #                axis.title.y = element_text(angle = 90, color = 'black', size = 25))
 # p_overall_totlean
+
+# TRUNK FAT MASS
+p_overall_trnkfat <- ggplot(overall_trnkfat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", linewidth = 1, color = "red") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Trunk fat mass (kg)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 25),
+               axis.text.y = element_text(size = 25),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 29, face = "bold"),
+               axis.title.y = element_text(angle = 90, color = 'purple3', size = 29, face = "bold"))
+p_overall_trnkfat
+
+
+# TOTAL BODY FAT MASS
+p_overall_totfat <- ggplot(overall_totfat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", linewidth = 1, color = "red") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Body fat mass (kg)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 25),
+               axis.text.y = element_text(size = 25),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 29, face = "bold"),
+               axis.title.y = element_text(angle = 90, color = 'purple3', size = 29, face = "bold"))
+p_overall_totfat
 
 ```
 
