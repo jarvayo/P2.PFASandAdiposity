@@ -345,7 +345,7 @@ PFAS_IPW_IMP <- as.data.frame(impute.transcan(PFAS_IPW_ARG, imputation=5, data=P
                                           list.out=TRUE, pr=FALSE, check=FALSE))
 
 ##### MERGE ORIGNIAL DATASET WITH IMPUTED DATASET
-PFAS_IPW_BIND <- cbind(PFAS_IPW_NA ,PFAS_IPW_IMP)
+PFAS_IPW_BIND <- cbind(PFAS_IPW_NA, PFAS_IPW_IMP)
 
 ##### CREATE INDICATOR FOR MISSINGNESS IN OUTCOME MEASURES
 PFAS_IPW_BIND$mom_height_ma17 <- ifelse(is.na(PFAS_IPW_BIND$mom_height_ma17), 9999, PFAS_IPW_BIND$mom_height_ma17)
