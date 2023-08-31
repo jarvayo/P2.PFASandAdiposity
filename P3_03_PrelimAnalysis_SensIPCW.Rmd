@@ -15,9 +15,9 @@ library("olsrr")
 
 ```{r message=FALSE, warning=FALSE}
 ##### LOAD DATASET
-PFAS_IPW <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_IPW_COMP.csv")
-PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A.csv")
-PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D.csv")
+PFAS_IPW <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_IPW_COMP.csv")
+PFAS_A <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_A.csv")
+PFAS_D <-read.csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_D.csv")
 
 ```
 
@@ -313,7 +313,7 @@ a_d_EtFOSAA <- glm(a.cens ~ L2EtFOSAA + age + race + bmi_cat + edu + smoke +
 a_pd_EtFOSAA <- 1-predict(a_d_EtFOSAA, type = "response")
 
 
-##### CREAT WEIGHTS FOR ANTHRO DATASET
+##### CREATE WEIGHTS FOR ANTHRO DATASET
 # PFOS
 PFAS_IPW$PFOS_w <- a_pn_PFOS / a_pd_PFOS
 summary(PFAS_IPW$PFOS_w)
@@ -399,7 +399,7 @@ d_d_EtFOSAA <- glm(d.cens ~ L2EtFOSAA + age + race + bmi_cat + edu + smoke +
 d_pd_EtFOSAA <- 1-predict(d_d_EtFOSAA, type = "response")
 
 
-##### CREAT WEIGHTS FOR DXA DATASET
+##### CREATE WEIGHTS FOR DXA DATASET
 # PFOS
 PFAS_IPW$PFOS_w <- d_pn_PFOS / d_pd_PFOS
 summary(PFAS_IPW$PFOS_w)
