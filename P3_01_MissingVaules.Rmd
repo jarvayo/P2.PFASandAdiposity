@@ -87,6 +87,10 @@ PFAS_IPW_NA$bmi_cat <- factor(PFAS_IPW_NA$bmi_cat,
                                   "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
                                   "Extremely obese (>= 35)"))
 
+PFAS_IPW_NA$bmi_cat2 <- ifelse(PFAS_IPW_NA$bmi_mom_prepreg_d < 25.0, 0, 
+                         ifelse(PFAS_IPW_NA$bmi_mom_prepreg_d >=25.0 & PFAS_IPW_NA$bmi_mom_prepreg_d < 30.0, 1, 
+                         ifelse(PFAS_IPW_NA$bmi_mom_prepreg_d >=30.0, 2, NA)))
+
 ##### FOR THE RACE VARIABLE, DUE TO SMALL NUMBERS OF OBSERVATIONS PER CATEGORY,
 ##### COMBINED THE CATEGORIES "OTHER" AND ">1 RACE"
 PFAS_IPW_NA$race2_mom_epi_epia_d <- ifelse(PFAS_IPW_NA$race2_mom_epi_epia_d == "more than 1 race", 
@@ -122,6 +126,7 @@ summary(PFAS_IPW_NA$vig_pre_d)
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
 PFAS_IPW_NA$meno_cat <- as.factor(PFAS_IPW_NA$meno_cat)
 PFAS_IPW_NA$bmi_cat <- as.factor(PFAS_IPW_NA$bmi_cat)
+PFAS_IPW_NA$bmi_cat2 <- as.factor(PFAS_IPW_NA$bmi_cat2)
 PFAS_IPW_NA$race2_mom_epi_epia_d <- as.factor(PFAS_IPW_NA$race2_mom_epi_epia_d)
 PFAS_IPW_NA$coll_grad <- as.factor(PFAS_IPW_NA$coll_grad)
 PFAS_IPW_NA$income_hh_epq_epqa_d <- as.factor(PFAS_IPW_NA$income_hh_epq_epqa_d)
@@ -131,7 +136,8 @@ PFAS_IPW_NA$married_cohab <- as.factor(PFAS_IPW_NA$married_cohab)
 PFAS_IPW_NA$parity_cat <- as.factor(PFAS_IPW_NA$parity_cat)
 
 summary(PFAS_IPW_NA$meno_cat)
-summary(PFAS_IPW_NA$bmi_cat)              
+summary(PFAS_IPW_NA$bmi_cat)
+summary(PFAS_IPW_NA$bmi_cat2)
 summary(PFAS_IPW_NA$race2_mom_epi_epia_d) 
 summary(PFAS_IPW_NA$coll_grad)      
 summary(PFAS_IPW_NA$income_hh_epq_epqa_d) 
@@ -165,6 +171,10 @@ PFAS_A_NA$bmi_cat <- factor(PFAS_A_NA$bmi_cat,
                        labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
                                   "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
                                   "Extremely obese (>= 35)"))
+
+PFAS_A_NA$bmi_cat2 <- ifelse(PFAS_A_NA$bmi_mom_prepreg_d < 25.0, 0, 
+                         ifelse(PFAS_A_NA$bmi_mom_prepreg_d >=25.0 & PFAS_A_NA$bmi_mom_prepreg_d < 30.0, 1, 
+                         ifelse(PFAS_A_NA$bmi_mom_prepreg_d >=30.0, 2, NA)))
 
 ##### FOR THE RACE VARIABLE, DUE TO SMALL NUMBERS OF OBSERVATIONS PER CATEGORY,
 ##### COMBINED THE CATEGORIES "OTHER" AND ">1 RACE"
@@ -206,6 +216,7 @@ summary(PFAS_A_NA$vig_pre_d)
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
 PFAS_A_NA$meno_cat <- as.factor(PFAS_A_NA$meno_cat)
 PFAS_A_NA$bmi_cat <- as.factor(PFAS_A_NA$bmi_cat)
+PFAS_A_NA$bmi_cat2 <- as.factor(PFAS_A_NA$bmi_cat2)
 PFAS_A_NA$race2_mom_epi_epia_d <- as.factor(PFAS_A_NA$race2_mom_epi_epia_d)
 PFAS_A_NA$coll_grad <- as.factor(PFAS_A_NA$coll_grad)
 PFAS_A_NA$income_hh_epq_epqa_d <- as.factor(PFAS_A_NA$income_hh_epq_epqa_d)
@@ -215,7 +226,8 @@ PFAS_A_NA$married_cohab <- as.factor(PFAS_A_NA$married_cohab)
 PFAS_A_NA$parity_cat <- as.factor(PFAS_A_NA$parity_cat)
 
 summary(PFAS_A_NA$meno_cat)
-summary(PFAS_A_NA$bmi_cat)              
+summary(PFAS_A_NA$bmi_cat) 
+summary(PFAS_A_NA$bmi_cat2) 
 summary(PFAS_A_NA$race2_mom_epi_epia_d) 
 summary(PFAS_A_NA$coll_grad)      
 summary(PFAS_A_NA$income_hh_epq_epqa_d) 
@@ -230,7 +242,7 @@ table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + age_days_comp_d_ma17 + mom_fir
          mod_pre_d + vig_pre_d, 
        data = PFAS_A_NA, overall="Total")
 
-table1(~ meno_cat + bmi_cat + race2_mom_epi_epia_d + coll_grad + 
+table1(~ meno_cat + bmi_cat + bmi_cat2 + + race2_mom_epi_epia_d + coll_grad + 
          smokpreg_final_d + gt70k  + income_hh_epq_epqa_d + parity_cat + married_cohab, 
          data = PFAS_A_NA, overall="Total")
 
@@ -259,6 +271,10 @@ PFAS_D_NA$bmi_cat <- factor(PFAS_D_NA$bmi_cat,
                        labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
                                   "Overweight (25.0 to 29.9)", "Obese (30.0 to 34.9)", 
                                   "Extremely obese (>= 35)"))
+
+PFAS_D_NA$bmi_cat2 <- ifelse(PFAS_D_NA$bmi_mom_prepreg_d < 25.0, 0, 
+                         ifelse(PFAS_D_NA$bmi_mom_prepreg_d >=25.0 & PFAS_D_NA$bmi_mom_prepreg_d < 30.0, 1, 
+                         ifelse(PFAS_D_NA$bmi_mom_prepreg_d >=30.0, 2, NA)))
 
 ##### FOR THE RACE VARIABLE, DUE TO SMALL NUMBERS OF OBSERVATIONS PER CATEGORY,
 ##### COMBINED THE CATEGORIES "OTHER" AND ">1 RACE"
@@ -299,6 +315,8 @@ summary(PFAS_D_NA$vig_pre_d)
 
 ##### CHECK MISSINGNESS OF CATEGORICAL DEMOGRAPHIC VARIABLES
 PFAS_D_NA$meno_cat <- as.factor(PFAS_D_NA$meno_cat)
+PFAS_D_NA$bmi_cat <- as.factor(PFAS_D_NA$bmi_cat)
+PFAS_D_NA$bmi_cat2 <- as.factor(PFAS_D_NA$bmi_cat2)
 PFAS_D_NA$race2_mom_epi_epia_d <- as.factor(PFAS_D_NA$race2_mom_epi_epia_d)
 PFAS_D_NA$coll_grad <- as.factor(PFAS_D_NA$coll_grad)
 PFAS_D_NA$income_hh_epq_epqa_d <- as.factor(PFAS_D_NA$income_hh_epq_epqa_d)
@@ -322,7 +340,7 @@ table1(~ age_mom_enroll_d + mom_age_mdxa17 + age_days_mdxa17 + mom_firstperiod_1
          mod_pre_d + vig_pre_d, 
          data = PFAS_D_NA, overall="Total")
 
-table1(~ meno_cat + bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k  + 
+table1(~ meno_cat + bmi_cat + bmi_cat2 + + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k  + 
          income_hh_epq_epqa_d + parity_cat + married_cohab, data = PFAS_D_NA, overall="Total")
 
 ```
@@ -476,7 +494,7 @@ table1(~ age_mom_enroll_d + mom_age_comp_d_ma17 + age_days_comp_d_ma17 +
          mod_pre_d + vig_pre_d, 
        data = PFAS_A_COMP, overall="Total")
 
-table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k +
+table1(~ bmi_cat + bmi_cat2 + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k +
          parity_cat + married_cohab, data = PFAS_A_COMP, overall="Total")
 
 
@@ -486,7 +504,7 @@ table1(~ age_mom_enroll_d + mom_age_mdxa17 + age_days_mdxa17 +
          mod_pre_d + vig_pre_d, 
        data = PFAS_D_COMP, overall="Total")
 
-table1(~ bmi_cat + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k +
+table1(~ bmi_cat + bmi_cat2 + race2_mom_epi_epia_d + coll_grad + smokpreg_final_d + gt70k +
          parity_cat + married_cohab, data = PFAS_D_COMP, overall="Total")
 
 ```
