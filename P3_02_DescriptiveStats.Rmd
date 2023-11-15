@@ -270,6 +270,9 @@ PFAS_A$bmi_cat <- ifelse(PFAS_A$bmi <18.5, 0,
                          ifelse(PFAS_A$bmi >=25.0 & PFAS_A$bmi < 30.0, 2, 
                          ifelse(PFAS_A$bmi >=30.0 & PFAS_A$bmi < 35.0, 3,
                          ifelse(PFAS_A$bmi >=35.0, 4, NA)))))
+PFAS_A$bmi_cat2 <- ifelse(PFAS_A$bmi < 25.0, 0, 
+                         ifelse(PFAS_A$bmi >=25.0 & PFAS_A$bmi < 30.0, 1, 
+                         ifelse(PFAS_A$bmi >=30.0, 2, NA)))
 PFAS_A$race <- ifelse(PFAS_A$race == "white", 0,
                      ifelse(PFAS_A$race == "black", 1,
                      ifelse(PFAS_A$race == "hispa", 2,
@@ -295,6 +298,9 @@ PFAS_A$bmi_cat <- factor(PFAS_A$bmi_cat,
                        labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
                                   "Overweight (25.0 to 29.9)", "Obesity (30.0 to 34.9)", 
                                   "Extremely obesity (>= 35)"))
+PFAS_A$bmi_cat2 <- factor(PFAS_A$bmi_cat2,
+                       levels = c(0, 1, 2),
+                       labels = c("<25", "25 to 30", ">30")) 
 PFAS_A$race <- factor(PFAS_A$race,
                         levels = c(0, 1, 2, 3, 4),
                         labels = c("White", "Black", "Hispanic", "Asian", "Other/More than 1 race"))
@@ -328,6 +334,7 @@ label(PFAS_A$fu_time) <- "Follow-up time"
 label(PFAS_A$menar) <- "Age at first menarche"
 label(PFAS_A$bmi) <- "Pre-pregnancy BMI"
 label(PFAS_A$bmi_cat) <- "Pre-pregnancy BMI"
+label(PFAS_A$bmi_cat2) <- "Pre-pregnancy BMI"
 label(PFAS_A$race) <- "Race/Ethnicity"
 label(PFAS_A$income) <- "Annual household income"
 label(PFAS_A$parity) <- "Parity"
@@ -348,13 +355,14 @@ units(PFAS_A$fu_time)  <- "years"
 units(PFAS_A$menar) <- "years"
 units(PFAS_A$bmi)  <- "kg/m2"
 units(PFAS_A$bmi_cat)  <- "kg/m2"
+units(PFAS_A$bmi_cat2)  <- "kg/m2"
 units(PFAS_A$meno) <- "years"
 units(PFAS_A$fish) <- "servings/week"
 units(PFAS_A$darkmeat) <- "servings/week"
 units(PFAS_A$exer) <- "hrs/week"
 
 ##### TABE 1
-table1(~ age_enroll + age_fu + fu_time + menar + bmi + bmi_cat + race +  income + 
+table1(~ age_enroll + age_fu + fu_time + menar + bmi + bmi_cat + bmi_cat2 + race +  income + 
          parity + smoke + married + edu + meno_cat + meno + fish + darkmeat + exer + exer_cat, 
        data = PFAS_A, overall = "Total")
 
@@ -388,6 +396,9 @@ PFAS_D$bmi_cat <- ifelse(PFAS_D$bmi <18.5, 0,
                          ifelse(PFAS_D$bmi >=25.0 & PFAS_D$bmi < 30.0, 2, 
                          ifelse(PFAS_D$bmi >=30.0 & PFAS_D$bmi < 35.0, 3,
                          ifelse(PFAS_D$bmi >=35.0, 4, NA)))))
+PFAS_D$bmi_cat2 <- ifelse(PFAS_D$bmi < 25.0, 0, 
+                         ifelse(PFAS_D$bmi >=25.0 & PFAS_D$bmi < 30.0, 1, 
+                         ifelse(PFAS_D$bmi >=30.0, 2, NA)))
 PFAS_D$race <- ifelse(PFAS_D$race == "white", 0,
                      ifelse(PFAS_D$race == "black", 1,
                      ifelse(PFAS_D$race == "hispa", 2,
@@ -413,6 +424,9 @@ PFAS_D$bmi_cat <- factor(PFAS_D$bmi_cat,
                        labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
                                   "Overweight (25.0 to 29.9)", "Obesity (30.0 to 34.9)", 
                                   "Extremely obesity (>= 35)"))
+PFAS_D$bmi_cat2 <- factor(PFAS_D$bmi_cat2,
+                       levels = c(0, 1, 2),
+                       labels = c("<25", "25 to 30", ">30")) 
 PFAS_D$race <- factor(PFAS_D$race,
                         levels = c(0, 1, 2, 3, 4),
                         labels = c("White", "Black", "Hispanic", "Asian", "Other/More than 1 race"))
@@ -446,6 +460,7 @@ label(PFAS_D$fu_time) <- "Follow-up time"
 label(PFAS_D$menar) <- "Age at first menarche"
 label(PFAS_D$bmi) <- "Pre-pregnancy BMI"
 label(PFAS_D$bmi_cat) <- "Pre-pregnancy BMI"
+label(PFAS_D$bmi_cat2) <- "Pre-pregnancy BMI"
 label(PFAS_D$race) <- "Race/Ethnicity"
 label(PFAS_D$income) <- "Annual household income"
 label(PFAS_D$parity) <- "Parity"
@@ -467,6 +482,7 @@ units(PFAS_D$fu_time)  <- "years"
 units(PFAS_D$menar) <- "years"
 units(PFAS_D$bmi)  <- "kg/m2"
 units(PFAS_D$bmi_cat)  <- "kg/m2"
+units(PFAS_D$bmi_cat2)  <- "kg/m2"
 units(PFAS_D$meno) <- "years"
 units(PFAS_D$fish) <- "servings/week"
 units(PFAS_D$darkmeat) <- "servings/week"
@@ -474,7 +490,7 @@ units(PFAS_D$exer) <- "hrs/week"
 
 
 ##### TABE 1
-table1(~ age_enroll + age_fu + fu_time + menar + bmi + bmi_cat + race +  income + 
+table1(~ age_enroll + age_fu + fu_time + menar + bmi + bmi_cat + bmi_cat2 + race +  income + 
          parity + smoke + married + edu + meno_cat + meno + fish + darkmeat + exer + exer_cat, 
        data = PFAS_D, overall = "Total")
 
@@ -505,6 +521,9 @@ PFAS_X$bmi_cat <- ifelse(PFAS_X$bmi <18.5, 0,
                          ifelse(PFAS_X$bmi >=25.0 & PFAS_X$bmi < 30.0, 2, 
                          ifelse(PFAS_X$bmi >=30.0 & PFAS_X$bmi < 35.0, 3,
                          ifelse(PFAS_X$bmi >=35.0, 4, NA)))))
+PFAS_X$bmi_cat2 <- ifelse(PFAS_X$bmi < 25.0, 0, 
+                         ifelse(PFAS_X$bmi >=25.0 & PFAS_X$bmi < 30.0, 1, 
+                         ifelse(PFAS_X$bmi >=30.0, 2, NA)))
 PFAS_X$race <- ifelse(PFAS_X$race == "white", 0,
                      ifelse(PFAS_X$race == "black", 1,
                      ifelse(PFAS_X$race == "hispa", 2,
@@ -530,6 +549,9 @@ PFAS_X$bmi_cat <- factor(PFAS_X$bmi_cat,
                        labels = c("Underweight (< 18.5)", "Normal weight (18.5 to 24.9)", 
                                   "Overweight (25.0 to 29.9)", "Obesity (30.0 to 34.9)", 
                                   "Extremely obesity (>= 35)"))
+PFAS_X$bmi_cat2 <- factor(PFAS_X$bmi_cat2,
+                       levels = c(0, 1, 2),
+                       labels = c("<25", "25 to 30", ">30")) 
 PFAS_X$race <- factor(PFAS_X$race,
                         levels = c(0, 1, 2, 3, 4),
                         labels = c("White", "Black", "Hispanic", "Asian", "Other/More than 1 race"))
@@ -547,7 +569,7 @@ PFAS_X$married <- factor(PFAS_X$married,
                           labels = c("No", "Yes"))
 PFAS_X$edu <- factor(PFAS_X$edu,
                        levels = c(0, 1),
-                       labels = c(" < college degree", ">= college degree"))
+                       labels = c("< college degree", ">= college degree"))
 PFAS_X$meno_cat <- factor(PFAS_X$meno_cat,
                        levels = c(0, 1),
                        labels = c("Pre-menopause", "Post-menopause"))
@@ -561,6 +583,7 @@ label(PFAS_X$age_enroll) <- "Maternal age at enrollment"
 label(PFAS_X$menar) <- "Age at first menarche"
 label(PFAS_X$bmi) <- "Pre-pregnancy BMI"
 label(PFAS_X$bmi_cat) <- "Pre-pregnancy BMI"
+label(PFAS_X$bmi_cat2) <- "Pre-pregnancy BMI"
 label(PFAS_X$race) <- "Race/Ethnicity"
 label(PFAS_X$income) <- "Annual household income"
 label(PFAS_X$parity) <- "Parity"
@@ -580,6 +603,7 @@ units(PFAS_X$age_enroll)  <- "years"
 units(PFAS_X$menar) <- "years"
 units(PFAS_X$bmi)  <- "kg/m2"
 units(PFAS_X$bmi_cat)  <- "kg/m2"
+units(PFAS_X$bmi_cat2)  <- "kg/m2"
 units(PFAS_X$meno) <- "years"
 units(PFAS_X$fish) <- "servings/week"
 units(PFAS_X$darkmeat) <- "servings/week"
@@ -587,7 +611,7 @@ units(PFAS_X$exer) <- "hrs/week"
 
 
 ##### TABE 1
-table1(~ age_enroll + menar + bmi + bmi_cat + race +  income + parity + smoke + 
+table1(~ age_enroll + menar + bmi + bmi_cat + bmi_cat2 + race +  income + parity + smoke + 
          married + edu + meno_cat + meno + fish + darkmeat + exer + exer_cat, 
        data = PFAS_X, overall = "Total")
 
