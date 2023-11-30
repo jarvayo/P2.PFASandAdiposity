@@ -194,6 +194,12 @@ PFAS_A$married <- as.factor(PFAS_A$married)
 PFAS_A$edu <- as.factor(PFAS_A$edu)
 PFAS_A$meno_cat <- as.factor(PFAS_A$meno_cat)
 
+##### TABE 1
+library("table1")
+table1(~ age + menar + bmi + bmi_cat + race +  income + 
+         parity + smoke + married + edu, 
+       data = PFAS_IPW, overall = "Total")
+
 ```
 
 ```{r}
