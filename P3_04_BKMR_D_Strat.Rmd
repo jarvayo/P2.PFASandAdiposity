@@ -153,47 +153,47 @@ knots_d_m1 <- fields::cover.design(l2mixture_d_m1_z, nd = 20)$design
 ```
 
 ```{r}
-##### BUILD BKMR MODELS 
-# TRUNK FAT MASS
-m_tfm_b0 <- kmbayes(y = TFM_B0, Z = l2mixture_d_b0_z, X = cov_d_b0, iter = 20000, family = "gaussian",
-                      verbose = FALSE, varsel = TRUE, knots = knots_d_b0)
-beep(sound=5, expr=NULL)
-
-m_tfm_b1 <- kmbayes(y = TFM_B1, Z = l2mixture_d_b1_z, X = cov_d_b1, iter = 20000, family = "gaussian",
-                      verbose = FALSE, varsel = TRUE, knots = knots_d_b1)
-beep(sound=5, expr=NULL)
-
-m_tfm_m0 <- kmbayes(y = TFM_M0, Z = l2mixture_d_m0_z, X = cov_d_m0, iter = 20000, family = "gaussian",
-                      verbose = FALSE, varsel = TRUE, knots = knots_d_m0)
-beep(sound=5, expr=NULL)
-
-m_tfm_m1 <- kmbayes(y = TFM_M1, Z = l2mixture_d_m1_z, X = cov_d_m1, iter = 20000, family = "gaussian",
-                      verbose = FALSE, varsel = TRUE, knots = knots_d_m1)
-beep(sound=5, expr=NULL)
-
-# TOTAL BODY FAT MASS
-m_tbfm_b0 <- kmbayes(y = TBFM_B0, Z = l2mixture_d_b0_z, X = cov_d_b0, iter = 20000, family = "gaussian",
-                      verbose = FALSE, varsel = TRUE, knots = knots_d_b0)
-beep(sound=5, expr=NULL)
-
-m_tbfm_b1 <- kmbayes(y = TBFM_B1, Z = l2mixture_d_b1_z, X = cov_d_b1, iter = 20000, family = "gaussian",
-                      verbose = FALSE, varsel = TRUE, knots = knots_d_b1)
-beep(sound=5, expr=NULL)
-
-m_tbfm_m0 <- kmbayes(y = TBFM_M0, Z = l2mixture_d_m0_z, X = cov_d_m0, iter = 20000, family = "gaussian",
-                      verbose = FALSE, varsel = TRUE, knots = knots_d_m0)
-beep(sound=5, expr=NULL)
-
-m_tbfm_m1 <- kmbayes(y = TBFM_M1, Z = l2mixture_d_m1_z, X = cov_d_m1, iter = 20000, family = "gaussian",
-                      verbose = FALSE, varsel = TRUE, knots = knots_d_m1)
-beep(sound=5, expr=NULL)
+# ##### BUILD BKMR MODELS 
+# # TRUNK FAT MASS
+# m_tfm_b0 <- kmbayes(y = TFM_B0, Z = l2mixture_d_b0_z, X = cov_d_b0, iter = 20000, family = "gaussian",
+#                       verbose = FALSE, varsel = TRUE, knots = knots_d_b0)
+# beep(sound=5, expr=NULL)
+# 
+# m_tfm_b1 <- kmbayes(y = TFM_B1, Z = l2mixture_d_b1_z, X = cov_d_b1, iter = 20000, family = "gaussian",
+#                       verbose = FALSE, varsel = TRUE, knots = knots_d_b1)
+# beep(sound=5, expr=NULL)
+# 
+# m_tfm_m0 <- kmbayes(y = TFM_M0, Z = l2mixture_d_m0_z, X = cov_d_m0, iter = 20000, family = "gaussian",
+#                       verbose = FALSE, varsel = TRUE, knots = knots_d_m0)
+# beep(sound=5, expr=NULL)
+# 
+# m_tfm_m1 <- kmbayes(y = TFM_M1, Z = l2mixture_d_m1_z, X = cov_d_m1, iter = 20000, family = "gaussian",
+#                       verbose = FALSE, varsel = TRUE, knots = knots_d_m1)
+# beep(sound=5, expr=NULL)
+# 
+# # TOTAL BODY FAT MASS
+# m_tbfm_b0 <- kmbayes(y = TBFM_B0, Z = l2mixture_d_b0_z, X = cov_d_b0, iter = 20000, family = "gaussian",
+#                       verbose = FALSE, varsel = TRUE, knots = knots_d_b0)
+# beep(sound=5, expr=NULL)
+# 
+# m_tbfm_b1 <- kmbayes(y = TBFM_B1, Z = l2mixture_d_b1_z, X = cov_d_b1, iter = 20000, family = "gaussian",
+#                       verbose = FALSE, varsel = TRUE, knots = knots_d_b1)
+# beep(sound=5, expr=NULL)
+# 
+# m_tbfm_m0 <- kmbayes(y = TBFM_M0, Z = l2mixture_d_m0_z, X = cov_d_m0, iter = 20000, family = "gaussian",
+#                       verbose = FALSE, varsel = TRUE, knots = knots_d_m0)
+# beep(sound=5, expr=NULL)
+# 
+# m_tbfm_m1 <- kmbayes(y = TBFM_M1, Z = l2mixture_d_m1_z, X = cov_d_m1, iter = 20000, family = "gaussian",
+#                       verbose = FALSE, varsel = TRUE, knots = knots_d_m1)
+# beep(sound=5, expr=NULL)
 
 ```
 
 ```{r}
-# ##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
-save(m_tfm_b0, m_tfm_b1, m_tfm_m0, m_tfm_m1, m_tbfm_b0, m_tbfm_b1, m_tbfm_m0, m_tbfm_m1,
-    file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_D_STRAT.Rdata")
+# # ##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
+# save(m_tfm_b0, m_tfm_b1, m_tfm_m0, m_tfm_m1, m_tbfm_b0, m_tbfm_b1, m_tbfm_m0, m_tbfm_m1,
+#     file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_D_STRAT.Rdata")
 
 ```
 
@@ -214,11 +214,17 @@ sel_final <- seq(1200, 20000, by = 1)
 ##### ESIMATE POSTERIOR INCLUSION PROBABILITIES
 # TOTAL BODY FAT MASS
 #summary(l2m_wt)
-ExtractPIPs(l2m_wt, sel = sel_final)
+ExtractPIPs(m_tfm_b0, sel = sel_final)
+ExtractPIPs(m_tfm_b1, sel = sel_final)
+ExtractPIPs(m_tfm_m0, sel = sel_final)
+ExtractPIPs(m_tfm_m1, sel = sel_final)
 
 # TOTAL BODY FAT MASS
 #summary(l2m_wt)
-ExtractPIPs(l2m_waist, sel = sel_final)
+ExtractPIPs(m_tbfm_b0, sel = sel_final)
+ExtractPIPs(m_tbfm_b1, sel = sel_final)
+ExtractPIPs(m_tbfm_m0, sel = sel_final)
+ExtractPIPs(m_tbfm_m1, sel = sel_final)
 
 ```
 
@@ -759,38 +765,6 @@ p_overall_tbfm_m1 <- ggplot(overall_tbfm_m1, aes(quantile, est, ymin = est - 1.9
     axis.title.x = element_text(angle = 0, color = 'black', size = 25),
     axis.title.y = element_text(angle = 90, color = 'black', size = 24))
 p_overall_tbfm_m1
-
-
-
-
-
-
-# TRUNK FAT MASS
-p_overall_wt <- ggplot(overall_wt, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-  geom_hline(yintercept = 00, linetype = "dashed", color = "red", linewidth = 1) +
-  geom_pointrange() +
-  scale_y_continuous(name = "Trunk fat mass (kg)")+
-  xlab("PFAS quantile") +
-  theme_classic()+ theme(
-    axis.text.x = element_text(size = 25),
-    axis.text.y = element_text(size = 25),
-    axis.title.x = element_text(angle = 0, color = 'black', size = 29, face = "bold"),
-    axis.title.y = element_text(angle = 90, color = 'purple3', size = 29, face = "bold"))
-p_overall_wt
-
-
-# TOTAL BODY FAT MASS
-p_overall_waist <- ggplot(overall_waist, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-  geom_hline(yintercept = 00, linetype = "dashed", color = "red", linewidth = 1) +
-  geom_pointrange() +
-  scale_y_continuous(name = "Waist circum (cm)")+
-  xlab("PFAS quantile") +
-  theme_classic()+ theme(
-    axis.text.x = element_text(size = 25),
-    axis.text.y = element_text(size = 25),
-    axis.title.x = element_text(angle = 0, color = 'black', size = 29, face = "bold"),
-    axis.title.y = element_text(angle = 90, color = 'purple3', size = 29, face = "bold"))
-p_overall_waist
 
 ```
 
