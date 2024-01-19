@@ -1,5 +1,5 @@
 #####                                                        #####
-##### CLEAN PFAS DATA SET AND ENFORCE ELIGIBILITY CRITERIA #####
+##### CLEAN PFAS DATA SET AND ENFORCE ELIGIBILITY CRITERIA   #####
 #####                                                        #####
 
 ```{r message=FALSE, warning=FALSE}
