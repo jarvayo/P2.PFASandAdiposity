@@ -77,7 +77,7 @@ PFAS_A$fish_s <- scale(PFAS_A$fish)
 PFAS_A$darkmeat_s <- scale(PFAS_A$darkmeat)
 
 ##### TABE 1
-table1(~ age + menar + bmi + bmi_cat + bmi_yn + race +  income + parity + smoke +
+table1(~ age + menar + weight + height + bmi + bmi_cat + bmi_yn + race +  income + parity + smoke +
          married + edu + fish + darkmeat, data = PFAS_A, overall = "Total")
 
 ```
