@@ -1,0 +1,474 @@
+#####                                                  #####
+##### RUN MIXTURES ANALYSIS WITH BKMR IN ANTHRO        #####
+#####                                                  #####
+
+```{r message=FALSE, warning=FALSE}
+##### LOAD PACKAGES
+library("bkmr")
+library("ggplot2")
+library("beepr")
+library("tidyverse")
+
+```
+
+```{r message=FALSE, warning=FALSE}
+##### LOAD DATASET
+PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_AF.csv")
+
+##### LOAD WORKSPACE
+# load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
+
+```
+
+```{r}
+##### TRANSFORM VARIABLES TO NUMERIC FOR BKMR COVARIATE MATRIX
+
+# RENAME
+PFAS_A$age_enroll <- PFAS_A$age_mom_enroll_d
+PFAS_A$menar <- PFAS_A$mom_firstperiod_12y
+PFAS_A$bmi <- PFAS_A$bmi_mom_prepreg_d
+PFAS_A$race <- PFAS_A$race2_mom_epi_epia_d
+PFAS_A$income <- PFAS_A$gt70k
+PFAS_A$parity <- PFAS_A$parity_d
+PFAS_A$smoke <- PFAS_A$smokpreg_final_d
+PFAS_A$married <- PFAS_A$married_cohab
+PFAS_A$edu <- PFAS_A$coll_grad
+PFAS_A$fish <- PFAS_A$fish_d_f1
+PFAS_A$darkmeat <- PFAS_A$dark_meat_f1
+
+# REFACTOR AND RELABEL 
+PFAS_A$bmi_cat <- ifelse(PFAS_A$bmi <18.5, 0,
+                         ifelse(PFAS_A$bmi >=18.5 & PFAS_A$bmi < 25.0, 1, 
+                         ifelse(PFAS_A$bmi >=25.0 & PFAS_A$bmi < 30.0, 2, 
+                         ifelse(PFAS_A$bmi >=30.0 & PFAS_A$bmi < 35.0, 3,
+                         ifelse(PFAS_A$bmi >=35.0, 4, 99)))))
+PFAS_A$race <- ifelse(PFAS_A$race == "white", 0,
+                     ifelse(PFAS_A$race == "black", 1,
+                     ifelse(PFAS_A$race == "hispa", 2,
+                     ifelse(PFAS_A$race == "asian", 3,
+                     ifelse(PFAS_A$race == "other", 4, 4)))))
+PFAS_A$income <- ifelse(PFAS_A$income == 1, 1, 0)
+PFAS_A$parity <- ifelse(PFAS_A$parity == 0, 0,
+                        ifelse(PFAS_A$parity == 1, 1,
+                        ifelse(PFAS_A$parity > 1, 2, 0)))
+PFAS_A$smoke <- ifelse(PFAS_A$smoke == "former", 0,
+                         ifelse(PFAS_A$smoke == "smoke preg", 1,
+                         ifelse(PFAS_A$smoke == "xnever", 2, 2)))
+PFAS_A$married <- ifelse(PFAS_A$married == 1, 1, 0)
+PFAS_A$edu <- ifelse(PFAS_A$edu == 1, 1, 0)
+
+# SET CATEGORICAL VARIABLES AS FACTORS
+PFAS_A$bmi_cat <- as.factor(PFAS_A$bmi_cat)
+PFAS_A$race <- as.factor(PFAS_A$race)
+PFAS_A$income <- as.factor(PFAS_A$income)
+PFAS_A$parity <- as.factor(PFAS_A$parity)
+PFAS_A$smoke <- as.factor(PFAS_A$smoke)
+PFAS_A$married <- as.factor(PFAS_A$married)
+PFAS_A$edu <- as.factor(PFAS_A$edu)
+
+# CENTER AND SCALE CONTINUOUS VARIABLES
+PFAS_A$height_s <- scale(PFAS_A$height)
+PFAS_A$age_s <- scale(PFAS_A$age_enroll)
+PFAS_A$menar_s <- scale(PFAS_A$menar)
+PFAS_A$fish_s <- scale(PFAS_A$fish)
+PFAS_A$darkmeat_s <- scale(PFAS_A$darkmeat)
+
+```
+
+```{r}
+##### PREPARE VARIABLES FOR BKMR MODELS #####
+##### ANTHRO DATASET (N = 549)
+
+# CREATE MIXTURE OF PFAS
+mixture_a <- as.matrix(cbind(PFAS_A$PFOS, PFAS_A$PFOA, PFAS_A$PFNA, PFAS_A$PFHxS, 
+                              PFAS_A$MeFOSAA, PFAS_A$EtFOSAA))
+
+# RENAME VARIABLES IN MIXTURE
+colnames(mixture_a) <- c("PFOS", "PFOA", "PFNA", "PFHxS", "MeFOSAA", "EtFOSAA")
+
+# LOG2-TRANSFORM MIXTURE
+l2mixture_a <- apply(mixture_a, 2, log2)
+
+# SCALE MIXTURE VARIABLES TO THE MEAN
+l2mixture_a_z <- scale(l2mixture_a)
+
+# SET THE OUTCOME
+Weight <- PFAS_A$Weight
+Waist <- PFAS_A$Waist
+
+# CREAT THE COVARIATE MATRIX
+cov_a_nw <- as.matrix(cbind(PFAS_A$age_s, PFAS_A$race, PFAS_A$smoke, 
+                         PFAS_A$parity, PFAS_A$married, PFAS_A$fish_s, PFAS_A$height_s))
+
+cov_a <- as.matrix(cbind(PFAS_A$age_s, PFAS_A$race, PFAS_A$bmi_cat, PFAS_A$smoke, 
+                         PFAS_A$parity, PFAS_A$married, PFAS_A$fish_s, PFAS_A$height_s))
+
+# SET THE SEED
+set.seed(1234)
+
+# CREATE KNOTS
+knots_al2_z <- fields::cover.design(l2mixture_a_z, nd = 50)$design
+
+```
+
+```{r}
+##### BUILD BKMR MODELS 
+# WEIGHT
+l2m_wt <- kmbayes(y = Weight, Z = l2mixture_a_z, X = cov_a_nw, iter = 20000, family = "gaussian",
+                       verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
+beep(sound=5, expr=NULL)
+
+
+# WAIST CIRCUMFERENCE
+l2m_waist <- kmbayes(y = Waist, Z = l2mixture_a_z, X = cov_a, iter = 20000, family = "gaussian",
+                      verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
+beep(sound=5, expr=NULL)
+
+```
+
+```{r}
+##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
+save(l2m_wt, l2m_waist,
+    file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
+
+```
+
+```{r}
+##### VALUES TO KEEP AFTER BURIN/THIN
+sel <- seq(0,20000,by = 50)
+
+##### ACCESS CONVERGENCE WITH TRACEPLOTS
+TracePlot(fit = l2m_wt, par = "beta", sel = sel)
+TracePlot(fit = l2m_waist, par = "beta", sel = sel)
+
+##### VALUES TO KEEP AFTER BURNING/THIN (ACCORDING TO THE TRACEPLOT FUNCTION ABOVE)
+sel_final <- seq(1200, 20000, by = 1)
+
+```
+
+```{r}
+##### ESIMATE POSTERIOR INCLUSION PROBABILITIES
+# WAIST CIRCUMFERENCE
+#summary(l2m_wt)
+ExtractPIPs(l2m_wt, sel = sel_final)
+
+# WAIST CIRCUMFERENCE
+#summary(l2m_wt)
+ExtractPIPs(l2m_waist, sel = sel_final)
+
+```
+
+```{r}
+##### PREDICT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
+# WEIGHT
+univar_wt <- PredictorResponseUnivar(fit = l2m_wt, sel = sel_final, method = "approx")
+
+# WAIST CIRCUMFERENCE
+univar_waist <- PredictorResponseUnivar(fit = l2m_waist, sel = sel_final, method = "approx")
+
+
+##### PLOT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
+# BMI
+uni_wt <- ggplot(univar_wt, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity", colour='black') + xlab("Plasma PFAS, log2(ng/mL)") + ylab("Weight (kg)") +
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 25))  
+
+uni1_wt <- ggplot(univar_wt[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFOS, log2(ng/mL)") + ylab("Weight (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
+
+uni2_wt <- ggplot(univar_wt[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFOA, log2(ng/mL)") + ylab("Weight (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
+
+uni3_wt <- ggplot(univar_wt[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFNA, log2(ng/mL)") + ylab("Weight (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
+
+uni4_wt <- ggplot(univar_wt[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFHxS, log2(ng/mL)") + ylab("Weight (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
+
+uni5_wt <- ggplot(univar_wt[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma MeFOSAA, log2(ng/mL)") + ylab("Weight (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
+
+uni6_wt <- ggplot(univar_wt[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma EtFOSAA, log2(ng/mL)") + ylab("Weight (kg)") +
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
+
+uni_wt
+uni1_wt
+uni2_wt
+uni3_wt
+uni4_wt
+uni5_wt
+uni6_wt
+
+
+# WAIST CIRCUMFERENCE
+uni_waist <- ggplot(univar_waist, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity", colour='black') + xlab("Plasma PFAS, log2(ng/mL)") + ylab("Waist circumference (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 25))  
+
+uni1_waist <- ggplot(univar_waist[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFOS, log2(ng/mL)") + ylab("Waist circ. (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
+
+uni2_waist <- ggplot(univar_waist[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFOA, log2(ng/mL)") + ylab("Waist circ. (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
+
+uni3_waist <- ggplot(univar_waist[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFNA, log2(ng/mL)") + ylab("Waist circ. (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
+
+uni4_waist <- ggplot(univar_waist[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFHxS, log2(ng/mL)") + ylab("Waist circ. (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
+
+uni5_waist <- ggplot(univar_waist[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma MeFOSAA, log2(ng/mL)") + ylab("Waist circ. (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
+
+uni6_waist <- ggplot(univar_waist[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma EtFOSAA, log2(ng/mL)") + ylab("Waist circ. (cm)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 28))  
+
+uni_waist
+uni1_waist
+uni2_waist
+uni3_waist
+uni4_waist
+uni5_waist
+uni6_waist
+
+```
+
+```{r}
+##### PREDICT BIVARIATE EXPOSURE-RESPONSE CURVE TO ASSESS POTENTIAL INTERACTIONS
+##### SUBESQUENTLY, PREDICT INTERACTIONS AMONG PFAS
+# WEIGHT
+bivar_wt <- PredictorResponseBivar(fit = l2m_wt, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_wt <- PredictorResponseBivarLevels(pred.resp.df = bivar_wt, Z = l2mixture_a_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_wt_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_wt, Z = l2mixture_a_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+# WAIST CIRCUMFERENCE
+bivar_waist <- PredictorResponseBivar(fit = l2m_waist, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_waist <- PredictorResponseBivarLevels(pred.resp.df = bivar_waist, Z = l2mixture_a_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_waist_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_waist, Z = l2mixture_a_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+
+
+##### PLOT BIVARIATE INTERACTIONS
+##### NON-PARALLEL LINES WOULD INDICATE POTENTIAL INTERACTIONS
+# WEIGHT
+p_interact_wt <- ggplot(interact_wt, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) + theme(
+               axis.title.x=element_text(angle=0, color='black', size = 20),
+               axis.title.y=element_text(angle=90, color='black', size = 20)) +
+  xlab ("PFAS 1") +
+  ylab ("Weight (kg)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_wt
+
+# WAIST CIRCUMFERENCE
+p_interact_waist <- ggplot(interact_waist, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) + theme(
+               axis.title.x=element_text(angle=0, color='black', size = 20),
+               axis.title.y=element_text(angle=90, color='black', size = 20)) +
+  xlab ("PFAS 1") +
+  ylab ("Waist circ. (cm)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_waist 
+
+```
+
+```{r}
+##### DETERMINE RISK ASSOCIATED WITH THE OVERALL MIXTURE
+# WEIGHT
+overall_wt <- OverallRiskSummaries(fit = l2m_wt, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+
+# WAIST CIRCUMFERENCE
+overall_waist <- OverallRiskSummaries(fit = l2m_waist, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+
+
+
+##### PLOT RISK ASSOCIATED WITH THE OVERALL MIXTURE
+# WEIGHT
+p_overall_wt <- ggplot(overall_wt, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "red", linewidth = 1) +
+               geom_pointrange() +
+               scale_y_continuous(name = "Weight (kg)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 25),
+               axis.text.y = element_text(size = 24),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 25),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 24))
+p_overall_wt
+
+
+# WAIST CIRCUMFERENCE
+p_overall_waist <- ggplot(overall_waist, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "red", linewidth = 1) +
+               geom_pointrange() +
+               scale_y_continuous(name = "Waist circ (cm)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 25),
+               axis.text.y = element_text(size = 24),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 25),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 24))
+p_overall_waist
+
+```
+
+```{r}
+##### ESTIMATE SINGLE PFAS EFFECT
+# WEIGHT
+singvar_wt <- SingVarRiskSummaries(fit = l2m_wt, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75), sel = sel_final, method = "approx")
+singvar_wt2 <- SingVarRiskSummaries(fit = l2m_wt, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.50), sel = sel_final, method = "approx")
+singvar_wt2
+2.59337899 - 1.96*1.0832861	
+2.59337899 + 1.96*1.0832861	
+
+-0.06773467 - 1.96*0.8380125	
+-0.06773467 + 1.96*0.8380125	
+
+-1.42599551 - 1.96*0.6651822	
+-1.42599551 + 1.96*0.6651822	
+
+-0.80095312 - 1.96*0.5197135	
+-0.80095312 + 1.96*0.5197135	
+
+-0.58733041 - 1.96*0.6415295	
+-0.58733041 + 1.96*0.6415295	
+
+0.99348867 - 1.96*0.7352979
+0.99348867 + 1.96*0.7352979
+
+
+# WAIST CIRCUMFERENCE
+singvar_waist <- SingVarRiskSummaries(fit = l2m_waist, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75), sel = sel_final, method = "approx")
+singvar_waist2 <- SingVarRiskSummaries(fit = l2m_waist, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.50), sel = sel_final, method = "approx")
+singvar_waist2
+
+1.2451138 - 1.96*1.1777942	
+1.2451138 + 1.96*1.1777942	
+
+1.4374616 - 1.96*1.0598314	
+1.4374616 + 1.96*1.0598314	
+
+-1.8165612 - 1.96*0.7483963	
+-1.8165612 + 1.96*0.7483963	
+
+-0.9815914 - 1.96*0.6332867	
+-0.9815914 + 1.96*0.6332867	
+
+-0.9133417 - 1.96*0.7488471	
+-0.9133417 + 1.96*0.7488471	
+
+0.9510012 - 1.96*0.7875484	
+0.9510012 + 1.96*0.7875484	
+
+
+##### PLOT SINGLE PFAS EFFECT
+##### HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+# WEIGHT
+p_singvar_wt <- ggplot(singvar_wt, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) + 
+  theme_bw() + theme(text = element_text(size = 23)) + theme(axis.title.y = element_blank()) +
+  scale_x_discrete(limits = c("EtFOSAA", "MeFOSAA", "PFHxS", "PFNA", "PFOA", "PFOS")) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "black", linewidth = 1) +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_y_continuous(name = "Weight (kg)")
+p_singvar_wt
+
+
+# WAIST CIRCUMFERENCE
+p_singvar_waist <- ggplot(singvar_waist, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) + 
+  theme_bw() + theme(text = element_text(size = 23)) + theme(axis.title.y = element_blank()) +
+  scale_x_discrete(limits = c("EtFOSAA", "MeFOSAA", "PFHxS", "PFNA", "PFOA", "PFOS")) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "black", linewidth = 1) +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_y_continuous(name = "Waist circ. (cm)")
+p_singvar_waist
+
+
+# WEIGHT
+p_singvar_wt2 <- ggplot(singvar_wt2, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) + 
+  theme_bw() + theme(text = element_text(size = 23, color = "black")) + theme(axis.title.y = element_blank()) +
+  scale_x_discrete(limits = c("EtFOSAA", "MeFOSAA", "PFHxS", "PFNA", "PFOA", "PFOS")) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "red", linewidth = 1) +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_y_continuous(name = "Weight (kg)")
+p_singvar_wt2
+
+
+# WAIST CIRCUMFERENCE
+p_singvar_waist2 <- ggplot(singvar_waist2, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) + 
+  theme_bw() + theme(text = element_text(size = 23, color = "black")) + theme(axis.title.y = element_blank()) +
+  scale_x_discrete(limits = c("EtFOSAA", "MeFOSAA", "PFHxS", "PFNA", "PFOA", "PFOS")) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "red", linewidth = 1) +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_y_continuous(name = "Waist circ. (cm)")
+p_singvar_waist2
+
+```
+
+```{r}
+##### UNIVARIATE INTERACTIONS AMONG PFAS
+# WEIGHT
+overall_interact_wt <- SingVarIntSummaries(fit = l2m_wt, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+# WAIST CIRCUMFERENCE
+overall_interact_waist <- SingVarIntSummaries(fit = l2m_waist, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+
+##### PLOT UNIVARIATE INTERACTIONS
+# WEIGHT
+p_overall_interact_wt <- ggplot(overall_interact_wt, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) +theme(text = element_text(size = 25)) +
+  geom_hline(yintercept = 0, lty = 2, color = "red", linewidth = 1) + coord_flip() +
+  ylab("Weight (kg)") +
+  xlab("Plasma PFAS")
+p_overall_interact_wt
+
+
+# WAIST CIRCUMFERENCE
+p_overall_interact_waist <- ggplot(overall_interact_waist, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) + theme(text = element_text(size = 25)) +
+  geom_hline(yintercept = 0, lty = 2, color = "red", linewidth = 1) + coord_flip() +
+  ylab("Waist circ. (cm)") +
+  xlab("Plasma PFAS")
+p_overall_interact_waist
+
+```
