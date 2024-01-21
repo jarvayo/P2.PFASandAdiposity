@@ -439,7 +439,7 @@ ad.l2m.wt <- list(
   "EtFOSAA" = glm(Weight ~ L2EtFOSAA + age_enroll + race + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_A))
 
-modelsummary(ad.l2m.wt, fmt = 4,
+modelsummary(ad.l2m.wt, fmt = 1,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]",
@@ -462,7 +462,7 @@ wad.l2m.wt <- list(
   "EtFOSAA" = glm(Weight ~ L2EtFOSAA + age_enroll + race + bmi_cat + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
 
-modelsummary(wad.l2m.wt, fmt = 4,
+modelsummary(wad.l2m.wt, fmt = 1,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]",
@@ -485,7 +485,7 @@ wad.l2m.wt.sens1 <- list(
   "EtFOSAA" = glm(Weight ~ L2EtFOSAA*bmi_yn + age_enroll + race + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
 
-modelsummary(wad.l2m.wt.sens1, fmt = 2,
+modelsummary(wad.l2m.wt.sens1, fmt = 1,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]",
@@ -510,7 +510,7 @@ ad.l2m.waist <- list(
   "EtFOSAA" = glm(Waist ~ L2EtFOSAA + age_enroll + race + bmi_cat + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_A))
 
-modelsummary(ad.l2m.waist, fmt = 4,
+modelsummary(ad.l2m.waist, fmt = 1,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]",
@@ -533,7 +533,7 @@ wad.l2m.waist <- list(
   "EtFOSAA" = glm(Waist ~ L2EtFOSAA + age_enroll + race + bmi_cat + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
 
-modelsummary(wad.l2m.waist, fmt = 4,
+modelsummary(wad.l2m.waist, fmt = 1,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]",
@@ -556,7 +556,7 @@ wad.l2m.waist.sens1 <- list(
   "EtFOSAA" = glm(Waist ~ L2EtFOSAA*bmi_yn + age_enroll + race + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
 
-modelsummary(wad.l2m.waist.sens1, fmt = 2,
+modelsummary(wad.l2m.waist.sens1, fmt = 1,
              estimate = "{estimate}{stars}",
              statistic = c("SE: {std.error}",
                            "95% CI: [{conf.low}, {conf.high}]",
@@ -583,7 +583,7 @@ ad.l2m.trnkfat <- list(
   "EtFOSAA" = glm(TrnkFat ~ L2EtFOSAA + age_enroll + race + bmi_cat + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_D))
 
-modelsummary(ad.l2m.trnkfat, fmt = 4, estimate = "{estimate}{stars}", 
+modelsummary(ad.l2m.trnkfat, fmt = 1, estimate = "{estimate}{stars}", 
              statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
                            "p = {p.value}"), 
              coef_omit = "Interc", title = "LOG2-PFAS vs. TRUNK FAT MASS")
@@ -604,7 +604,7 @@ wad.l2m.trnkfat <- list(
   "EtFOSAA" = glm(TrnkFat ~ L2EtFOSAA + age_enroll + race + bmi_cat + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
 
-modelsummary(wad.l2m.trnkfat, fmt = 4, estimate = "{estimate}{stars}", 
+modelsummary(wad.l2m.trnkfat, fmt = 1, estimate = "{estimate}{stars}", 
              statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
                            "p = {p.value}"), 
              coef_omit = "Interc", title = "LOG2-PFAS vs. TRUNK FAT MASS (IPC Weighted)")
@@ -625,7 +625,7 @@ wad.l2m.trnkfat.sens1 <- list(
   "EtFOSAA" = glm(TrnkFat ~ L2EtFOSAA*bmi_yn + age_enroll + race + smoke +  
                  parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
 
-modelsummary(wad.l2m.trnkfat.sens1, fmt = 2, estimate = "{estimate}{stars}", 
+modelsummary(wad.l2m.trnkfat.sens1, fmt = 1, estimate = "{estimate}{stars}", 
              statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
                            "p = {p.value}"), 
              coef_omit = "Interc", title = "LOG2-PFAS vs. TRUNK FAT MASS (IPC Weighted, Sens)")
@@ -648,7 +648,7 @@ ad.l2m.totfat <- list(
   "EtFOSAA" = glm(TotFat ~ L2EtFOSAA + age_enroll + race + bmi_cat + smoke + 
                     parity + married + fish + height, family = gaussian, data = PFAS_D))
 
-modelsummary(ad.l2m.totfat, fmt = 4, estimate = "{estimate}{stars}", 
+modelsummary(ad.l2m.totfat, fmt = 1, estimate = "{estimate}{stars}", 
              statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
                            "p = {p.value}"), 
              coef_omit = "Interc", title = "LOG2-PFAS vs. TOTAL BODY FAT MASS")
@@ -668,7 +668,7 @@ wad.l2m.totfat <- list(
   "EtFOSAA" = glm(TotFat ~ L2EtFOSAA + age_enroll + race + bmi_cat + smoke + 
                     parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
 
-modelsummary(wad.l2m.totfat, fmt = 4, estimate = "{estimate}{stars}", 
+modelsummary(wad.l2m.totfat, fmt = 1, estimate = "{estimate}{stars}", 
              statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
                            "p = {p.value}"), 
              coef_omit = "Interc", title = "LOG2-PFAS vs. TOTAL BODY FAT MASS (IPW Weighted)")
@@ -689,7 +689,7 @@ wad.l2m.totfat.sens1 <- list(
   "EtFOSAA" = glm(TotFat ~ L2EtFOSAA*bmi_yn + age_enroll + race + smoke + 
                     parity + married + fish + height, family = gaussian, data = PFAS_IPW, weights = EtFOSAA_w))
 
-modelsummary(wad.l2m.totfat.sens1, fmt = 2, estimate = "{estimate}{stars}", 
+modelsummary(wad.l2m.totfat.sens1, fmt = 1, estimate = "{estimate}{stars}", 
              statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
                            "p = {p.value}"), 
              coef_omit = "Interc", title = "LOG2-PFAS vs. TOTAL BODY FAT MASS (IPW Weighted, Sens)")
