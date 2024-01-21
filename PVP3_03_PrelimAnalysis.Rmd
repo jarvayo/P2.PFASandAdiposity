@@ -1,0 +1,317 @@
+#####                                                       #####
+##### PRE-LIMINARY ANALYSIS                                 #####
+#####                                                       #####
+
+```{r message=FALSE, warning=FALSE}
+##### LOAD PACKAGES
+library("tidyverse")
+library("modelsummary")
+library("kableExtra")
+library("gt")
+library("shiny")
+library("olsrr")
+library("dplyr")
+library("table1")
+
+```
+
+```{r message=FALSE, warning=FALSE}
+##### LOAD DATASET
+PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_AF.csv")
+PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_DF.csv")
+
+```
+
+```{r}
+##### PREPARE VARIABLES FOR LINEAR REGRESSION
+
+# RENAME
+PFAS_A$age_enroll <- PFAS_A$age_mom_enroll_d
+PFAS_A$menar <- PFAS_A$mom_firstperiod_12y
+PFAS_A$bmi <- PFAS_A$bmi_mom_prepreg_d
+PFAS_A$race <- PFAS_A$race2_mom_epi_epia_d
+PFAS_A$income <- PFAS_A$gt70k
+PFAS_A$parity <- PFAS_A$parity_d
+PFAS_A$smoke <- PFAS_A$smokpreg_final_d
+PFAS_A$married <- PFAS_A$married_cohab
+PFAS_A$edu <- PFAS_A$coll_grad
+PFAS_A$fish <- PFAS_A$fish_d_f1
+PFAS_A$darkmeat <- PFAS_A$dark_meat_f1
+
+# REFACTOR AND RELABEL 
+PFAS_A$bmi_cat <- ifelse(PFAS_A$bmi <18.5, 0,
+                         ifelse(PFAS_A$bmi >=18.5 & PFAS_A$bmi < 25.0, 1, 
+                                ifelse(PFAS_A$bmi >=25.0 & PFAS_A$bmi < 30.0, 2, 
+                                       ifelse(PFAS_A$bmi >=30.0 & PFAS_A$bmi < 35.0, 3,
+                                              ifelse(PFAS_A$bmi >=35.0, 4, NA)))))
+PFAS_A$bmi_yn <- ifelse(PFAS_A$bmi <25, 0, 1)
+PFAS_A$race <- ifelse(PFAS_A$race == "white", 0,
+                      ifelse(PFAS_A$race == "black", 1,
+                             ifelse(PFAS_A$race == "hispa", 2,
+                                    ifelse(PFAS_A$race == "asian", 3,
+                                           ifelse(PFAS_A$race == "other", 4, 4)))))
+PFAS_A$income <- ifelse(PFAS_A$income == 1, 1, 0)
+PFAS_A$parity <- ifelse(PFAS_A$parity == 0, 0,
+                        ifelse(PFAS_A$parity == 1, 1,
+                               ifelse(PFAS_A$parity > 1, 2, 0)))
+PFAS_A$smoke <- ifelse(PFAS_A$smoke == "former", 0,
+                       ifelse(PFAS_A$smoke == "smoke preg", 1,
+                              ifelse(PFAS_A$smoke == "xnever", 2, 2)))
+PFAS_A$married <- ifelse(PFAS_A$married == 1, 1, 0)
+PFAS_A$edu <- ifelse(PFAS_A$edu == 1, 1, 0)
+
+# SET CATEGORICAL VARIABLES AS FACTORS
+PFAS_A$bmi_cat <- as.factor(PFAS_A$bmi_cat)
+PFAS_A$bmi_yn <- as.factor(PFAS_A$bmi_yn)
+PFAS_A$race <- as.factor(PFAS_A$race)
+PFAS_A$income <- as.factor(PFAS_A$income)
+PFAS_A$parity <- as.factor(PFAS_A$parity)
+PFAS_A$smoke <- as.factor(PFAS_A$smoke)
+PFAS_A$married <- as.factor(PFAS_A$married)
+PFAS_A$edu <- as.factor(PFAS_A$edu)
+
+
+##### TABE 1
+table1(~ age_enroll + menar + pp_weight + height + bmi + bmi_cat + bmi_yn + height + pp_weight +
+         race +  income + parity + smoke + married + edu + fish + darkmeat, 
+       data = PFAS_A, overall = "Total")
+
+```
+
+```{r}
+##### PREPARE VARIABLES FOR LINEAR REGRESSION
+
+# RENAME
+PFAS_D$age <- PFAS_D$age_mom_enroll_d
+PFAS_D$menar <- PFAS_D$mom_firstperiod_12y
+PFAS_D$bmi <- PFAS_D$bmi_mom_prepreg_d
+PFAS_D$race <- PFAS_D$race2_mom_epi_epia_d
+PFAS_D$income <- PFAS_D$gt70k
+PFAS_D$parity <- PFAS_D$parity_d
+PFAS_D$smoke <- PFAS_D$smokpreg_final_d
+PFAS_D$married <- PFAS_D$married_cohab
+PFAS_D$edu <- PFAS_D$coll_grad
+PFAS_D$fish <- PFAS_D$fish_d_f1
+PFAS_D$darkmeat <- PFAS_D$dark_meat_f1
+
+# REFACTOR AND RELABEL 
+PFAS_D$bmi_cat <- ifelse(PFAS_D$bmi <18.5, 0,
+                         ifelse(PFAS_D$bmi >=18.5 & PFAS_D$bmi < 25.0, 1, 
+                                ifelse(PFAS_D$bmi >=25.0 & PFAS_D$bmi < 30.0, 2, 
+                                       ifelse(PFAS_D$bmi >=30.0 & PFAS_D$bmi < 35.0, 3,
+                                              ifelse(PFAS_D$bmi >=35.0, 4, NA)))))
+PFAS_D$bmi_yn <- ifelse(PFAS_D$bmi <25, 0, 1)
+PFAS_D$race <- ifelse(PFAS_D$race == "white", 0,
+                      ifelse(PFAS_D$race == "black", 1,
+                             ifelse(PFAS_D$race == "hispa", 2,
+                                    ifelse(PFAS_D$race == "asian", 3,
+                                           ifelse(PFAS_D$race == "other", 4, 4)))))
+PFAS_D$income <- ifelse(PFAS_D$income == 1, 1, 0)
+PFAS_D$parity <- ifelse(PFAS_D$parity == 0, 0,
+                        ifelse(PFAS_D$parity == 1, 1,
+                               ifelse(PFAS_D$parity > 1, 2, 0)))
+PFAS_D$smoke <- ifelse(PFAS_D$smoke == "former", 0,
+                       ifelse(PFAS_D$smoke == "smoke preg", 1,
+                              ifelse(PFAS_D$smoke == "xnever", 2, 2)))
+PFAS_D$married <- ifelse(PFAS_D$married == 1, 1, 0)
+PFAS_D$edu <- ifelse(PFAS_D$edu == 1, 1, 0)
+
+# SET CATEGORICAL VARIABLES AS FACTORS
+PFAS_D$bmi_cat <- as.factor(PFAS_D$bmi_cat)
+PFAS_D$bmi_yn <- as.factor(PFAS_D$bmi_yn)
+PFAS_D$race <- as.factor(PFAS_D$race)
+PFAS_D$income <- as.factor(PFAS_D$income)
+PFAS_D$parity <- as.factor(PFAS_D$parity)
+PFAS_D$smoke <- as.factor(PFAS_D$smoke)
+PFAS_D$married <- as.factor(PFAS_D$married)
+PFAS_D$edu <- as.factor(PFAS_D$edu)
+
+
+##### TABE 1
+table1(~ age_enroll + menar + pp_weight + height + bmi + bmi_cat + bmi_yn + race +
+         income + parity + smoke + married + edu + fish + darkmeat, data = PFAS_D, overall = "Total")
+
+```
+
+```{r}
+##### RUN ADJUSTED LINEAR REGRESSION MODELS, ANTHRO DATASET (N = 547)
+
+# WEIGHT
+ad.l2m.wt <- list(
+  "PFOS" = glm(Weight ~ L2PFOS + age_enroll + race + height + smoke + 
+                 parity + married + fish, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(Weight ~ L2PFOA + age_enroll + race + height + smoke +
+                 parity + married + fish, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(Weight ~ L2PFNA + age_enroll + race + height + smoke +  
+                 parity + married + fish, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(Weight ~ L2PFHxS + age_enroll + race + height + smoke +  
+                 parity + married + fish, family = gaussian, data = PFAS_A),
+  "MeFOSAA" = glm(Weight ~ L2MeFOSAA + age_enroll + race + height + smoke +  
+                 parity + married + fish, family = gaussian, data = PFAS_A),
+  "EtFOSAA" = glm(Weight ~ L2EtFOSAA + age_enroll + race + height + smoke +  
+                 parity + married + fish, family = gaussian, data = PFAS_A))
+
+
+modelsummary(ad.l2m.wt, fmt = 4,
+             estimate = "{estimate}{stars}",
+             statistic = c("SE: {std.error}",
+                           "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"),
+             coef_omit = "Interc", title = "LOG2-PFAS vs. WEIGHT (Adjusted)")
+
+
+
+# WAIST CIRCUMFERENCE
+ad.l2m.waist <- list(
+  "PFOS" = glm(Waist ~ L2PFOS + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_A),
+  "PFOA" = glm(Waist ~ L2PFOA + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_A),
+  "PFNA" = glm(Waist ~ L2PFNA + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_A),
+  "PFHxS" = glm(Waist ~ L2PFHxS + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_A),
+  "MeFOSAA" = glm(Waist ~ L2MeFOSAA + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_A),
+  "EtFOSAA" = glm(Waist ~ L2EtFOSAA + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_A))
+
+modelsummary(ad.l2m.waist, fmt = 4,
+             estimate = "{estimate}{stars}",
+             statistic = c("SE: {std.error}",
+                           "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"),
+             coef_omit = "Interc", title = "LOG2-PFAS vs. WAIST CIRCUMFERENCE (Adjusted)")
+
+```
+
+```{r}
+##### RUN ADJUSTED LINEAR REGRESSION MODELS, ANTHRO + DXA DATASET (N = 433)
+
+# TRUNK FAT MASS
+ad.l2m.trnkfat <- list(
+  "PFOS" = glm(TrnkFat ~ L2PFOS + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_D),
+  "PFOA" = glm(TrnkFat ~ L2PFOA + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_D),
+  "PFNA" = glm(TrnkFat ~ L2PFNA + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_D),
+  "PFHxS" = glm(TrnkFat ~ L2PFHxS + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_D),
+  "MeFOSAA" = glm(TrnkFat ~ L2MeFOSAA + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_D),
+  "EtFOSAA" = glm(TrnkFat ~ L2EtFOSAA + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_D))
+
+modelsummary(ad.l2m.trnkfat, fmt = 2, estimate = "{estimate}{stars}", 
+             statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"), 
+             coef_omit = "Interc", title = "LOG2-PFAS vs. TRUNK FAT MASS (Adjusted)")
+
+
+
+# TOTAL BODY FAT MASS
+ad.l2m.totfat <- list(
+  "PFOS" = glm(TotFat ~ L2PFOS + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_D),
+  "PFOA" = glm(TotFat ~ L2PFOA + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_D),
+  "PFNA" = glm(TotFat ~ L2PFNA + age_enroll + race + bmi_cat + smoke +  
+                 parity + married + fish + height, family = gaussian, data = PFAS_D),
+  "PFHxS" = glm(TotFat ~ L2PFHxS + age_enroll + race + bmi_cat + smoke + 
+                  parity + married + fish + height, family = gaussian, data = PFAS_D),
+  "MeFOSAA" = glm(TotFat ~ L2MeFOSAA + age_enroll + race + bmi_cat + smoke + 
+                    parity + married + fish + height, family = gaussian, data = PFAS_D),
+  "EtFOSAA" = glm(TotFat ~ L2EtFOSAA + age_enroll + race + bmi_cat + smoke + 
+                    parity + married + fish + height, family = gaussian, data = PFAS_D))
+
+modelsummary(ad.l2m.totfat, fmt = 2, estimate = "{estimate}{stars}", 
+             statistic = c("SE: {std.error}", "95% CI: [{conf.low}, {conf.high}]",
+                           "p = {p.value}"), 
+             coef_omit = "Interc", title = "LOG2-PFAS vs. TOTAL BODY FAT MASS (Adjusted)")
+
+```
+
+```{r}
+##### EMPLOY FDR CORRECTION
+PFAS_A <- PFAS_A %>% relocate(aid, L2PFOS, L2PFOA, L2PFNA, L2PFHxS, L2MeFOSAA, L2EtFOSAA, everything()) 
+PFAS_D <- PFAS_D %>% relocate(aid, L2PFOS, L2PFOA, L2PFNA, L2PFHxS, L2MeFOSAA, L2EtFOSAA, everything()) 
+
+
+# WEIGHT
+pval_WT <- NULL
+for (i in 2:7){
+m_WT <- glm(PFAS_A$Weight ~ PFAS_A[[i]] + PFAS_A$age_enroll + PFAS_A$race + 
+                PFAS_A$smoke +  PFAS_A$parity + 
+                PFAS_A$married + PFAS_A$fish + PFAS_A$height, family = gaussian)
+p_WT <- summary(m_WT)$coefficients[2,]
+pval_WT <- rbind(pval_WT, p_WT)
+rownames(pval_WT)[i-1] <- paste("X", i-1, sep="")
+}
+
+pval_WT_set <- pval_WT[,4]
+BH_WT <- p.adjust(pval_WT_set, method="BH")
+BY_WT <- p.adjust(pval_WT_set, method="BY")
+FDR_WT <- p.adjust(pval_WT_set, method="fdr")
+FWER_WT <- as.data.frame(cbind(pval_WT_set, BH_WT, BY_WT, FDR_WT))
+FWER_WT
+
+
+# Waist
+pval_Waist <- NULL
+for (i in 2:7){
+m_Waist <- glm(PFAS_A$Waist ~ PFAS_A[[i]] + PFAS_A$age_enroll + PFAS_A$race + 
+                PFAS_A$smoke +  PFAS_A$parity + 
+                PFAS_A$married + PFAS_A$fish + PFAS_A$height, family = gaussian)
+p_Waist <- summary(m_Waist)$coefficients[2,]
+pval_Waist <- rbind(pval_Waist, p_Waist)
+rownames(pval_Waist)[i-1] <- paste("X", i-1, sep="")
+}
+
+pval_Waist_set <- pval_Waist[,4]
+BH_Waist <- p.adjust(pval_Waist_set, method="BH")
+BY_Waist <- p.adjust(pval_Waist_set, method="BY")
+FDR_Waist <- p.adjust(pval_Waist_set, method="fdr")
+FWER_Waist <- as.data.frame(cbind(pval_Waist_set, BH_Waist, BY_Waist, FDR_Waist))
+FWER_Waist
+
+
+
+# TRNK
+pval_TRNK <- NULL
+for (i in 2:7){
+m_TRNK <- glm(PFAS_D$TrnkFat ~ PFAS_D[[i]] + PFAS_D$age_enroll + PFAS_D$race + 
+                PFAS_D$smoke +  PFAS_D$parity + 
+                PFAS_D$married + PFAS_D$fish + PFAS_D$height, family = gaussian)
+p_TRNK <- summary(m_TRNK)$coefficients[2,]
+pval_TRNK <- rbind(pval_TRNK, p_TRNK)
+rownames(pval_TRNK)[i-1] <- paste("X", i-1, sep="")
+}
+
+pval_TRNK_set <- pval_TRNK[,4]
+BH_TRNK <- p.adjust(pval_TRNK_set, method="BH")
+BY_TRNK <- p.adjust(pval_TRNK_set, method="BY")
+FDR_TRNK <- p.adjust(pval_TRNK_set, method="fdr")
+FWER_TRNK <- as.data.frame(cbind(pval_TRNK_set, BH_TRNK, BY_TRNK, FDR_TRNK))
+FWER_TRNK
+
+
+# FAT
+pval_FAT <- NULL
+for (i in 2:7){
+m_FAT <- glm(PFAS_D$TotFat ~ PFAS_D[[i]] + PFAS_D$age_enroll + PFAS_D$race + 
+                PFAS_D$smoke +  PFAS_D$parity + 
+                PFAS_D$married + PFAS_D$fish + PFAS_D$height, family = gaussian)
+p_FAT <- summary(m_FAT)$coefficients[2,]
+pval_FAT <- rbind(pval_FAT, p_FAT)
+rownames(pval_FAT)[i-1] <- paste("X", i-1, sep="")
+}
+
+pval_FAT_set <- pval_FAT[,4]
+BH_FAT <- p.adjust(pval_FAT_set, method="BH")
+BY_FAT <- p.adjust(pval_FAT_set, method="BY")
+FDR_FAT <- p.adjust(pval_FAT_set, method="fdr")
+FWER_FAT <- as.data.frame(cbind(pval_FAT_set, BH_FAT, BY_FAT, FDR_FAT))
+FWER_FAT
+
+```
