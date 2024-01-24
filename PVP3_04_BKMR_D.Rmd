@@ -1,0 +1,490 @@
+#####                                                 #####
+##### RUN MIXTURES ANALYSIS WITH BKMR IN DXA DATASET  #####
+#####                                                 #####
+
+```{r message=FALSE, warning=FALSE}
+##### LOAD PACKAGES
+library("bkmr")
+library("ggplot2")
+library("beepr")
+library("tidyverse")
+
+```
+
+```{r message=FALSE, warning=FALSE}
+##### LOAD DATASET
+PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_DF.csv")
+
+# ##### LOAD WORKSPACE
+# load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_DF.Rdata")
+
+```
+
+```{r}
+##### TRANSFORM VARIABLES TO NUMERIC FOR BKMR COVARIATE MATRIX
+
+# RENAME
+PFAS_D$age_enroll <- PFAS_D$age_mom_enroll_d
+PFAS_D$menar <- PFAS_D$mom_firstperiod_12y
+PFAS_D$bmi <- PFAS_D$bmi_mom_prepreg_d
+PFAS_D$race <- PFAS_D$race2_mom_epi_epia_d
+PFAS_D$income <- PFAS_D$gt70k
+PFAS_D$parity <- PFAS_D$parity_d
+PFAS_D$smoke <- PFAS_D$smokpreg_final_d
+PFAS_D$married <- PFAS_D$married_cohab
+PFAS_D$edu <- PFAS_D$coll_grad
+PFAS_D$fish <- PFAS_D$fish_d_f1
+PFAS_D$darkmeat <- PFAS_D$dark_meat_f1
+
+# REFACTOR AND RELABEL
+PFAS_D$bmi_cat <- ifelse(PFAS_D$bmi <18.5, 0,
+                         ifelse(PFAS_D$bmi >=18.5 & PFAS_D$bmi < 25.0, 1,
+                         ifelse(PFAS_D$bmi >=25.0 & PFAS_D$bmi < 30.0, 2,
+                         ifelse(PFAS_D$bmi >=30.0 & PFAS_D$bmi < 35.0, 3,
+                         ifelse(PFAS_D$bmi >=35.0, 4, 99)))))
+PFAS_D$race <- ifelse(PFAS_D$race == "white", 0,
+                     ifelse(PFAS_D$race == "black", 1,
+                     ifelse(PFAS_D$race == "hispa", 2,
+                     ifelse(PFAS_D$race == "asian", 3,
+                     ifelse(PFAS_D$race == "other", 4, 4)))))
+PFAS_D$income <- ifelse(PFAS_D$income == 1, 1, 0)
+PFAS_D$parity <- ifelse(PFAS_D$parity == 0, 0,
+                        ifelse(PFAS_D$parity == 1, 1,
+                        ifelse(PFAS_D$parity > 1, 2, 0)))
+PFAS_D$smoke <- ifelse(PFAS_D$smoke == "former", 0,
+                         ifelse(PFAS_D$smoke == "smoke preg", 1,
+                         ifelse(PFAS_D$smoke == "xnever", 2, 2)))
+PFAS_D$married <- ifelse(PFAS_D$married == 1, 1, 0)
+PFAS_D$edu <- ifelse(PFAS_D$edu == 1, 1, 0)
+
+# SET CATEGORICAL VARIABLES AS FACTORS
+PFAS_D$bmi_cat <- as.factor(PFAS_D$bmi_cat)
+PFAS_D$race <- as.factor(PFAS_D$race)
+PFAS_D$income <- as.factor(PFAS_D$income)
+PFAS_D$parity <- as.factor(PFAS_D$parity)
+PFAS_D$smoke <- as.factor(PFAS_D$smoke)
+PFAS_D$married <- as.factor(PFAS_D$married)
+PFAS_D$edu <- as.factor(PFAS_D$edu)
+
+# CENTER AND SCALE CONTINUOUS VARIABLES
+PFAS_D$height_s <- scale(PFAS_D$height)
+PFAS_D$age_s <- scale(PFAS_D$age_enroll)
+PFAS_D$menar_s <- scale(PFAS_D$menar)
+PFAS_D$fish_s <- scale(PFAS_D$fish)
+PFAS_D$darkmeat_s <- scale(PFAS_D$darkmeat)
+
+```
+
+```{r}
+##### PREPARE VARIABLES FOR BKMR MODELS #####
+##### ANTHRO + DXA DATASET (N = 433)
+
+# CREATE MIXTURE OF PFAS
+mixture_d <- as.matrix(cbind(PFAS_D$PFOS, PFAS_D$PFOA, PFAS_D$PFNA, PFAS_D$PFHxS, 
+                              PFAS_D$MeFOSAA, PFAS_D$EtFOSAA))
+
+# RENAME VARIABLES IN MIXTURE
+colnames(mixture_d) <- c("PFOS", "PFOA", "PFNA", "PFHxS", "MeFOSAA", "EtFOSAA")
+
+# LOG2-TRANSFORM MIXTURE
+l2mixture_d <- apply(mixture_d, 2, log2)
+
+# SCALE MIXTURE VARIABLES TO THE MEAN
+l2mixture_d_z <- scale(l2mixture_d)
+
+# SET THE OUTCOME
+TrnkFat <- PFAS_D$TrnkFat
+TotFat <- PFAS_D$TotFat
+
+
+# CREATE THE COVARIATE MATRIX
+cov_d <- as.matrix(cbind(PFAS_D$age_s, PFAS_D$race, PFAS_D$bmi_cat, PFAS_D$smoke, 
+                         PFAS_D$parity, PFAS_D$married, PFAS_D$fish_s, PFAS_D$height_s))
+
+# SET THE SEED
+set.seed(1234)
+
+# CREATE KNOTS
+knots_dl2_z <- fields::cover.design(l2mixture_d_z, nd = 40)$design
+
+```
+
+```{r}
+##### BUILD BKMR MODELS
+# TRUNK FAT MASS
+l2m_trnkfat <- kmbayes(y = TrnkFat, Z = l2mixture_d_z, X = cov_d, iter = 20000, family = "gaussian",
+                     verbose = FALSE, varsel = TRUE, knots = knots_dl2_z)
+beep(sound=5, expr=NULL)
+
+# TOTAL BODY FAT MASS
+l2m_totfat <- kmbayes(y = TotFat, Z = l2mixture_d_z, X = cov_d, iter = 20000, family = "gaussian",
+                     verbose = FALSE, varsel = TRUE, knots = knots_dl2_z)
+beep(sound=5, expr=NULL)
+
+```
+
+```{r}
+##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
+save(l2m_trnkfat, l2m_totfat,
+    file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_DF.Rdata")
+
+```
+
+```{r}
+##### VALUES TO KEEP AFTER BURIN/THIN
+#
+sel <- seq(0,20000,by = 50)
+
+##### ACCESS CONVERGENCE WITH TRACEPLOTS
+TracePlot(fit = l2m_trnkfat, par = "beta", sel = sel)
+TracePlot(fit = l2m_totfat, par = "beta", sel = sel)
+# TracePlot(fit = l2m_totfatpct, par = "beta", sel = sel)
+# TracePlot(fit = l2m_tfin, par = "beta", sel = sel)
+# TracePlot(fit = l2m_bfin, par = "beta", sel = sel)
+# TracePlot(fit = m_totlean, par = "beta", sel = sel)
+
+##### VALUES TO KEEP AFTER BURNING/THIN (ACCORDING TO THE TRACEPLOT FUNCTION ABOVE)
+sel_final <- seq(1200, 20000, by = 1)
+
+```
+
+```{r}
+##### ESIMATE POSTERIOR INCLUSION PROBABILITIES
+# TRUNK FAT MASS
+#summary(l2m_trnkfat)
+ExtractPIPs(l2m_trnkfat, sel = sel_final)
+
+# TOTAL BODY FAT MASS
+#summary(l2m_totfat)
+ExtractPIPs(l2m_totfat, sel = sel_final)
+
+```
+
+```{r}
+##### PREDICT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
+# TRUNK FAT MASS
+univar_trnkfat <- PredictorResponseUnivar(fit = l2m_trnkfat, sel = sel_final, method = "approx")
+
+# TOTAL BODY FAT MASS
+univar_totfat <- PredictorResponseUnivar(fit = l2m_totfat, sel = sel_final, method = "approx")
+
+
+##### PLOT UNIVARIATE EXPOSURE-RESPONSE FUNCTION
+# TRUNK FAT MASS
+uni_trnkfat <- ggplot(univar_trnkfat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) +
+  geom_smooth(stat = "identity", colour='black') + xlab("Plasma PFAS, log2(ng/mL)") + ylab("Trunk fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 25))
+
+uni1_trnkfat <- ggplot(univar_trnkfat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFOS, log2(ng/mL)") + ylab("Trunk fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 26))
+
+uni2_trnkfat <- ggplot(univar_trnkfat[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFOA, log2(ng/mL)") + ylab("Trunk fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 26))
+
+uni3_trnkfat <- ggplot(univar_trnkfat[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFNA, log2(ng/mL)") + ylab("Trunk fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 26))
+
+uni4_trnkfat <- ggplot(univar_trnkfat[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFHxS, log2(ng/mL)") + ylab("Trunk fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 26))
+
+uni5_trnkfat <- ggplot(univar_trnkfat[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma MeFOSAA, log2(ng/mL)") + ylab("Trunk fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 26))
+
+uni6_trnkfat <- ggplot(univar_trnkfat[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma EtFOSAA, log2(ng/mL)") + ylab("Trunk fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 26))
+
+uni_trnkfat
+uni1_trnkfat
+uni2_trnkfat
+uni3_trnkfat
+uni4_trnkfat
+uni5_trnkfat
+uni6_trnkfat
+
+
+# TOTAL BODY FAT MASS
+uni_totfat <- ggplot(univar_totfat, aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) + facet_wrap(~ variable) + 
+  geom_smooth(stat = "identity", colour='black') + xlab("Plasma PFAS, log2(ng/mL)") + ylab("Body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1) + theme(text = element_text(size = 25))
+
+uni1_totfat <- ggplot(univar_totfat[1:50,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFOS, log2(ng/mL)") + ylab("Body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 26))
+
+uni2_totfat <- ggplot(univar_totfat[51:100,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFOA, log2(ng/mL)") + ylab("Body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 26))
+
+uni3_totfat <- ggplot(univar_totfat[101:150,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFNA, log2(ng/mL)") + ylab("Body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 26))
+
+uni4_totfat <- ggplot(univar_totfat[151:200,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma PFHxS, log2(ng/mL)") + ylab("Body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 26))
+
+uni5_totfat <- ggplot(univar_totfat[201:250,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma MeFOSAA, log2(ng/mL)") + ylab("Body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 26))
+
+uni6_totfat <- ggplot(univar_totfat[251:300,], aes(z, est, ymin = est - 1.96*se, ymax = est + 1.96*se)) +
+  geom_smooth(stat = "identity", colour='black') + theme_classic() +
+  xlab("Plasma EtFOSAA, log2(ng/mL)") + ylab("Body fat mass (kg)")+
+  geom_hline(yintercept = 0, colour = 'red', linetype = 'dashed', linewidth = 1.5) + theme(text = element_text(size = 26))
+
+uni_totfat
+uni1_totfat
+uni2_totfat
+uni3_totfat
+uni4_totfat
+uni5_totfat
+uni6_totfat
+
+```
+
+```{r}
+##### PREDICT BIVARIATE EXPOSURE-RESPONSE CURVE TO ASSESS POTENTIAL INTERACTIONS
+##### SUBESQUENTLY, PREDICT INTERACTIONS AMONG PFAS
+# TRUNK FAT MASS
+bivar_trnkfat <- PredictorResponseBivar(fit = l2m_trnkfat, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_trnkfat <- PredictorResponseBivarLevels(pred.resp.df = bivar_trnkfat, Z = l2mixture_d_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_trnkfat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_trnkfat, Z = l2mixture_d_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+# TOTAL BODY FAT MASS
+bivar_totfat <- PredictorResponseBivar(fit = l2m_totfat, min.plot.dist = 1, sel = sel_final, method = "approx")
+interact_totfat <- PredictorResponseBivarLevels(pred.resp.df = bivar_totfat, Z = l2mixture_d_z,
+                                               both_pairs = T, qs = c(0.25, 0.50, 0.75))
+interact_totfat_1090 <- PredictorResponseBivarLevels(pred.resp.df = bivar_totfat, Z = l2mixture_d_z,
+                                                    both_pairs = TRUE, qs = c(0.10, 0.5, 0.90))
+
+
+
+##### PLOT BIVARIATE INTERACTIONS
+##### NON-PARALLEL LINES WOULD INDICATE POTENTIAL INTERACTIONS
+# TRUNK FAT MASS
+p_interact_trnkfat <- ggplot(interact_trnkfat, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) + theme(
+               axis.title.x=element_text(angle=0, color='black', size = 20),
+               axis.title.y=element_text(angle=90, color='black', size = 20)) +
+  xlab ("PFAS 1") +
+  ylab ("Trunk fat mass (kg)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_trnkfat
+
+# TOTAL BODY FAT MASS
+p_interact_totfat <- ggplot(interact_totfat, aes(z1, est)) +
+  geom_smooth(aes(col = quantile), stat = "identity") + 
+  facet_grid(variable2 ~ variable1) + theme(
+               axis.title.x=element_text(angle=0, color='black', size = 20),
+               axis.title.y=element_text(angle=90, color='black', size = 20)) +
+  xlab ("PFAS 1") +
+  ylab ("Body fat mass (kg)") +
+  ggtitle("h(PFAS 1 | Quantiles of PFAS 2)") 
+p_interact_totfat
+
+```
+
+```{r}
+##### DETERMINE RISK ASSOCIATED WITH THE OVERALL MIXTURE
+# TRUNK FAT MASS
+overall_trnkfat <- OverallRiskSummaries(fit = l2m_trnkfat, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+
+# TOTAL BODY FAT MASS
+overall_totfat <- OverallRiskSummaries(fit = l2m_totfat, q.fixed = 0.50, sel = sel_final,
+                                               method = "approx", qs = seq(0.25, 0.75, by = 0.05))
+
+
+
+##### PLOT RISK ASSOCIATED WITH THE OVERALL MIXTURE
+# TRUNK FAT MASS
+p_overall_trnkfat <- ggplot(overall_trnkfat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", linewidth = 1, color = "red") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Trunk fat mass (kg)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 25),
+               axis.text.y = element_text(size = 24),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 25),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 24))
+p_overall_trnkfat
+
+
+# TOTAL BODY FAT MASS
+p_overall_totfat <- ggplot(overall_totfat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+               geom_hline(yintercept = 00, linetype = "dashed", linewidth = 1, color = "red") +
+               geom_pointrange() +
+               scale_y_continuous(name = "Body fat mass (kg)")+
+               xlab("PFAS quantile") +
+               theme_classic()+ theme(
+               axis.text.x = element_text(size = 25),
+               axis.text.y = element_text(size = 24),
+               axis.title.x = element_text(angle = 0, color = 'black', size = 25),
+               axis.title.y = element_text(angle = 90, color = 'black', size = 24))
+p_overall_totfat
+
+```
+
+```{r}
+##### ESTIMATE SINGLE PFAS EFFECT
+# TRUNK FAT MASS
+singvar_trnkfat <- SingVarRiskSummaries(fit = l2m_trnkfat, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75), sel = sel_final, method = "approx")
+singvar_trnkfat2 <- SingVarRiskSummaries(fit = l2m_trnkfat, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.50), sel = sel_final, method = "approx")
+singvar_trnkfat2
+
+# PFOS	
+1.1784517 - 1.96*0.5930815	
+1.1784517 + 1.96*0.5930815	
+
+# PFOA	
+0.6719856 - 1.96*0.5232495	
+0.6719856 + 1.96*0.5232495	
+
+# PFNA	
+-0.7871524 - 1.96*0.3647302	
+-0.7871524 + 1.96*0.3647302	
+
+# PFHxS	
+-0.7835649 - 1.96*0.3378976	
+-0.7835649 + 1.96*0.3378976	
+
+# MeFOSAA	
+-0.3131620 - 1.96*0.3867656	
+-0.3131620 + 1.96*0.3867656	
+
+# EtFOSAA	
+0.6168861 - 1.96*0.4078390	
+0.6168861 + 1.96*0.4078390	
+
+
+# TOTAL BODY FAT MASS
+singvar_totfat <- SingVarRiskSummaries(fit = l2m_totfat, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.25, 0.50, 0.75), sel = sel_final, method = "approx")
+singvar_totfat2 <- SingVarRiskSummaries(fit = l2m_totfat, qs.diff = c(0.25, 0.75),
+                                            q.fixed = c(0.50), sel = sel_final, method = "approx")
+singvar_totfat2
+
+# PFOS	
+3.0124335 - 1.96*1.1085269
+3.0124335 + 1.96*1.1085269	
+
+# PFOA	
+0.5996236 - 1.96*0.9179066	
+0.5996236 + 1.96*0.9179066	
+
+# PFNA	
+-1.4037093 - 1.96*0.6680507	
+-1.4037093 + 1.96*0.6680507	
+
+# PFHxS	
+-1.4264039 - 1.96*0.6087548	
+-1.4264039 + 1.96*0.6087548	
+
+# MeFOSAA	
+-0.1420952 - 1.96*0.6945466	
+-0.1420952 + 1.96*0.6945466	
+
+# EtFOSAA	
+1.1700541 - 1.96*0.7443219		
+1.1700541 + 1.96*0.7443219		
+
+
+# ##### PLOT SINGLE PFAS EFFECT
+# ##### HOLDING ALL OTHER PFAS AT THE 25TH, 50TH, 75TH PERCENTILES
+# TRUNK FAT MASS
+p_singvar_trnkfat <- ggplot(singvar_trnkfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  theme_bw() + theme(text = element_text(size = 23)) + theme(axis.title.y = element_blank()) +
+  scale_x_discrete(limits = c("EtFOSAA", "MeFOSAA", "PFHxS", "PFNA", "PFOA", "PFOS")) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, color = "black") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_y_continuous(name = "Trunk fat mass (kg)")
+p_singvar_trnkfat
+
+
+# TOTAL BODY FAT MASS
+p_singvar_totfat <- ggplot(singvar_totfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd,
+                                col = q.fixed)) +
+  theme_bw() + theme(text = element_text(size = 23)) + theme(axis.title.y = element_blank()) +
+  scale_x_discrete(limits = c("EtFOSAA", "MeFOSAA", "PFHxS", "PFNA", "PFOA", "PFOS")) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", linewidth = 1, color = "black") +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_y_continuous(name = "Body fat mass (kg)")
+p_singvar_totfat
+
+
+# TRUNK FAT MASS
+p_singvar_trnkfat2 <- ggplot(singvar_trnkfat2, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) + 
+  theme_bw() + theme(text = element_text(size = 23, color = "black")) + theme(axis.title.y = element_blank()) +
+  scale_x_discrete(limits = c("EtFOSAA", "MeFOSAA", "PFHxS", "PFNA", "PFOA", "PFOS")) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "red", linewidth = 1.5) +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_y_continuous(name = "Trunk fat mass (kg)")
+p_singvar_trnkfat2
+
+
+# TOTAL BODY FAT MASS
+p_singvar_totfat2 <- ggplot(singvar_totfat2, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) + 
+  theme_bw() + theme(text = element_text(size = 23, color = "black")) + theme(axis.title.y = element_blank()) +
+  scale_x_discrete(limits = c("EtFOSAA", "MeFOSAA", "PFHxS", "PFNA", "PFOA", "PFOS")) +
+  geom_hline(aes(yintercept = 0), linetype = "dashed", color = "red", linewidth = 1.5) +
+  geom_pointrange(position = position_dodge(width = 0.75)) + coord_flip() +
+  scale_y_continuous(name = "Body fat mass (kg)")
+p_singvar_totfat2
+
+```
+
+```{r}
+##### UNIVARIATE INTERACTIONS AMONG PFAS
+# TRUNK FAT MASS
+overall_interact_trnkfat <- SingVarIntSummaries(fit = l2m_trnkfat, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+# TOTAL BODY FAT MASS
+overall_interact_totfat <- SingVarIntSummaries(fit = l2m_totfat, qs.diff = c(0.25, 0.75),
+                                       qs.fixed = c(0.25, 0.75),sel=sel_final)
+
+
+
+##### PLOT UNIVARIATE INTERACTIONS
+# TRUNK FAT MASS
+p_overall_interact_trnkfat <- ggplot(overall_interact_trnkfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) + theme(text = element_text(size = 25)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 1, col = "red") + coord_flip() +
+  ylab("Trunk fat mass (kg)") +
+  xlab("Plasma PFAS")
+p_overall_interact_trnkfat
+
+
+# TOTAL BODY FAT MASS
+p_overall_interact_totfat <- ggplot(overall_interact_totfat, aes(variable, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
+  geom_pointrange(position = position_dodge(width = 0.75)) + theme(text = element_text(size = 25)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 1, col = "red") + coord_flip() +
+  ylab("Body fat mass (kg)") +
+  xlab("Plasma PFAS")
+p_overall_interact_totfat
+
+```
