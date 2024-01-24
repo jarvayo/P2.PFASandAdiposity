@@ -16,7 +16,7 @@ library("tidyverse")
 PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_AF.csv")
 
 ##### LOAD WORKSPACE
-# load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
+load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
 
 ```
 
@@ -112,24 +112,24 @@ knots_al2_z <- fields::cover.design(l2mixture_a_z, nd = 50)$design
 ```
 
 ```{r}
-##### BUILD BKMR MODELS 
-# WEIGHT
-l2m_wt <- kmbayes(y = Weight, Z = l2mixture_a_z, X = cov_a_nw, iter = 20000, family = "gaussian",
-                       verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
-beep(sound=5, expr=NULL)
-
-
-# WAIST CIRCUMFERENCE
-l2m_waist <- kmbayes(y = Waist, Z = l2mixture_a_z, X = cov_a, iter = 20000, family = "gaussian",
-                      verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
-beep(sound=5, expr=NULL)
+# ##### BUILD BKMR MODELS 
+# # WEIGHT
+# l2m_wt <- kmbayes(y = Weight, Z = l2mixture_a_z, X = cov_a_nw, iter = 20000, family = "gaussian",
+#                        verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
+# beep(sound=5, expr=NULL)
+# 
+# 
+# # WAIST CIRCUMFERENCE
+# l2m_waist <- kmbayes(y = Waist, Z = l2mixture_a_z, X = cov_a, iter = 20000, family = "gaussian",
+#                       verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
+# beep(sound=5, expr=NULL)
 
 ```
 
 ```{r}
-##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
-save(l2m_wt, l2m_waist,
-    file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
+# ##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
+# save(l2m_wt, l2m_waist,
+#     file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
 
 ```
 
@@ -352,23 +352,30 @@ singvar_wt <- SingVarRiskSummaries(fit = l2m_wt, qs.diff = c(0.25, 0.75),
 singvar_wt2 <- SingVarRiskSummaries(fit = l2m_wt, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.50), sel = sel_final, method = "approx")
 singvar_wt2
-2.59337899 - 1.96*1.0832861	
-2.59337899 + 1.96*1.0832861	
 
--0.06773467 - 1.96*0.8380125	
--0.06773467 + 1.96*0.8380125	
+# PFOS
+7.7166480 - 1.96*1.920668	
+7.7166480 + 1.96*1.920668	
 
--1.42599551 - 1.96*0.6651822	
--1.42599551 + 1.96*0.6651822	
+# PFOA
+1.0535595 - 1.96*1.457813
+1.0535595 + 1.96*1.457813
 
--0.80095312 - 1.96*0.5197135	
--0.80095312 + 1.96*0.5197135	
+# PFNA	
+-5.9816203 - 1.96*1.289299	
+-5.9816203 + 1.96*1.289299	
 
--0.58733041 - 1.96*0.6415295	
--0.58733041 + 1.96*0.6415295	
+# PFHxS	
+-2.0340970 - 1.96*1.010691	
+-2.0340970 + 1.96*1.010691	
 
-0.99348867 - 1.96*0.7352979
-0.99348867 + 1.96*0.7352979
+# MeFOSAA	
+-0.5896487 - 1.96*1.074545	
+-0.5896487 + 1.96*1.074545	
+
+# EtFOSAA	
+1.4988709 - 1.96*1.045089	
+1.4988709 + 1.96*1.045089	
 
 
 # WAIST CIRCUMFERENCE
@@ -378,23 +385,29 @@ singvar_waist2 <- SingVarRiskSummaries(fit = l2m_waist, qs.diff = c(0.25, 0.75),
                                             q.fixed = c(0.50), sel = sel_final, method = "approx")
 singvar_waist2
 
-1.2451138 - 1.96*1.1777942	
-1.2451138 + 1.96*1.1777942	
+# PFOS	
+1.0543839 - 1.96*0.9267323	
+1.0543839 + 1.96*0.9267323	
 
-1.4374616 - 1.96*1.0598314	
-1.4374616 + 1.96*1.0598314	
+# PFOA	
+1.4094704 - 1.96*0.8947919	
+1.4094704 + 1.96*0.8947919	
 
--1.8165612 - 1.96*0.7483963	
--1.8165612 + 1.96*0.7483963	
+# PFNA	
+-2.0549724 - 1.96*0.6539849	
+-2.0549724 + 1.96*0.6539849	
 
--0.9815914 - 1.96*0.6332867	
--0.9815914 + 1.96*0.6332867	
+# PFHxS	
+-0.6652791 - 1.96*0.5247127	
+-0.6652791 + 1.96*0.5247127	
 
--0.9133417 - 1.96*0.7488471	
--0.9133417 + 1.96*0.7488471	
+# MeFOSAA
+-0.5158834 - 1.96*0.5817501	
+-0.5158834 + 1.96*0.5817501	
 
-0.9510012 - 1.96*0.7875484	
-0.9510012 + 1.96*0.7875484	
+# EtFOSAA	
+0.8146210 - 1.96*0.6610874	
+0.8146210 + 1.96*0.6610874	
 
 
 ##### PLOT SINGLE PFAS EFFECT
