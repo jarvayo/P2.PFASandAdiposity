@@ -15,8 +15,8 @@ library("tidyverse")
 ##### LOAD DATASET
 PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_AF.csv")
 
-##### LOAD WORKSPACE
-load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF_STRAT.Rdata")
+# ##### LOAD WORKSPACE
+# load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF_STRAT.Rdata")
 
 ```
 
@@ -162,47 +162,47 @@ knots_a_m1 <- fields::cover.design(l2mixture_a_m1_z, nd = 20)$design
 ```
 
 ```{r}
-# ##### BUILD BKMR MODELS
-# # WEIGHT
-# m_wt_b0 <- kmbayes(y = WT_B0, Z = l2mixture_a_b0_z, X = cov_a_b0, iter = 20000, family = "gaussian",
-#                       verbose = FALSE, varsel = TRUE, knots = knots_a_b0)
-# beep(sound=5, expr=NULL)
-# 
-# m_wt_b1 <- kmbayes(y = WT_B1, Z = l2mixture_a_b1_z, X = cov_a_b1, iter = 20000, family = "gaussian",
-#                       verbose = FALSE, varsel = TRUE, knots = knots_a_b1)
-# beep(sound=5, expr=NULL)
-# 
-# m_wt_m0 <- kmbayes(y = WT_M0, Z = l2mixture_a_m0_z, X = cov_a_m0, iter = 20000, family = "gaussian",
-#                       verbose = FALSE, varsel = TRUE, knots = knots_a_m0)
-# beep(sound=5, expr=NULL)
-# 
-# m_wt_m1 <- kmbayes(y = WT_M1, Z = l2mixture_a_m1_z, X = cov_a_m1, iter = 20000, family = "gaussian",
-#                       verbose = FALSE, varsel = TRUE, knots = knots_a_m1)
-# beep(sound=5, expr=NULL)
-# 
-# # WAIST CIRCUMFERENCE
-# m_wc_b0 <- kmbayes(y = WC_B0, Z = l2mixture_a_b0_z, X = cov_a_b0, iter = 20000, family = "gaussian",
-#                       verbose = FALSE, varsel = TRUE, knots = knots_a_b0)
-# beep(sound=5, expr=NULL)
-# 
-# m_wc_b1 <- kmbayes(y = WC_B1, Z = l2mixture_a_b1_z, X = cov_a_b1, iter = 20000, family = "gaussian",
-#                       verbose = FALSE, varsel = TRUE, knots = knots_a_b1)
-# beep(sound=5, expr=NULL)
-# 
-# m_wc_m0 <- kmbayes(y = WC_M0, Z = l2mixture_a_m0_z, X = cov_a_m0, iter = 20000, family = "gaussian",
-#                       verbose = FALSE, varsel = TRUE, knots = knots_a_m0)
-# beep(sound=5, expr=NULL)
-# 
-# m_wc_m1 <- kmbayes(y = WC_M1, Z = l2mixture_a_m1_z, X = cov_a_m1, iter = 20000, family = "gaussian",
-#                       verbose = FALSE, varsel = TRUE, knots = knots_a_m1)
-# beep(sound=5, expr=NULL)
+##### BUILD BKMR MODELS
+# WEIGHT
+m_wt_b0 <- kmbayes(y = WT_B0, Z = l2mixture_a_b0_z, X = cov_a_b0, iter = 20000, family = "gaussian",
+                      verbose = FALSE, varsel = TRUE, knots = knots_a_b0)
+beep(sound=5, expr=NULL)
+
+m_wt_b1 <- kmbayes(y = WT_B1, Z = l2mixture_a_b1_z, X = cov_a_b1, iter = 20000, family = "gaussian",
+                      verbose = FALSE, varsel = TRUE, knots = knots_a_b1)
+beep(sound=5, expr=NULL)
+
+m_wt_m0 <- kmbayes(y = WT_M0, Z = l2mixture_a_m0_z, X = cov_a_m0, iter = 20000, family = "gaussian",
+                      verbose = FALSE, varsel = TRUE, knots = knots_a_m0)
+beep(sound=5, expr=NULL)
+
+m_wt_m1 <- kmbayes(y = WT_M1, Z = l2mixture_a_m1_z, X = cov_a_m1, iter = 20000, family = "gaussian",
+                      verbose = FALSE, varsel = TRUE, knots = knots_a_m1)
+beep(sound=5, expr=NULL)
+
+# WAIST CIRCUMFERENCE
+m_wc_b0 <- kmbayes(y = WC_B0, Z = l2mixture_a_b0_z, X = cov_a_b0, iter = 20000, family = "gaussian",
+                      verbose = FALSE, varsel = TRUE, knots = knots_a_b0)
+beep(sound=5, expr=NULL)
+
+m_wc_b1 <- kmbayes(y = WC_B1, Z = l2mixture_a_b1_z, X = cov_a_b1, iter = 20000, family = "gaussian",
+                      verbose = FALSE, varsel = TRUE, knots = knots_a_b1)
+beep(sound=5, expr=NULL)
+
+m_wc_m0 <- kmbayes(y = WC_M0, Z = l2mixture_a_m0_z, X = cov_a_m0, iter = 20000, family = "gaussian",
+                      verbose = FALSE, varsel = TRUE, knots = knots_a_m0)
+beep(sound=5, expr=NULL)
+
+m_wc_m1 <- kmbayes(y = WC_M1, Z = l2mixture_a_m1_z, X = cov_a_m1, iter = 20000, family = "gaussian",
+                      verbose = FALSE, varsel = TRUE, knots = knots_a_m1)
+beep(sound=5, expr=NULL)
 
 ```
 
 ```{r}
-# ##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
-# save(m_wt_b0, m_wt_b1, m_wt_m0, m_wt_m1, m_wc_b0, m_wc_b1, m_wc_m0, m_wc_m1,
-#     file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF_STRAT.Rdata")
+##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
+save(m_wt_b0, m_wt_b1, m_wt_m0, m_wt_m1, m_wc_b0, m_wc_b1, m_wc_m0, m_wc_m1,
+    file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF_STRAT.Rdata")
 
 ```
 
