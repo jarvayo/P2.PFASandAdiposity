@@ -15,8 +15,8 @@ library("tidyverse")
 ##### LOAD DATASET
 PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_AF.csv")
 
-##### LOAD WORKSPACE
-load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
+# ##### LOAD WORKSPACE
+# load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
 
 ```
 
@@ -112,24 +112,24 @@ knots_al2_z <- fields::cover.design(l2mixture_a_z, nd = 50)$design
 ```
 
 ```{r}
-# ##### BUILD BKMR MODELS 
-# # WEIGHT
-# l2m_wt <- kmbayes(y = Weight, Z = l2mixture_a_z, X = cov_a_nw, iter = 20000, family = "gaussian",
-#                        verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
-# beep(sound=5, expr=NULL)
-# 
-# 
-# # WAIST CIRCUMFERENCE
-# l2m_waist <- kmbayes(y = Waist, Z = l2mixture_a_z, X = cov_a, iter = 20000, family = "gaussian",
-#                       verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
-# beep(sound=5, expr=NULL)
+##### BUILD BKMR MODELS
+# WEIGHT
+l2m_wt <- kmbayes(y = Weight, Z = l2mixture_a_z, X = cov_a_nw, iter = 20000, family = "gaussian",
+                       verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
+beep(sound=5, expr=NULL)
+
+
+# WAIST CIRCUMFERENCE
+l2m_waist <- kmbayes(y = Waist, Z = l2mixture_a_z, X = cov_a, iter = 20000, family = "gaussian",
+                      verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
+beep(sound=5, expr=NULL)
 
 ```
 
 ```{r}
-# ##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
-# save(l2m_wt, l2m_waist,
-#     file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
+##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
+save(l2m_wt, l2m_waist,
+    file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
 
 ```
 
