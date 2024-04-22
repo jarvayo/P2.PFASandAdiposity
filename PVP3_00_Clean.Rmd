@@ -69,6 +69,7 @@ PFAS_2 <- subset(PFAS_2, t2diab_mom_epi_epia_d == 2 | is.na(t2diab_mom_epi_epia_
 PFAS_3 <- subset(PFAS_2, !is.na(mom_height_ma17)) # MISSING HEIGHT MEASUREMENT
 PFAS_3 <- subset(PFAS_3, !is.na(mom_weight_ma17)) # MISSING WEIGHT MEASUREMENT 
 PFAS_4 <- subset(PFAS_3, !is.na(mom_waist_ma17)) # MISSING WAIST MEASUREMENT  
+PFAS_5 <- subset(PFAS_4, !is.na(TRUNK_FAT_mdxa17)) # MISSING DXA MEASURES 
 
 ```
 
