@@ -15,8 +15,8 @@ library("tidyverse")
 ##### LOAD DATASET
 PFAS_A <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_AF.csv")
 
-# ##### LOAD WORKSPACE
-# load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
+##### LOAD WORKSPACE
+load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
 
 ```
 
@@ -112,24 +112,24 @@ knots_al2_z <- fields::cover.design(l2mixture_a_z, nd = 50)$design
 ```
 
 ```{r}
-##### BUILD BKMR MODELS
-# WEIGHT
-l2m_wt <- kmbayes(y = Weight, Z = l2mixture_a_z, X = cov_a_nw, iter = 20000, family = "gaussian",
-                       verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
-beep(sound=5, expr=NULL)
-
-
-# WAIST CIRCUMFERENCE
-l2m_waist <- kmbayes(y = Waist, Z = l2mixture_a_z, X = cov_a, iter = 20000, family = "gaussian",
-                      verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
-beep(sound=5, expr=NULL)
+# ##### BUILD BKMR MODELS
+# # WEIGHT
+# l2m_wt <- kmbayes(y = Weight, Z = l2mixture_a_z, X = cov_a_nw, iter = 20000, family = "gaussian",
+#                        verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
+# beep(sound=5, expr=NULL)
+# 
+# 
+# # WAIST CIRCUMFERENCE
+# l2m_waist <- kmbayes(y = Waist, Z = l2mixture_a_z, X = cov_a, iter = 20000, family = "gaussian",
+#                       verbose = FALSE, varsel = TRUE, knots = knots_al2_z)
+# beep(sound=5, expr=NULL)
 
 ```
 
 ```{r}
-##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
-save(l2m_wt, l2m_waist,
-    file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
+# ##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
+# save(l2m_wt, l2m_waist,
+#     file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_AF.Rdata")
 
 ```
 
@@ -317,7 +317,7 @@ overall_waist <- OverallRiskSummaries(fit = l2m_waist, q.fixed = 0.50, sel = sel
 ##### PLOT RISK ASSOCIATED WITH THE OVERALL MIXTURE
 # WEIGHT
 p_overall_wt <- ggplot(overall_wt, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-               geom_hline(yintercept = 00, linetype = "dashed", color = "red", linewidth = 1) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "grey", linewidth = 1.5) +
                geom_pointrange() +
                scale_y_continuous(name = "Weight (kg)")+
                xlab("PFAS quantile") +
@@ -331,7 +331,7 @@ p_overall_wt
 
 # WAIST CIRCUMFERENCE
 p_overall_waist <- ggplot(overall_waist, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-               geom_hline(yintercept = 00, linetype = "dashed", color = "red", linewidth = 1) +
+               geom_hline(yintercept = 00, linetype = "dashed", color = "grey", linewidth = 1.5) +
                geom_pointrange() +
                scale_y_continuous(name = "Waist circ (cm)")+
                xlab("PFAS quantile") +
