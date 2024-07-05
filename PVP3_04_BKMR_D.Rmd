@@ -15,8 +15,8 @@ library("tidyverse")
 ##### LOAD DATASET
 PFAS_D <-read_csv("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/PFAS_DF.csv")
 
-# ##### LOAD WORKSPACE
-# load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_DF.Rdata")
+##### LOAD WORKSPACE
+load("C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_DF.Rdata")
 
 ```
 
@@ -110,23 +110,23 @@ knots_dl2_z <- fields::cover.design(l2mixture_d_z, nd = 40)$design
 ```
 
 ```{r}
-##### BUILD BKMR MODELS
-# TRUNK FAT MASS
-l2m_trnkfat <- kmbayes(y = TrnkFat, Z = l2mixture_d_z, X = cov_d, iter = 20000, family = "gaussian",
-                     verbose = FALSE, varsel = TRUE, knots = knots_dl2_z)
-beep(sound=5, expr=NULL)
-
-# TOTAL BODY FAT MASS
-l2m_totfat <- kmbayes(y = TotFat, Z = l2mixture_d_z, X = cov_d, iter = 20000, family = "gaussian",
-                     verbose = FALSE, varsel = TRUE, knots = knots_dl2_z)
-beep(sound=5, expr=NULL)
+# ##### BUILD BKMR MODELS
+# # TRUNK FAT MASS
+# l2m_trnkfat <- kmbayes(y = TrnkFat, Z = l2mixture_d_z, X = cov_d, iter = 20000, family = "gaussian",
+#                      verbose = FALSE, varsel = TRUE, knots = knots_dl2_z)
+# beep(sound=5, expr=NULL)
+# 
+# # TOTAL BODY FAT MASS
+# l2m_totfat <- kmbayes(y = TotFat, Z = l2mixture_d_z, X = cov_d, iter = 20000, family = "gaussian",
+#                      verbose = FALSE, varsel = TRUE, knots = knots_dl2_z)
+# beep(sound=5, expr=NULL)
 
 ```
 
 ```{r}
-##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
-save(l2m_trnkfat, l2m_totfat,
-    file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_DF.Rdata")
+# ##### SAVE WORKSPACE FOR SBP BKMR FUNCTIONS
+# save(l2m_trnkfat, l2m_totfat,
+#     file="C:/Users/jarva/Desktop/James-Todd Lab/P3.PFASandAdiposity/Data/P3_BKMR_DF.Rdata")
 
 ```
 
@@ -319,7 +319,7 @@ overall_totfat <- OverallRiskSummaries(fit = l2m_totfat, q.fixed = 0.50, sel = s
 ##### PLOT RISK ASSOCIATED WITH THE OVERALL MIXTURE
 # TRUNK FAT MASS
 p_overall_trnkfat <- ggplot(overall_trnkfat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-               geom_hline(yintercept = 00, linetype = "dashed", linewidth = 1, color = "red") +
+               geom_hline(yintercept = 00, linetype = "dashed", linewidth = 1.5, color = "grey") +
                geom_pointrange() +
                scale_y_continuous(name = "Trunk fat mass (kg)")+
                xlab("PFAS quantile") +
@@ -333,7 +333,7 @@ p_overall_trnkfat
 
 # TOTAL BODY FAT MASS
 p_overall_totfat <- ggplot(overall_totfat, aes(quantile, est, ymin = est - 1.96*sd, ymax = est + 1.96*sd)) +
-               geom_hline(yintercept = 00, linetype = "dashed", linewidth = 1, color = "red") +
+               geom_hline(yintercept = 00, linetype = "dashed", linewidth = 1.5, color = "grey") +
                geom_pointrange() +
                scale_y_continuous(name = "Body fat mass (kg)")+
                xlab("PFAS quantile") +
