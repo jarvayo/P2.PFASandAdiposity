@@ -529,7 +529,7 @@ colnames(PFAS_A)[colnames(PFAS_A) == "PFNA2"] <- "PFNA"
 
 ##### PFAS CORRELATION MATRIX
 PFAS_A_corr <- PFAS_A[ , c("PFOS", "PFOA", "PFNA", "PFHxS", "MeFOSAA", "EtFOSAA")]
-p_corr <- cor(PFAS_A_corr)
+p_corr <- cor(PFAS_A_corr, method = "spearman")
 round(p_corr, 2)
 
 corrplot(p_corr, type = "upper", order = "hclust", method = "circle",
